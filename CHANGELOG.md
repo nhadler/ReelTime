@@ -16,6 +16,9 @@ this project follows [Semantic Versioning](https://semver.org/).
   red button: Revoke Link and Make a New Link were green. The buttons
   that ask (Revoke Link on a cue, Delete in Settings → Views) are plain,
   like the other buttons beside them.
+- **Section titles** inside a page are one size everywhere: they were
+  nearly as big as the page title on Conform, Backup and the Overview,
+  and the size of body text in Settings.
 
 ## [2.2.0] - 2026-11-17
 
