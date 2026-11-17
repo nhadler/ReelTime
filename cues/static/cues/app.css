@@ -4432,10 +4432,10 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 .view-editor input[type='search'],
 .view-editor select {
   min-height: var(--control-h);
-  padding: 0.3rem 0.5rem;
+  padding: 0.3rem 0.6rem;
   border: 1px solid var(--rule);
   border-radius: var(--radius);
-  background: var(--panel);
+  background: var(--bay);
   color: var(--ink);
   font: inherit;
 }

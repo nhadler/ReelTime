@@ -12,8 +12,8 @@
       <input id="review-who" type="text" name="name" maxlength="60" required autofocus autocomplete="name"
              {% if error %}aria-invalid="true" aria-describedby="review-who-error"{% endif %}>
       {% if error %}<ul class="errorlist" id="review-who-error"><li>{{ error }}</li></ul>{% endif %}
+      <span class="helptext">Your name shows with your comments, and whoever sent this link sees when you watched.</span>
     </div>
-    <p class="muted">Your name shows with your comments, and whoever sent this link sees when you watched.</p>
     <button class="button" type="submit">Watch</button>
   </form>
 {% endblock %}

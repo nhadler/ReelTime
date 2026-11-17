@@ -47,6 +47,9 @@ this project follows [Semantic Versioning](https://semver.org/).
   as in the filters and the Schedule (it was a circle there), and the
   three kinds of count (Credits, notes cells, the filter button) share
   one pill.
+- **Fields:** a field's error sits right under its box, above any
+  hint; the view editor's boxes match every other dialog's; the review
+  link's name hint is a hint, not body text.
 
 ## [2.2.0] - 2026-11-17
 
