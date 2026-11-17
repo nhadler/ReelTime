@@ -69,13 +69,26 @@ is full screen and M mutes.
 
 Typing a comment pauses the video. The comment is about the frame on
 screen, shown as **At** with its timecode; untick **At** for a comment
-on the whole cue. Enter sends it. Reviewers see each other's comments, and **Reply**
+on the whole cue. Enter sends it.
+
+Once you click into the comment box, the comment shows on the timeline
+as a handle each side of the frame on screen. For a comment about a
+stretch of the video,
+drag a handle (or focus it and use the arrow keys): the video shows the
+frame the handle is on, the timeline fills in between the two, and the
+comment box shows both timecodes. The stretch then stays where it was
+put until the comment is sent; the × beside the timecodes puts it back
+on the frame on screen.
+
+Reviewers see each other's comments, and **Reply**
 on a comment answers it. A guest can type any name; comments from
 someone signed in to ReelTime are marked **Team**, and only those are
 sure to be from who they say.
 
-Each timed comment is a mark on the video's timeline. Clicking a
-comment's timecode, or its mark, goes to that frame.
+Each timed comment is a dot above the video's timeline. Clicking a
+comment's timecode, or its dot, goes to that frame, or to the start of
+its stretch. While the video is inside a comment's stretch, that part
+of the timeline is coloured and the comment is lit in the list.
 
 ## Working Through the Comments
 

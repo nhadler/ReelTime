@@ -91,11 +91,18 @@ def test_reading_replying_and_resolving(editor: User, cue: models.Cue) -> None:
         True,
         "Too busy",
     )
-    assert (listed["at"], listed["resolved"], listed["replies"]) == (
-        "1:00:11:00",
-        False,
-        [],
+    assert (listed["at"], listed["to"]) == ("1:00:11:00", "")
+    assert (listed["resolved"], listed["replies"]) == (False, [])
+    # A note about a stretch of the video says where it ends.
+    stretch = review.add_comment(
+        v1, name="Dana", body="Thin this out", frame=48, user=None, end=96
     )
+    notes = tools.review_comments(cue.pk)["versions"][0]["notes"]
+    assert [(n["at"], n["to"]) for n in notes] == [
+        ("1:00:11:00", ""),
+        ("1:00:12:00", "1:00:14:00"),
+    ]
+    review.delete_comment(stretch, None)
     replied = tools.reply_to_comment(note.pk, "Thinned out in v2")
     assert replied["reply_to"] == note.pk
     assert replied["by"] == editor.get_full_name() == "Casey"

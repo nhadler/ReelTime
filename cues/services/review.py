@@ -3,10 +3,10 @@
 A cue has at most one link. Its page plays each version whose File Link
 is a Dropbox link to a file (and under it the version's Audio Link, the
 music alone, when it has one), and takes comments on that version: on the
-whole of it, or at a frame of the video. Notes take replies and can be
-resolved. A comment, a reply, resolving and removal are each one
-undoable change in the cue's project; making, changing and revoking the
-link aren't (see cues.review.ReviewLink).
+whole of it, at a frame of the video, or on a stretch of it. Notes take
+replies and can be resolved. A comment, a reply, resolving and removal
+are each one undoable change in the cue's project; making, changing and
+revoking the link aren't (see cues.review.ReviewLink).
 
 Used by the review page (cues.views.review) and the cue page's Review
 section.
@@ -231,11 +231,14 @@ class Comment:
         timecode: Where in the picture it's about, or "" for the whole
             version.
         replies: Its replies, oldest first.
+        until: Where the stretch it's about ends, or "" when it's about
+            one frame or the whole version.
     """
 
     comment: models.ReviewComment
     timecode: str
     replies: list[models.ReviewComment]
+    until: str = ""
 
     @property
     def resolved(self) -> bool:
@@ -260,13 +263,18 @@ def comments(
     notes.sort(
         key=lambda c: (c.frame is not None, c.frame or 0, c.created_at, c.pk)
     )
+
+    def shown(frame: int | None) -> str:
+        if frame is None:
+            return ""
+        return timecode.format_timecode(min(base + frame, last), rate)
+
     return [
         Comment(
             note,
-            ""
-            if note.frame is None
-            else timecode.format_timecode(min(base + note.frame, last), rate),
+            shown(note.frame),
             replies.get(note.pk, []),
+            shown(note.end_frame),
         )
         for note in notes
     ]
@@ -355,6 +363,7 @@ def add_comment(
     frame: int | None,
     user: User | None,
     parent: models.ReviewComment | None = None,
+    end: int | None = None,
 ) -> models.ReviewComment:
     """Adds a note to a version, or a reply to one, as an undoable change.
 
@@ -367,11 +376,15 @@ def add_comment(
             whole version. A reply has none.
         user: The signed-in user writing it, or None for a guest.
         parent: The note this replies to, on the same version.
+        end: The last frame of the stretch the note is about, which
+            starts at `frame`; None, or `frame` itself, for the one
+            frame.
 
     Raises:
         ReviewError: A name or comment is missing or too long, the frame
-            is out of range, the note replied to isn't one of this
-            version's, or the version has too many comments.
+            or the end is out of range, the end comes before the frame,
+            the note replied to isn't one of this version's, or the
+            version has too many comments.
     """
     cue = version.cue
     shown = _name(name, user)
@@ -380,10 +393,13 @@ def add_comment(
         if parent.version_id != version.pk or parent.parent_id is not None:
             raise ReviewError("That comment can't be replied to.")
         frame = None
-    if frame is not None and not 0 <= frame <= timecode.max_frames(
-        cue.project.rate
-    ):
+    last = timecode.max_frames(cue.project.rate)
+    if frame is None or end == frame:
+        end = None
+    if any(at is not None and not 0 <= at <= last for at in (frame, end)):
         raise ReviewError("That time isn't in the video.")
+    if frame is not None and end is not None and end < frame:
+        raise ReviewError("That stretch of the video ends before it starts.")
     what = f"Reply to {parent.name}" if parent else "Comment"
     who = shown if user else f"{shown} (guest)"
     label = f"{what} on {cue.number} {version.label} by {who}"
@@ -403,6 +419,7 @@ def add_comment(
         return models.ReviewComment.objects.create(
             version=version,
             frame=frame,
+            end_frame=end,
             member=user is not None,
             name=shown,
             body=text,

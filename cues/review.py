@@ -53,7 +53,8 @@ class ReviewLink(Timestamped):
 class ReviewComment(Timestamped):
     """A comment on one version, from its review page.
 
-    Either a note (on the whole version, or at a frame of its video) or
+    Either a note (on the whole version, at a frame of its video or on
+    a stretch of it) or
     a reply to one. A note can be resolved once it's dealt with. Tracked
     by history, so resolving undoes, and a comment deleted on its own or
     with its version or cue comes back with undo.
@@ -68,6 +69,9 @@ class ReviewComment(Timestamped):
     # version as a whole. The timecode shown follows from it (the
     # version's IN less the link's pre-roll), so fixing those moves it.
     frame = models.PositiveIntegerField(null=True, blank=True)
+    # The last frame of a note about a stretch of the video, which
+    # starts at `frame`; None for a note about the one frame.
+    end_frame = models.PositiveIntegerField(null=True, blank=True)
     # Whether a signed-in ReelTime user wrote it, rather than a guest.
     member = models.BooleanField(default=False)
     # The name shown: the guest's, or the user's when it was written.

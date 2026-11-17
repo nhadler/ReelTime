@@ -8,8 +8,13 @@
  *
  * Typing a comment pauses the video. A comment is about the frame on
  * screen unless "At" is unticked; Enter sends it, Shift+Enter breaks the
- * line. Reply on a comment turns the box into a reply to it. Clicking a
- * comment's timecode or its mark goes to its frame.
+ * line. While a comment is being written (the box has the keyboard or
+ * some text) it has a handle each side of the frame on screen; dragging
+ * one stretches the comment over part of the video, and it then stays
+ * where it was put until it's sent or reset. Reply on a comment turns
+ * the box into a reply to it. Clicking a comment's timecode or its mark
+ * goes to its frame. A comment about a stretch is a dot like any other,
+ * and its stretch of the track is coloured while the video is inside it.
  *
  * A version can also have its audio alone, in a small player under the
  * video; playing one pauses the other, and a comment made while
@@ -28,6 +33,7 @@ const video = document.getElementById('review-video');
 const player = document.getElementById('review-player');
 const seek = document.getElementById('review-seek');
 const marks = document.getElementById('review-marks');
+const spans = document.getElementById('review-spans');
 const time = document.getElementById('review-time');
 const list = document.getElementById('review-list');
 const form = document.getElementById('review-form');
@@ -35,6 +41,15 @@ const form = document.getElementById('review-form');
 let pending = null;
 // Whether the audio-only player was the last thing played.
 let listening = false;
+// The first and last frames the comment being written is about, once
+// an end of its marker has been dragged; null while it follows the frame
+// on screen.
+let pinned = null;
+// Whether the comment form, or the comment's marker, has the keyboard.
+let writing = false;
+// For each timed comment in the list, its stretch drawn on the track,
+// or null for a comment at one frame.
+let stretches = [];
 
 /**
  * A frame count as a timecode label, e.g. 1:02:14:08, with ';' before
@@ -119,35 +134,121 @@ function update() {
     time.value = text;
     seek.value = String(frame);
     seek.setAttribute('aria-valuetext', text);
-    const at = document.getElementById('review-at');
-    if (at) {
-      at.textContent = text;
-    }
+    showDraft();
     highlight(frame);
   }
 }
 
 /**
- * Marks the comment the video is at: the last one at or before the
- * frame, for the two seconds after it.
+ * @return {!Array<number>} The first and last frames a comment sent now
+ *     would be about: the same frame twice unless it was stretched.
+ */
+function span() {
+  const frame = pending ?? position();
+  return pinned ?? [frame, frame];
+}
+
+/** @return {boolean} Whether the comment being written is a timed one. */
+function placed() {
+  const field = document.getElementById('review-timed-field');
+  return Boolean(
+    field && !field.hidden && document.getElementById('review-timed').checked,
+  );
+}
+
+/**
+ * @return {boolean} Whether a comment is being written: the form has
+ *     the keyboard, the box some text, or the comment was stretched.
+ */
+function started() {
+  const body = document.getElementById('review-body');
+  return writing || pinned !== null || Boolean(body.value.trim());
+}
+
+/**
+ * Says in the comment box what the comment is about, and while one is
+ * being written puts its handles there on the timeline.
+ */
+function showDraft() {
+  const at = document.getElementById('review-at');
+  if (!at) {
+    return;
+  }
+  const [from, to] = span();
+  const texts = [from, to].map((frame) => label(config.firstFrame + frame));
+  at.textContent = to > from ? texts.join(' – ') : texts[0];
+  const last = lastFrame();
+  const draft = document.getElementById('review-draft');
+  draft.hidden = !last || !placed() || !started();
+  draft.classList.toggle('is-pinned', pinned !== null);
+  draft.style.setProperty('--at', String(from / (last || 1)));
+  draft.style.setProperty('--to', String(to / (last || 1)));
+  for (const [edge, id] of ['review-from', 'review-to'].entries()) {
+    const handle = document.getElementById(id);
+    handle.setAttribute('aria-valuemax', String(last));
+    handle.setAttribute('aria-valuenow', String([from, to][edge]));
+    handle.setAttribute('aria-valuetext', texts[edge]);
+  }
+  document.getElementById('review-unpin').hidden = pinned === null;
+  document.getElementById('review-hint').hidden = draft.hidden;
+}
+
+/**
+ * Keeps the comment where it was put, or with null lets it follow the
+ * frame on screen again.
+ * @param {?Array<number>} range Its first and last frames.
+ */
+function pin(range) {
+  pinned = range;
+  showDraft();
+}
+
+/**
+ * Moves one end of the comment's marker to a frame, never past the
+ * other end, and shows that frame.
+ * @param {number} edge 0 for its start, 1 for its end.
+ * @param {number} frame
+ */
+function stretch(edge, frame) {
+  const [from, to] = span();
+  const at = Math.min(Math.max(0, frame), lastFrame());
+  video.pause();
+  pin(edge ? [from, Math.max(at, from)] : [Math.min(at, to), to]);
+  show(pinned[edge]);
+}
+
+/**
+ * Marks the comments the video is at: every one about a stretch the
+ * frame is inside (its stretch then shows on the track), and the
+ * last one at a frame at or before it, for the two seconds after.
  * @param {number} frame
  */
 function highlight(frame) {
-  let current = null;
-  for (const item of list.querySelectorAll('[data-frame]')) {
+  let latest = null;
+  const items = list.querySelectorAll('[data-frame]');
+  for (const [index, item] of items.entries()) {
     const at = Number(item.dataset.frame);
-    item.classList.remove('is-current');
-    if (at <= frame && frame - at < 2 * FPS) {
-      current = item;
+    const end = item.dataset.end;
+    const inside = Boolean(end) && at <= frame && frame <= Number(end);
+    item.classList.toggle('is-current', inside);
+    stretches[index]?.classList.toggle('is-current', inside);
+    if (!end && at <= frame && frame - at < 2 * FPS) {
+      latest = item;
     }
   }
-  current?.classList.add('is-current');
+  latest?.classList.add('is-current');
 }
 
-/** Draws each timed comment as a mark on the scrubber. */
+/**
+ * Draws each timed comment as a dot over the scrubber, and for one
+ * about a stretch that stretch of the track, which shows while the
+ * video is inside it.
+ */
 function drawMarks() {
   const last = lastFrame();
   marks.replaceChildren();
+  spans.replaceChildren();
+  stretches = [];
   if (!last) {
     return;
   }
@@ -165,7 +266,18 @@ function drawMarks() {
     mark.style.setProperty('--at', String(frame / last));
     mark.addEventListener('click', () => show(frame));
     marks.append(mark);
+    let stretch = null;
+    if (item.dataset.end) {
+      const end = Math.min(Number(item.dataset.end), last);
+      stretch = document.createElement('span');
+      stretch.className = 'review-scrub__span';
+      stretch.style.setProperty('--at', String(frame / last));
+      stretch.style.setProperty('--to', String(end / last));
+      spans.append(stretch);
+    }
+    stretches.push(stretch);
   }
+  highlight(pending ?? position());
 }
 
 /** Plays or pauses. */
@@ -216,10 +328,14 @@ function sized() {
     pending = null;
     show(frame);
   }
+  showDraft();
   update();
 }
 
-/** Shows or hides the comment box's "At": only the video has frames. */
+/**
+ * Shows or hides the comment box's "At" and the comment's marker: only
+ * the video has frames. A stretch that was set goes with them.
+ */
 function showAt() {
   const field = document.getElementById('review-timed-field');
   if (field) {
@@ -227,6 +343,7 @@ function showAt() {
       listening ||
       player.classList.contains('is-broken') ||
       Boolean(document.getElementById('review-parent').value);
+    pin(field.hidden ? null : pinned);
   }
 }
 
@@ -355,10 +472,7 @@ list.addEventListener('click', (event) => {
     show(Number(button.dataset.seek));
   }
 });
-list.addEventListener('htmx:afterSwap', () => {
-  drawMarks();
-  highlight(position());
-});
+list.addEventListener('htmx:afterSwap', drawMarks);
 // A refresh says which list it has, and gets nothing back while that's
 // still the one. None is sent while a question is open over the page:
 // the button that asked it would be replaced before the answer.
@@ -400,11 +514,70 @@ if (form) {
   const body = document.getElementById('review-body');
   const timed = document.getElementById('review-timed');
   const frame = document.getElementById('review-frame');
+  const end = document.getElementById('review-end');
+  const draft = document.getElementById('review-draft');
+  document
+    .getElementById('review-unpin')
+    .addEventListener('click', () => pin(null));
+  // A comment on the whole cue has no place on the timeline.
+  timed.addEventListener('change', () => pin(null));
+  // The ends of the comment's marker: dragged, or moved a frame at a
+  // time with the arrow keys (a second with Shift).
+  for (const [edge, id] of ['review-from', 'review-to'].entries()) {
+    const handle = document.getElementById(id);
+    // How far from the end's own frame the handle was taken hold of.
+    let held = 0;
+    const under = (x) => {
+      const box = draft.getBoundingClientRect();
+      return Math.round(((x - held - box.left) / box.width) * lastFrame());
+    };
+    handle.addEventListener('pointerdown', (event) => {
+      if (event.button !== 0) {
+        return;
+      }
+      event.preventDefault();
+      const box = draft.getBoundingClientRect();
+      held =
+        event.clientX - box.left - (span()[edge] / lastFrame()) * box.width;
+      handle.setPointerCapture(event.pointerId);
+      handle.focus();
+    });
+    handle.addEventListener('pointermove', (event) => {
+      if (handle.hasPointerCapture(event.pointerId)) {
+        stretch(edge, under(event.clientX));
+      }
+    });
+    handle.addEventListener('keydown', (event) => {
+      const by = {ArrowLeft: -1, ArrowDown: -1, ArrowRight: 1, ArrowUp: 1}[
+        event.key
+      ];
+      if (!by || event.ctrlKey || event.metaKey || event.altKey) {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      stretch(edge, span()[edge] + by * (event.shiftKey ? Math.round(FPS) : 1));
+    });
+  }
+  // The comment's marker shows while the comment form, or the marker
+  // itself, has the keyboard; with some text typed it stays. The whole
+  // form, so nothing in it moves as it's clicked.
+  const ours = (target) =>
+    target instanceof Node && (form.contains(target) || draft.contains(target));
+  document.addEventListener('focusin', (event) => {
+    writing = ours(event.target);
+    showDraft();
+  });
+  document.addEventListener('focusout', (event) => {
+    writing = ours(event.relatedTarget);
+    showDraft();
+  });
   // The comment as it was last sent, so only that text is cleared.
   let sent = null;
   body.addEventListener('input', () => {
     video.pause();
     document.getElementById('review-audio-source')?.pause();
+    showDraft();
   });
   body.addEventListener('keydown', (event) => {
     // 229: Safari's Enter that finishes typing in an input method.
@@ -435,13 +608,14 @@ if (form) {
       body.focus();
     }
   });
-  // The frame on screen as the comment is sent, unless "At" is unticked
-  // or it's a reply.
+  // The frame on screen as the comment is sent, or the stretch its
+  // marker was dragged over, unless "At" is unticked or it's a reply.
   form.addEventListener('htmx:configRequest', (event) => {
-    const at = document.getElementById('review-timed-field');
-    const value = timed.checked && !at.hidden ? String(position()) : '';
-    frame.value = value;
-    event.detail.parameters.frame = value;
+    const [from, to] = placed() ? span() : [null, null];
+    frame.value = from === null ? '' : String(from);
+    end.value = from === null || to === from ? '' : String(to);
+    event.detail.parameters.frame = frame.value;
+    event.detail.parameters.end = end.value;
     sent = body.value;
   });
   document.body.addEventListener('review:posted', () => {
@@ -449,6 +623,7 @@ if (form) {
     if (body.value === sent) {
       body.value = '';
     }
+    pin(null);
     replyTo();
   });
   // The note being replied to was deleted meanwhile.

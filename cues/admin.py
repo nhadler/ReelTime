@@ -344,7 +344,14 @@ class ReviewLinkAdmin(admin.ModelAdmin):  # type: ignore[type-arg]
 class ReviewCommentAdmin(SimpleHistoryAdmin):  # type: ignore[misc]
     """Comments left on a version's review page."""
 
-    list_display = ("version", "name", "member", "frame", "created_at")
+    list_display = (
+        "version",
+        "name",
+        "member",
+        "frame",
+        "end_frame",
+        "created_at",
+    )
 
 
 @admin.register(models.ReviewView)

@@ -37,7 +37,8 @@ def review_comments(cue_id: int, version: str = "") -> dict[str, Any]:
     """A cue's review link and the comments left on its versions.
 
     Each version lists its notes, on the whole version first and then by
-    timecode ("at"), with their replies and whether they're resolved.
+    timecode ("at"), with their replies and whether they're resolved. A
+    note about a stretch of the video also says where it ends ("to").
     `version` names one version by its label, e.g. "v2"; by default
     every version with comments, and the current one, are listed.
 
@@ -69,6 +70,7 @@ def review_comments(cue_id: int, version: str = "") -> dict[str, Any]:
                     {
                         **_comment(note.comment),
                         "at": note.timecode,
+                        "to": note.until,
                         "resolved": note.resolved,
                         "replies": [_comment(reply) for reply in note.replies],
                     }

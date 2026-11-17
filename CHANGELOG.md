@@ -6,6 +6,15 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- **Review comments on a stretch of the video.** On a review page the
+  comment being written has a handle each side of the frame on screen;
+  dragging one stretches the comment over part of the video. Such a
+  comment lists both timecodes, and its part of the timeline is
+  coloured while the video is inside it.
+  `review_comments` (MCP) gives where it ends as `to`.
+
 ## [2.1.0] - 2026-11-13
 
 ### Added

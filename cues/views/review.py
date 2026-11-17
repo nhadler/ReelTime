@@ -422,6 +422,7 @@ def comments(request: HttpRequest, token: str) -> HttpResponse:
             name=request.POST.get("name", "") or request.session.get(NAME, ""),
             body=request.POST.get("body", ""),
             frame=_frame(request.POST.get("frame", "")),
+            end=_frame(request.POST.get("end", "")),
             user=member,
             parent=_parent(shown.version, request.POST.get("parent", "")),
         )

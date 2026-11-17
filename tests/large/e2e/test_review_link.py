@@ -1,5 +1,6 @@
 """A review link, as a guest uses it: watch, step frames, comment."""
 
+from collections.abc import Callable
 import pathlib
 import re
 from typing import Any
@@ -472,3 +473,160 @@ def test_watching_is_recorded(
         page.wait_for_timeout(100)
     assert visit.played >= 1
     assert visit.furthest is not None and visit.furthest >= 12
+
+
+def _at_frame_five(page: Any, app: str) -> Callable[[int], str]:
+    """Opens 1m01's review page at its sixth frame; returns frame → timecode."""
+    cue = _cue_with_video()
+    link = review.create(cue, None)
+    _dropbox(page)
+    start = cue.tc_in
+    assert start is not None
+    _watch(page, f"{app}/review/{link.token}/")
+    expect(page.locator("#review-seek")).not_to_have_attribute("max", "0")
+    for _ in range(5):
+        page.get_by_role("button", name="Forward one frame").click()
+    return lambda frames: timecode.format_timecode(
+        start + frames, cue.project.rate
+    )
+
+
+def test_a_comment_on_a_stretch_of_the_video(
+    page: Any, app: str, axe: Check, csp_violations: list[str]
+) -> None:
+    del csp_violations
+    tc = _at_frame_five(page, app)
+    at = page.locator("#review-at")
+    reset = page.get_by_role("button", name="Reset")
+    ends = page.get_by_role("slider", name="Where your comment ends")
+    box = page.get_by_label("Comment", exact=True)
+    # The comment's marker is on the timeline once the box is clicked
+    # into, at the frame on screen.
+    expect(at).to_have_text(tc(5))
+    expect(page.locator("#review-draft")).to_be_hidden()
+    expect(page.locator("#review-hint")).to_be_hidden()
+    box.click()
+    expect(page.locator("#review-draft")).to_be_visible()
+    expect(page.locator("#review-hint")).to_be_visible()
+    expect(reset).to_be_hidden()
+
+    # Its end moves with the arrow keys, and the video shows that frame.
+    ends.focus()
+    for _ in range(7):
+        page.keyboard.press("ArrowRight")
+    expect(at).to_have_text(f"{tc(5)} – {tc(12)}")
+    expect(page.locator("#review-time")).to_have_text(tc(12))
+    expect(ends).to_have_attribute("aria-valuetext", tc(12))
+    expect(reset).to_be_visible()
+    axe("review page with a comment stretched")
+    box.fill("Too busy through here")
+    box.press("Enter")
+    listed = page.locator(".review-comment")
+    expect(listed).to_have_count(1)
+    expect(listed).to_contain_text(f"{tc(5)} – {tc(12)}")
+    note = models.ReviewComment.objects.get()
+    assert (note.frame, note.end_frame) == (5, 12)
+    # Sent, it's a line on the timeline while the video is inside it,
+    # and the next comment is back at the frame on screen.
+    expect(page.locator(".review-scrub__span.is-current")).to_have_count(1)
+    expect(reset).to_be_hidden()
+    expect(at).to_have_text(tc(12))
+
+
+def test_dragging_the_ends_of_a_comment(
+    page: Any, app: str, csp_violations: list[str]
+) -> None:
+    del csp_violations
+    tc = _at_frame_five(page, app)
+    at = page.locator("#review-at")
+    readout = page.locator("#review-time")
+    starts = page.get_by_role("slider", name="Where your comment starts")
+    page.get_by_label("Comment", exact=True).click()
+
+    # The start, dragged three frames earlier with the mouse.
+    last = int(page.locator("#review-seek").get_attribute("max") or 0)
+    track = page.locator("#review-draft").bounding_box()
+    grip = starts.bounding_box()
+    assert last and track and grip
+    x, y = grip["x"] + grip["width"] / 2, grip["y"] + grip["height"] / 2
+    page.mouse.move(x, y)
+    page.mouse.down()
+    page.mouse.move(x - 3 * track["width"] / last, y, steps=4)
+    page.mouse.up()
+    expect(at).to_have_text(f"{tc(2)} – {tc(5)}")
+    expect(readout).to_have_text(tc(2))
+    # It stays put while the video moves on.
+    page.get_by_role("button", name="Forward one frame").click()
+    expect(readout).to_have_text(tc(3))
+    expect(at).to_have_text(f"{tc(2)} – {tc(5)}")
+    # An end never passes the other.
+    starts.focus()
+    page.keyboard.press("Shift+ArrowRight")
+    expect(at).to_have_text(tc(5))
+    expect(readout).to_have_text(tc(5))
+
+    # Reset: the comment is about the frame on screen again.
+    page.get_by_role("button", name="Reset").click()
+    page.get_by_role("button", name="Forward one frame").click()
+    expect(at).to_have_text(tc(6))
+    # With nothing typed and the box left, the marker is gone.
+    expect(page.locator("#review-draft")).to_be_hidden()
+    box = page.get_by_label("Comment", exact=True)
+    box.fill("This hit is late")
+    box.press("Enter")
+    expect(page.locator(".review-comment")).to_have_count(1)
+    late = models.ReviewComment.objects.get()
+    assert (late.frame, late.end_frame) == (6, None)
+
+
+def test_a_stretch_is_lit_while_the_video_is_inside_it(
+    page: Any, app: str, csp_violations: list[str]
+) -> None:
+    del csp_violations
+    cue = _cue_with_video()
+    link = review.create(cue, None)
+    version = cue.current_version
+    assert version is not None and cue.tc_in is not None
+    review.add_comment(
+        version, name="Dana", body="Too busy", frame=5, user=None, end=12
+    )
+    review.add_comment(
+        version, name="Dana", body="Late hit", frame=8, user=None
+    )
+    _dropbox(page)
+    start = timecode.format_timecode(cue.tc_in + 5, cue.project.rate)
+    _watch(page, f"{app}/review/{link.token}/")
+    expect(page.locator("#review-seek")).not_to_have_attribute("max", "0")
+    forward = page.get_by_role("button", name="Forward one frame")
+    listed = page.locator(".review-comment")
+    lit = re.compile("is-current")
+    line = page.locator(".review-scrub__span")
+    box = page.get_by_label("Comment", exact=True)
+
+    # A comment on the whole cue has no marker, and loses its stretch.
+    box.click()
+    page.locator("#review-to").focus()
+    page.keyboard.press("ArrowRight")
+    expect(page.get_by_role("button", name="Reset")).to_be_visible()
+    page.locator("#review-timed").uncheck()
+    expect(page.locator("#review-draft")).to_be_hidden()
+    expect(page.get_by_role("button", name="Reset")).to_be_hidden()
+    page.locator("#review-timed").check()
+    expect(page.locator("#review-draft")).to_be_visible()
+    page.get_by_role("button", name="Back one frame").click()
+
+    # Lit from its first frame to its last, whatever else starts inside,
+    # and only then drawn over its stretch of the timeline.
+    expect(listed.first).not_to_have_class(lit)
+    expect(line).not_to_have_class(lit)
+    page.get_by_role("button", name=f"Go to {start}").click()
+    expect(page.locator("#review-time")).to_have_text(start)
+    expect(listed.first).to_have_class(lit)
+    for _ in range(7):
+        forward.click()
+    expect(listed.first).to_have_class(lit)
+    expect(line).to_have_class(lit)
+    expect(listed.nth(1)).to_have_class(lit)
+    forward.click()
+    expect(listed.first).not_to_have_class(lit)
+    expect(line).not_to_have_class(lit)

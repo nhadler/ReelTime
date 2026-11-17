@@ -4,10 +4,10 @@
 {% if comments %}
   <ol class="review-list">
     {% for item in comments %}
-      <li class="review-comment{% if item.resolved %} is-resolved{% endif %}"{% if item.timecode %} data-frame="{{ item.comment.frame }}" data-summary="{{ item.comment.name }}: {{ item.comment.body|truncatechars:80 }}"{% endif %}>
+      <li class="review-comment{% if item.resolved %} is-resolved{% endif %}"{% if item.timecode %} data-frame="{{ item.comment.frame }}"{% if item.until %} data-end="{{ item.comment.end_frame }}"{% endif %} data-summary="{{ item.comment.name }}: {{ item.comment.body|truncatechars:80 }}"{% endif %}>
         <div class="review-comment__head">
           {% if item.timecode %}
-            <button class="review-comment__at tc" id="seek-{{ item.comment.pk }}" type="button" data-seek="{{ item.comment.frame }}" aria-label="Go to {{ item.timecode }}">{{ item.timecode }}</button>
+            <button class="review-comment__at tc" id="seek-{{ item.comment.pk }}" type="button" data-seek="{{ item.comment.frame }}" aria-label="Go to {{ item.timecode }}{% if item.until %}, the start of a comment that runs to {{ item.until }}{% endif %}">{{ item.timecode }}{% if item.until %} – {{ item.until }}{% endif %}</button>
           {% else %}
             <span class="review-comment__at review-comment__at--overall">Overall</span>
           {% endif %}
