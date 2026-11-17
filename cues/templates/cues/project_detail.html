@@ -78,13 +78,13 @@
         <fieldset class="segmented">
           <legend title="Keys 1 to 5">Row Size</legend>
           {% for value, label in row_sizes %}
-            <label><input type="radio" name="row-size" value="{{ value }}"{% if value == "medium" %} checked{% endif %}><span>{{ label }}</span></label>
+            <label class="segmented__choice"><input type="radio" name="row-size" value="{{ value }}"{% if value == "medium" %} checked{% endif %}> {{ label }}</label>
           {% endfor %}
         </fieldset>
         <fieldset class="segmented">
           <legend title="Key L">Timeline</legend>
-          <label><input type="radio" name="timeline-lanes" value="all" checked><span>All Lanes</span></label>
-          <label><input type="radio" name="timeline-lanes" value="collapsed"><span>Collapsed</span></label>
+          <label class="segmented__choice"><input type="radio" name="timeline-lanes" value="all" checked> All Lanes</label>
+          <label class="segmented__choice"><input type="radio" name="timeline-lanes" value="collapsed"> Collapsed</label>
         </fieldset>
       </div>
     </details>

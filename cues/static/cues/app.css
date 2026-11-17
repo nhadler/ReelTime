@@ -1723,54 +1723,6 @@ body:has(.overview) > .page {
   outline-offset: 2px;
 }
 
-/* Joined choice buttons over radio inputs (View menu). */
-.segmented {
-  margin: 0;
-  padding: var(--space) 0.4rem;
-  border: 0;
-}
-
-.segmented label {
-  display: inline-block;
-}
-
-.segmented input {
-  position: absolute;
-  opacity: 0;
-}
-
-.segmented span {
-  display: inline-block;
-  margin-right: -1px;
-  padding: 0.2rem 0.6rem;
-  border: 1px solid var(--rule);
-  background: var(--panel);
-  color: var(--slate);
-  font-size: var(--step--1);
-  cursor: pointer;
-}
-
-.segmented label:first-of-type span {
-  border-radius: var(--radius) 0 0 var(--radius);
-}
-
-.segmented label:last-of-type span {
-  border-radius: 0 var(--radius) var(--radius) 0;
-}
-
-.segmented input:checked + span {
-  position: relative;
-  z-index: 1;
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 22%, var(--panel));
-  color: var(--ink);
-}
-
-.segmented input:focus-visible + span {
-  outline: 2px solid var(--focus);
-  outline-offset: 1px;
-}
-
 .bottom-bar {
   display: flex;
   flex: none;
@@ -2585,8 +2537,9 @@ input[type='search'].grid-search {
   line-height: 1.6;
 }
 
-/* Import dialog */
-
+/* Pick one of a few: joined segments over radio inputs (dialogs, the
+   tools, the View menu). The one picked is outlined and tinted green,
+   its text ink so it reads in both themes. */
 .segmented {
   display: flex;
   flex-wrap: wrap;
@@ -2628,8 +2581,23 @@ input[type='search'].grid-search {
   position: relative;
   z-index: 1;
   border-color: var(--accent);
-  background: var(--panel-raised);
-  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 22%, var(--panel));
+  color: var(--ink);
+}
+
+/* On a phone a long group wraps, which would break the joined corners:
+   the segments stand apart instead. */
+@media (width <= 40rem) {
+  .segmented {
+    gap: 0.35rem;
+  }
+
+  .segmented .segmented__choice,
+  .segmented .segmented__choice:first-of-type,
+  .segmented .segmented__choice:last-of-type {
+    margin-left: 0;
+    border-radius: var(--radius);
+  }
 }
 
 /* Separate chips for groups long enough to wrap, where joined segments

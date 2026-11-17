@@ -19,6 +19,10 @@ this project follows [Semantic Versioning](https://semver.org/).
 - **Section titles** inside a page are one size everywhere: they were
   nearly as big as the page title on Conform, Backup and the Overview,
   and the size of body text in Settings.
+- **Pick-one choices** (Row Size in the View menu, Export, Format,
+  the tools) look the same everywhere: the one picked is tinted green
+  with its text in the normal colour. On a phone a group that wraps
+  stands apart instead of breaking its joined corners.
 
 ## [2.2.0] - 2026-11-17
 

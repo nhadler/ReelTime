@@ -699,7 +699,7 @@ def test_project_bar_and_progress_segments(editor: Client) -> None:
     assert 'id="grid-details"' in html
     assert 'id="grid-new-cue"' in html
     for size in ("Tiny", "Small", "Medium", "Large", "Auto"):
-        assert f"<span>{size}</span>" in html
+        assert f"> {size}</label>" in html
 
 
 def test_other_project_pages_share_the_bar(editor: Client) -> None:
