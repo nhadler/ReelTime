@@ -773,14 +773,41 @@ kbd.palette__detail {
   list-style: none;
 }
 
-.messages li {
-  padding: var(--space) calc(var(--space) * 2);
-  border-left: 3px solid var(--accent);
-  background: var(--panel);
+/* A message about the page or a form: a bar on the left, tinted by its
+   kind (done, a problem, a warning), the text in the normal colour.
+   After a full-page action (.messages), above a form sent back with
+   errors (.form-errors), in Import, and in a dialog that stays open. */
+.messages li,
+.form-errors,
+.import__problem,
+.import__notice,
+.dialog__note {
+  --kind: var(--accent);
+  margin: 0 0 calc(var(--space) * 2);
+  padding: var(--space) calc(var(--space) * 1.5);
+  border-left: 3px solid var(--kind);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: color-mix(in srgb, var(--kind) 10%, var(--panel));
+  color: var(--ink);
 }
 
-.messages .error {
-  border-left-color: var(--danger);
+.messages li {
+  margin: 0;
+}
+
+.messages li + li {
+  margin-top: var(--space);
+}
+
+.messages .error,
+.form-errors,
+.import__problem {
+  --kind: var(--danger);
+}
+
+.messages .warning,
+.import__notice {
+  --kind: var(--amber);
 }
 
 .errorlist {
@@ -800,15 +827,6 @@ kbd.palette__detail {
 [aria-invalid='true']:focus-visible,
 .field:has(> .errorlist) :is(input, select, textarea):focus-visible {
   outline-color: var(--danger);
-}
-
-/* Above a form sent back with errors (includes/form_errors.html). */
-.form-errors {
-  margin: 0 0 calc(var(--space) * 2);
-  padding: var(--space) calc(var(--space) * 1.5);
-  border-left: 3px solid var(--danger);
-  border-radius: 0 var(--radius) var(--radius) 0;
-  background: color-mix(in srgb, var(--danger) 10%, var(--panel));
 }
 
 .form-errors p {
@@ -1265,10 +1283,6 @@ details.form-section summary {
   font-size: var(--step-2);
   line-height: 1;
   cursor: pointer;
-}
-
-.dialog__note {
-  color: var(--accent);
 }
 
 .dialog__section {
@@ -2052,6 +2066,10 @@ body:has(.overview) > .page {
   font-size: var(--step--1);
 }
 
+.cue-head__status.is-error {
+  color: var(--danger);
+}
+
 .cue-head__actions {
   display: flex;
   align-items: center;
@@ -2687,18 +2705,10 @@ input[type='search'].grid-search {
 .import__problem,
 .import__notice {
   margin: calc(var(--space) * 2) 0 0;
-  padding: var(--space) calc(var(--space) * 1.5);
-  border-left: 3px solid var(--danger);
-  color: var(--danger);
 }
 
 .import__problem p {
   margin: 0;
-}
-
-.import__notice {
-  border-left-color: var(--amber);
-  color: var(--amber);
 }
 
 .import__summary {

@@ -26,6 +26,10 @@ this project follows [Semantic Versioning](https://semver.org/).
 - **Log a Turnover** and **Edit Turnover** keep the project bar, with
   the title and **?** link of the other project pages. Their notes on
   what unticking a reel does are in Help.
+- **Messages** have one shape: a bar on the left tinted by kind, the
+  text in the normal colour. Saved, error and Import's problems and
+  warnings looked different; the cue page's "Not saved." is now red and
+  names the field.
 
 ## [2.2.0] - 2026-11-17
 

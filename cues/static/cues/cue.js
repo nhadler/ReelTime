@@ -95,7 +95,13 @@ document.body.addEventListener('htmx:afterRequest', (event) => {
   // The server sends cues:changed only when it saved something.
   const trigger = event.detail.xhr.getResponseHeader('HX-Trigger') || '';
   const saved = event.detail.successful && trigger.includes('cues:changed');
-  status.textContent = saved ? 'Saved.' : 'Not saved.';
+  // A refusal names the field, in red; its reason is under the field.
+  const label = source.closest('.field')?.querySelector('label');
+  const name = label ? label.textContent.trim() : '';
+  status.textContent = saved
+    ? 'Saved.'
+    : `Not saved${name ? `: ${name}` : ''}.`;
+  status.classList.toggle('is-error', !saved);
 });
 
 // A dialog that added a cue or version asks the page to reload; wait

@@ -194,7 +194,9 @@ export function setUpNotesPanel(options) {
     const saved = row(cue.id)?.[field] ?? '';
     if (editor && cueId === cue.id) {
       status.textContent =
-        saved === text ? 'Saved' : 'Not saved: see the message under the grid';
+        saved === text
+          ? 'Saved.'
+          : 'Not saved: see the message under the grid.';
       status.classList.toggle('notes-panel__status--error', saved !== text);
     }
   }

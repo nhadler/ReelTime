@@ -68,7 +68,7 @@ def _saved(page: Any, cue: models.Cue, check: Any) -> None:
             break
         page.wait_for_timeout(100)
     assert check(_notes(cue)), _notes(cue)
-    expect(page.locator(".notes-panel__status")).to_have_text("Saved")
+    expect(page.locator(".notes-panel__status")).to_have_text("Saved.")
 
 
 def _to_end(page: Any) -> None:
