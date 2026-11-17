@@ -56,6 +56,8 @@ this project follows [Semantic Versioning](https://semver.org/).
   their edge.
 - **Dialog widths:** Export Cues and Export Cue Sheet are the medium
   width, like the other short dialogs, instead of the widest.
+- **Difficulty bars** use the app's own amber and red, so they follow
+  the light theme like everything else.
 
 ## [2.2.0] - 2026-11-17
 

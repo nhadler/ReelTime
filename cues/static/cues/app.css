@@ -94,6 +94,18 @@
   --radius: 6px;
   /* Under anything that floats over the page: menus, popovers, tips. */
   --shadow: 0 10px 30px rgb(0 0 0 / 35%);
+  /* Behind a modal dialog or the search palette. */
+  --backdrop: rgb(0 0 0 / 55%);
+  /* A chosen option among several (segmented, filter pills, view tiles). */
+  --selected: color-mix(in srgb, var(--accent) 22%, var(--panel));
+  /* Tips stay dark in both themes, like the system's own. */
+  --tooltip-bg: #08090c;
+  --tooltip-ink: #f2f2f0;
+  --tooltip-rule: rgb(255 255 255 / 10%);
+  --tooltip-key-rule: rgb(255 255 255 / 25%);
+  /* The switch's knob, white on either track. */
+  --knob: #fff;
+  --knob-ink: #5b6270;
   /* Two control heights: buttons, inputs and selects use one or the other. */
   --control-h: 2.25rem;
   --control-h-sm: 1.75rem;
@@ -393,7 +405,7 @@ a {
 }
 
 .palette::backdrop {
-  background: rgb(0 0 0 / 55%);
+  background: var(--backdrop);
 }
 
 .palette__field {
@@ -1276,7 +1288,7 @@ details.form-section summary {
 }
 
 .dialog::backdrop {
-  background: rgb(0 0 0 / 55%);
+  background: var(--backdrop);
 }
 
 .dialog__head {
@@ -1733,8 +1745,8 @@ body:has(.overview) > .page {
   width: 1.2rem;
   height: 1.2rem;
   border-radius: 50%;
-  background: #fff;
-  color: #5b6270;
+  background: var(--knob);
+  color: var(--knob-ink);
   transition: transform 0.12s;
 }
 
@@ -2661,7 +2673,7 @@ input[type='search'].grid-search {
   position: relative;
   z-index: 1;
   border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 22%, var(--panel));
+  background: var(--selected);
   color: var(--ink);
 }
 
@@ -3386,7 +3398,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 
 .filter-panel .menu__choice:has(input:checked) {
   border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 22%, var(--panel));
+  background: var(--selected);
   color: var(--ink);
 }
 
@@ -3787,11 +3799,11 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 }
 
 .grading__bars--2 {
-  fill: #fb923c;
+  fill: var(--amber);
 }
 
 .grading__bars--3 {
-  fill: #dc2626;
+  fill: var(--danger);
 }
 
 .grading__off {
@@ -4460,7 +4472,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 
 .view-tile--active {
   border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 22%, var(--panel));
+  background: var(--selected);
   color: var(--ink);
   cursor: grab;
 }
@@ -4807,11 +4819,11 @@ button.stats__name:hover,
   z-index: 1000;
   max-width: 18rem;
   padding: 0.35rem 0.6rem;
-  border: 1px solid rgb(255 255 255 / 10%);
+  border: 1px solid var(--tooltip-rule);
   border-radius: calc(var(--radius) - 2px);
-  background: #08090c;
+  background: var(--tooltip-bg);
   box-shadow: var(--shadow);
-  color: #f2f2f0;
+  color: var(--tooltip-ink);
   font-size: 0.75rem;
   font-weight: 500;
   line-height: 1.35;
@@ -4826,7 +4838,7 @@ button.stats__name:hover,
 .tooltip__key {
   margin-left: 0.45rem;
   padding: 0 0.3rem;
-  border: 1px solid rgb(255 255 255 / 25%);
+  border: 1px solid var(--tooltip-key-rule);
   border-radius: 3px;
   font-family: var(--mono);
   font-size: 0.7rem;
