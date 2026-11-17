@@ -210,6 +210,10 @@ def test_the_composer_sets_up_a_link_on_the_cue_page(
     section.get_by_role("button", name="Revoke Link").click()
     confirm = page.locator(".confirm-dialog")
     expect(confirm).to_contain_text("Revoke this link?")
+    # It can't be taken back, so its button is the red one.
+    expect(confirm.get_by_role("button", name="Revoke Link")).to_have_class(
+        re.compile("button--danger")
+    )
     confirm.get_by_role("button", name="Revoke Link").click()
     expect(
         section.get_by_role("button", name="Make a Review Link")

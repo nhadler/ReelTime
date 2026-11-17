@@ -12,6 +12,10 @@ this project follows [Semantic Versioning](https://semver.org/).
   dialog, and wrap on a phone instead of breaking their labels over
   several lines. The buttons of a question (Delete, Reset Schedule) no
   longer sit in a strip set in from the dialog's edges.
+- **Questions before something that can't be undone** always have a
+  red button: Revoke Link and Make a New Link were green. The buttons
+  that ask (Revoke Link on a cue, Delete in Settings → Views) are plain,
+  like the other buttons beside them.
 
 ## [2.2.0] - 2026-11-17
 

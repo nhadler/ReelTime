@@ -5072,10 +5072,6 @@ button.stats__name:hover,
   gap: 0.25rem;
 }
 
-.button--danger-text {
-  color: var(--danger);
-}
-
 .danger-zone {
   padding: calc(var(--space) * 2);
   border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent);

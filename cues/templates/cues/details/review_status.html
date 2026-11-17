@@ -25,7 +25,7 @@
                 hx-post="{% url 'cues:review_link' cue.pk %}" hx-vals='{"remove_password": "1"{% if selected %}, "version": "{{ selected.pk }}"{% endif %}}'
                 hx-target="#cue-review" hx-swap="outerHTML">Remove Password</button>
       {% endif %}
-      <button class="button button--quiet button--small button--danger-text" type="button"
+      <button class="button button--quiet button--small" type="button"
               hx-post="{% url 'cues:review_link' cue.pk %}" hx-vals='{"revoke": "1"{% if selected %}, "version": "{{ selected.pk }}"{% endif %}}'
               hx-target="#cue-review" hx-swap="outerHTML"
               hx-confirm="Revoke this link? It stops working for everyone who has it. The comments stay.">Revoke Link</button>

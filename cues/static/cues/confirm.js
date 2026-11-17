@@ -3,7 +3,8 @@
  * app's own dialog rather than the browser's confirm box.
  *
  * `ask` shows the question with a named action (Delete, Reset, Discard)
- * and Cancel. htmx's hx-confirm goes through it too. A field with
+ * and Cancel. A question is only asked before something that can't be
+ * taken back, so the action is always the red, destructive button. htmx's hx-confirm goes through it too. A field with
  * data-confirm-text keeps its form's danger button disabled until the
  * text is typed exactly (Delete Project, the title).
  */
@@ -26,6 +27,7 @@ function confirmDialog() {
     actions.className = 'form-actions';
     const yes = document.createElement('button');
     yes.value = 'yes';
+    yes.className = 'button button--danger';
     yes.dataset.confirmYes = '';
     const no = document.createElement('button');
     no.value = 'no';
@@ -50,8 +52,6 @@ export function ask(question, action = 'OK') {
   box.querySelector('#confirm-title').textContent = question;
   const yes = box.querySelector('[data-confirm-yes]');
   yes.textContent = action;
-  const danger = /^(Delete|Reset|Discard|Remove|Revert)/.test(action);
-  yes.className = danger ? 'button button--danger' : 'button';
   box.returnValue = '';
   box.showModal();
   yes.focus();

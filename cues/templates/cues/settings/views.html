@@ -33,7 +33,7 @@
                 {% if row.changed %}
                   <button class="button button--quiet button--small" type="submit" name="action" value="reset" data-confirm="Reset {{ row.view.name }} to the standard columns? Your changes to it are lost.">Reset to Standard</button>
                 {% elif not row.standard %}
-                  <button class="button button--quiet button--small button--danger-text" type="submit" name="action" value="delete" data-confirm="Delete the {{ row.view.name }} view?">Delete</button>
+                  <button class="button button--quiet button--small" type="submit" name="action" value="delete" data-confirm="Delete the {{ row.view.name }} view?">Delete</button>
                 {% endif %}
               </form>
             </td>
