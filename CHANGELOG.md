@@ -43,6 +43,10 @@ this project follows [Semantic Versioning](https://semver.org/).
 - **Icon buttons** (×, drag handles, the calendar button, the notes
   tools) are one size and shape, where there were seven sizes and three
   shapes.
+- **Status colours** are the same small square in the status editor
+  as in the filters and the Schedule (it was a circle there), and the
+  three kinds of count (Credits, notes cells, the filter button) share
+  one pill.
 
 ## [2.2.0] - 2026-11-17
 

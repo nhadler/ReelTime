@@ -480,9 +480,9 @@ a {
 
 .palette__tag {
   flex: none;
-  padding: 0 0.35rem;
+  padding: 0 0.4rem;
   border: 1px solid var(--rule);
-  border-radius: var(--radius);
+  border-radius: 999px;
   color: var(--slate);
   font-size: var(--step--1);
 }
@@ -1621,15 +1621,25 @@ body:has(.overview) > .page {
   color: var(--ink);
 }
 
-.toolbar__count {
-  min-width: 1.2rem;
-  padding: 0 0.3rem;
+/* A number beside what it counts: Credits' totals, a notes cell's
+   ticked boxes, the filters in use (green: they hide rows). */
+:is(.count-pill, .md-count, .toolbar__count) {
+  display: inline-block;
+  min-width: 1.5rem;
+  padding: 0 0.45rem;
   border-radius: 999px;
+  background: var(--panel-raised);
+  color: var(--slate);
+  font-size: var(--step--1);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.toolbar__count {
   background: var(--accent);
   color: var(--accent-ink);
-  font-size: 0.7rem;
-  line-height: 1.2rem;
-  text-align: center;
 }
 
 .toolbar__find {
@@ -3575,9 +3585,9 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 }
 
 .status-editor__dot {
-  width: 0.6rem;
-  height: 0.6rem;
-  border-radius: 50%;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
 }
 
 .status-editor__rule {
@@ -3974,12 +3984,6 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 .md-count {
   float: right;
   margin: 0 0 0 0.5em;
-  padding: 0 0.4em;
-  border-radius: 999px;
-  background: var(--panel-raised);
-  color: var(--slate);
-  font-size: var(--step--1);
-  font-variant-numeric: tabular-nums;
 }
 
 .md-count--done {
@@ -6269,17 +6273,6 @@ body:has(> .page--fill) {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-}
-
-.count-pill {
-  min-width: 1.5rem;
-  padding: 0.05rem 0.45rem;
-  border-radius: 999px;
-  background: var(--panel-raised);
-  color: var(--slate);
-  font-size: var(--step--1);
-  font-weight: 500;
-  text-align: center;
 }
 
 .party-table table {
