@@ -91,6 +91,16 @@
   --step-2: 1.35rem;
   --step-3: 1.62rem;
   --space: 0.5rem;
+  /* The spacing steps: 2, 4, 8, 12, 16, 24, 32, 48px. --space is step 3;
+     larger gaps are also written calc(var(--space) * n). */
+  --space-1: 0.125rem;
+  --space-2: 0.25rem;
+  --space-3: 0.5rem;
+  --space-4: 0.75rem;
+  --space-5: 1rem;
+  --space-6: 1.5rem;
+  --space-7: 2rem;
+  --space-8: 3rem;
   --radius: 6px;
   /* Under anything that floats over the page: menus, popovers, tips. */
   --shadow: 0 10px 30px rgb(0 0 0 / 35%);
@@ -288,8 +298,8 @@ a {
 .profile__who {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 0.6rem 0.4rem;
+  gap: var(--space-4);
+  padding: var(--space) 0.6rem 0.4rem;
 }
 
 .profile__names {
@@ -308,7 +318,7 @@ a {
 .profile__email,
 .profile__role {
   color: var(--slate);
-  font-size: 0.85rem;
+  font-size: var(--step--1);
 }
 
 /* The installed version at the foot of the menu; amber, with the newer
@@ -316,9 +326,9 @@ a {
 .profile__version {
   display: grid;
   margin: 0;
-  padding: 0.35rem 0.6rem 0.2rem;
+  padding: 0.35rem 0.6rem var(--space-2);
   color: var(--slate);
-  font-size: 0.85rem;
+  font-size: var(--step--1);
   font-variant-numeric: tabular-nums;
 }
 
@@ -360,7 +370,7 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.3rem 0.5rem 0.3rem 0.6rem;
+  padding: var(--space-2) var(--space) var(--space-2) 0.6rem;
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: transparent;
@@ -382,7 +392,7 @@ a {
 .topbar__search kbd {
   margin-left: 0.6rem;
   font-family: var(--mono);
-  font-size: 0.75rem;
+  font-size: var(--step--1);
 }
 
 /* The Ctrl+K palette: a search field with results under it, near the
@@ -439,13 +449,13 @@ a {
 .palette__results {
   flex: 1;
   margin: 0;
-  padding: 0.3rem;
+  padding: var(--space-2);
   overflow-y: auto;
   list-style: none;
 }
 
 .palette__heading {
-  padding: 0.6rem 0.6rem 0.25rem;
+  padding: 0.6rem 0.6rem var(--space-2);
   color: var(--slate);
   font-size: var(--step--1);
   font-weight: 600;
@@ -503,13 +513,13 @@ a {
 
 kbd.palette__detail {
   font-family: var(--mono);
-  font-size: 0.75rem;
+  font-size: var(--step--1);
 }
 
 /* A cue found by its notes: where it matched, under the cue. */
 .palette__item--snippet {
   flex-wrap: wrap;
-  row-gap: 0.15rem;
+  row-gap: var(--space-1);
 }
 
 .palette__snippet {
@@ -577,7 +587,7 @@ kbd.palette__detail {
   justify-content: center;
   gap: var(--space);
   min-height: var(--control-h);
-  padding: 0.25rem 0.9rem;
+  padding: var(--space-2) 0.9rem;
   border: 1px solid transparent;
   border-radius: var(--radius);
   background: var(--accent);
@@ -646,7 +656,7 @@ kbd.palette__detail {
 .sign-in__copy {
   /* Its margins come out of the width too, so a phone never scrolls. */
   width: min(32rem, 100% - clamp(1rem, 11vw, 10rem) - 1rem);
-  margin-inline: clamp(1rem, 11vw, 10rem) 1rem;
+  margin-inline: clamp(1rem, 11vw, 10rem) var(--space-5);
   overflow-wrap: anywhere;
 }
 
@@ -678,7 +688,7 @@ kbd.palette__detail {
 }
 
 .sign-in__button {
-  padding: 0.75rem 1.4rem;
+  padding: var(--space-4) 1.4rem;
   font-size: var(--step-1);
 }
 
@@ -726,7 +736,7 @@ kbd.palette__detail {
 
 .strip__cue text {
   font-family: var(--mono);
-  font-size: 13px;
+  font-size: var(--step--1);
 }
 
 .strip__cue--done rect {
@@ -820,7 +830,7 @@ kbd.palette__detail {
 }
 
 .errorlist {
-  margin: 0.25rem 0 0;
+  margin: var(--space-2) 0 0;
   padding: 0;
   list-style: none;
   color: var(--danger);
@@ -871,7 +881,7 @@ kbd.palette__detail {
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: var(--space-2);
 }
 
 .field--wide {
@@ -908,7 +918,7 @@ kbd.palette__detail {
    label above, and as tall as an input. */
 .fields > .field--check:not(.field--wide) {
   align-content: flex-start;
-  row-gap: 0.3rem;
+  row-gap: var(--space-2);
   padding-top: calc(var(--step--1) * 1.45 + 0.3rem);
 }
 
@@ -951,7 +961,7 @@ select,
 textarea {
   width: 100%;
   min-height: var(--control-h);
-  padding: 0.3rem 0.6rem;
+  padding: var(--space-2) 0.6rem;
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: var(--bay);
@@ -962,7 +972,7 @@ textarea {
 input[type='color'] {
   width: 2.6rem;
   height: 2.1rem;
-  padding: 0.15rem;
+  padding: var(--space-1);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: var(--bay);
@@ -987,7 +997,7 @@ input.tc {
 
 .table th,
 .table td {
-  padding: 0.5rem 0.75rem;
+  padding: var(--space) var(--space-4);
   border-bottom: 1px solid var(--rule);
   text-align: left;
   vertical-align: middle;
@@ -1187,7 +1197,7 @@ textarea:disabled {
   align-items: start;
 }
 
-@media (max-width: 40rem) {
+@media (width <= 40rem) {
   .project,
   .thumb-edit {
     grid-template-columns: 1fr;
@@ -1241,7 +1251,7 @@ textarea:disabled {
   display: flex;
   flex: none;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space);
   color: var(--slate);
   font-size: var(--step--1);
   white-space: nowrap;
@@ -1536,7 +1546,7 @@ body:has(.overview) > .page {
 }
 
 /* Below this width the links keep only their icons. */
-@media (max-width: 64rem) {
+@media (width <= 64rem) {
   .project-bar__links span {
     position: absolute;
     width: 1px;
@@ -1606,7 +1616,7 @@ body:has(.overview) > .page {
 .toolbar__button {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: var(--space-2);
   height: 2.1rem;
   padding: 0 0.4rem;
   border: 0;
@@ -1617,7 +1627,7 @@ body:has(.overview) > .page {
   background: none;
   color: var(--slate);
   font: inherit;
-  font-size: 0.8rem;
+  font-size: var(--step--1);
   white-space: nowrap;
   cursor: pointer;
   font-weight: 600;
@@ -1669,7 +1679,7 @@ body:has(.overview) > .page {
 
 .toolbar__search {
   width: 12rem;
-  padding: 0.25rem 0.5rem;
+  padding: var(--space-2) var(--space);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: var(--panel);
@@ -1697,7 +1707,7 @@ body:has(.overview) > .page {
   margin-left: calc(var(--space) * 3);
   color: var(--slate);
   font-family: var(--mono);
-  font-size: 0.75rem;
+  font-size: var(--step--1);
 }
 
 /* A two-state switch drawn over a real checkbox. */
@@ -1844,7 +1854,7 @@ body:has(.overview) > .page {
 }
 
 .project-note__title {
-  margin: 0 0 0.3rem;
+  margin: 0 0 var(--space-2);
   color: var(--slate);
   font-size: var(--step--1);
   font-weight: 600;
@@ -1853,7 +1863,7 @@ body:has(.overview) > .page {
 .project-note textarea {
   width: 100%;
   min-height: 5rem;
-  padding: 0.4rem 0.5rem;
+  padding: 0.4rem var(--space);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: var(--bay);
@@ -1865,24 +1875,24 @@ body:has(.overview) > .page {
 }
 
 .project-note__saved {
-  margin: 0.2rem 0 0;
+  margin: var(--space-2) 0 0;
   color: var(--slate);
-  font-size: 0.75rem;
+  font-size: var(--step--1);
 }
 
 /* After a conflict: the text saved elsewhere, under the kept draft. */
 .project-note__theirs {
   margin-top: 0.4rem;
-  padding: 0.4rem 0.5rem;
+  padding: 0.4rem var(--space);
   border-left: 3px solid var(--amber);
   background: var(--panel);
   font-size: var(--step--1);
 }
 
 .project-note__theirs-title {
-  margin: 0 0 0.2rem;
+  margin: 0 0 var(--space-2);
   color: var(--slate);
-  font-size: 0.75rem;
+  font-size: var(--step--1);
   font-weight: 600;
 }
 
@@ -1924,7 +1934,7 @@ body:has(.overview) > .page {
 
 .chip {
   display: inline-block;
-  margin-right: 0.3rem;
+  margin-right: var(--space-2);
   padding: 0 0.4rem;
   border: 1px solid var(--rule);
   border-radius: 999px;
@@ -1955,7 +1965,7 @@ body:has(.overview) > .page {
 }
 
 .view-tab {
-  padding: 0.5rem 0.9rem;
+  padding: var(--space) 0.9rem;
   border: 0;
   border-top: 2px solid transparent;
   border-right: 1px solid var(--rule);
@@ -2004,7 +2014,7 @@ body:has(.overview) > .page {
   opacity: 1;
 }
 
-@media (max-width: 40rem) {
+@media (width <= 40rem) {
   /* Narrow: the wordmark, Search and the profile picture share the first
      line, and the page links get the second to themselves. */
   .topbar {
@@ -2197,7 +2207,7 @@ body:has(.overview) > .page {
   grid-template-columns: auto 1fr;
   align-items: baseline;
   gap: 0 var(--space);
-  padding: 0.4rem 0.5rem;
+  padding: 0.4rem var(--space);
   border-left: 3px solid transparent;
   border-radius: 0 var(--radius) var(--radius) 0;
   color: var(--ink);
@@ -2335,7 +2345,7 @@ body:has(.overview) > .page {
   top: calc(100% + 0.3rem);
   right: 0;
   min-width: 14rem;
-  padding: 0.3rem;
+  padding: var(--space-2);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: var(--panel-raised);
@@ -2379,7 +2389,7 @@ body:has(.overview) > .page {
 }
 
 .menu__rule {
-  margin: 0.3rem 0.2rem;
+  margin: var(--space-2) var(--space-2);
   border: 0;
   border-top: 1px solid var(--rule);
 }
@@ -2425,7 +2435,7 @@ body:has(.overview) > .page {
   display: flex;
   align-items: center;
   gap: var(--space);
-  padding: 0.3rem 0.4rem;
+  padding: var(--space-2) 0.4rem;
   border-radius: calc(var(--radius) - 2px);
   color: var(--ink);
   text-decoration: none;
@@ -2468,7 +2478,7 @@ body:has(.overview) > .page {
 }
 
 .history__meta {
-  margin: 0 0 0.3rem;
+  margin: 0 0 var(--space-2);
   color: var(--slate);
   font-size: var(--step--1);
 }
@@ -2584,7 +2594,7 @@ input[type='search'].grid-search {
 .menu__group legend {
   float: left;
   width: 100%;
-  margin-bottom: 0.2rem;
+  margin-bottom: var(--space-2);
   color: var(--slate);
   font-size: var(--step--1);
   font-weight: 600;
@@ -2621,7 +2631,7 @@ input[type='search'].grid-search {
 .cue-number {
   display: block;
   width: 100%;
-  padding: 0 0.5rem;
+  padding: 0 var(--space);
   border-radius: 2px;
   box-shadow: inset 3px 0 0 var(--chip, transparent);
   font-family: var(--mono);
@@ -2643,7 +2653,7 @@ input[type='search'].grid-search {
 
 .segmented legend {
   width: 100%;
-  margin-bottom: 0.3rem;
+  margin-bottom: var(--space-2);
   color: var(--slate);
   font-size: var(--step--1);
   font-weight: 500;
@@ -2653,7 +2663,7 @@ input[type='search'].grid-search {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.35rem 0.75rem;
+  padding: 0.35rem var(--space-4);
   border: 1px solid var(--rule);
   margin-left: -1px;
   cursor: pointer;
@@ -2750,7 +2760,7 @@ input[type='search'].grid-search {
 }
 
 .import__source legend {
-  padding: 0 0.3rem;
+  padding: 0 var(--space-2);
   color: var(--slate);
   font-size: var(--step--1);
   font-weight: 600;
@@ -2795,7 +2805,7 @@ input[type='search'].grid-search {
 }
 
 .import__details ul {
-  margin: 0.3rem 0 0;
+  margin: var(--space-2) 0 0;
 }
 
 .import__columns {
@@ -2967,7 +2977,7 @@ textarea.copy-json {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.3rem;
+  gap: var(--space-2);
   padding: calc(var(--space) * 3) calc(var(--space) * 2);
   border: 1.5px dashed var(--rule);
   border-radius: var(--radius);
@@ -3049,7 +3059,7 @@ textarea.copy-json {
   border-top: 1px solid var(--rule);
 }
 
-@media (max-width: 48rem) {
+@media (width <= 48rem) {
   .band {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -3081,7 +3091,7 @@ textarea.copy-json {
 .numbering {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--space-2);
   margin: 0;
   padding: 0;
   border: 0;
@@ -3193,7 +3203,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 .calendar__grid {
   display: grid;
   grid-template-columns: repeat(7, 2.1rem);
-  gap: 0.2rem;
+  gap: var(--space-2);
 }
 
 .calendar__weekday {
@@ -3273,7 +3283,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 }
 
 .deadline legend {
-  margin-bottom: 0.3rem;
+  margin-bottom: var(--space-2);
   color: var(--slate);
   font-size: var(--step--1);
   font-weight: 500;
@@ -3327,7 +3337,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  gap: 0.3rem;
+  gap: var(--space-2);
 }
 
 .cue-form__rule {
@@ -3378,7 +3388,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 /* Filter choices as toggle pills over real checkboxes and radios. */
 .filter-panel .menu__choice {
   position: relative;
-  padding: 0.15rem 0.6rem;
+  padding: var(--space-1) 0.6rem;
   border: 1px solid var(--rule);
   border-radius: 999px;
   background: var(--panel);
@@ -3474,7 +3484,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
   display: block;
   width: 100%;
   overflow: hidden;
-  padding: 0 0.5rem 0 0.6rem;
+  padding: 0 var(--space) 0 0.6rem;
   border-radius: 4px;
   background: color-mix(in srgb, var(--chip, transparent) 20%, var(--panel));
   box-shadow: inset 3px 0 0 var(--chip, transparent);
@@ -3490,7 +3500,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 .written {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space);
   width: 100%;
   height: 100%;
 }
@@ -3561,8 +3571,8 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 
 .status-editor__filter {
   width: 100%;
-  margin-bottom: 0.3rem;
-  padding: 0.3rem 0.45rem;
+  margin-bottom: var(--space-2);
+  padding: var(--space-2) 0.45rem;
   border: 1px solid var(--rule);
   border-radius: 4px;
   background: var(--panel);
@@ -3583,7 +3593,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.35rem 0.5rem;
+  padding: 0.35rem var(--space);
   border-radius: 4px;
   font-size: var(--step--1);
   cursor: pointer;
@@ -3601,7 +3611,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 }
 
 .status-editor__rule {
-  margin: 0.25rem 0;
+  margin: var(--space-2) 0;
   border-top: 1px solid var(--rule);
 }
 
@@ -3610,7 +3620,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
   position: fixed;
   z-index: 50;
   min-width: 14rem;
-  padding: 0.3rem;
+  padding: var(--space-2);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: var(--panel-raised);
@@ -3624,7 +3634,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 }
 
 .context-menu__rule {
-  margin: 0.3rem 0.2rem;
+  margin: var(--space-2) var(--space-2);
   border: 0;
   border-top: 1px solid var(--rule);
 }
@@ -3698,7 +3708,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 
 .timeline__label {
   display: block;
-  padding: 0.3rem 0.6rem;
+  padding: var(--space-2) 0.6rem;
   overflow: hidden;
   border-bottom: 1px solid var(--rule);
   color: var(--slate);
@@ -3710,7 +3720,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 .timeline__ruler {
   position: relative;
   height: 1.2rem;
-  margin-bottom: 0.3rem;
+  margin-bottom: var(--space-2);
   border-bottom: 1px solid var(--rule);
   color: var(--slate);
   font-size: 0.62rem;
@@ -3720,7 +3730,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 .timeline__minute,
 .timeline__dot {
   position: absolute;
-  padding-left: 0.2rem;
+  padding-left: var(--space-2);
 }
 
 .timeline__dot {
@@ -3735,7 +3745,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 .timeline__cue {
   position: absolute;
   height: 18px;
-  padding: 0 0.3rem;
+  padding: 0 var(--space-2);
   overflow: hidden;
   border: 0;
   border-radius: 2px;
@@ -3922,7 +3932,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 
 .md .md-heading {
   margin: 0.9em 0 0.35em;
-  font-weight: 650;
+  font-weight: 600;
   line-height: 1.3;
 }
 
@@ -4007,7 +4017,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
   max-width: min(34rem, 80vw);
   max-height: min(24rem, 60vh);
   overflow: auto;
-  padding: 0.75rem 0.9rem;
+  padding: var(--space-4) 0.9rem;
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: var(--panel-raised);
@@ -4073,7 +4083,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
   z-index: 1;
   top: calc(var(--space) * -1.5);
   display: flex;
-  gap: 0.15rem;
+  gap: var(--space-1);
   margin: calc(var(--space) * -1.5) 0 0.4rem;
   padding: calc(var(--space) * 1.5) 0 0.4rem;
   background: var(--panel);
@@ -4107,7 +4117,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 .notes-panel__doc {
   flex: 1 0 auto;
   min-height: 12rem;
-  padding: 0.6rem 0.75rem;
+  padding: 0.6rem var(--space-4);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: var(--bay);
@@ -4133,7 +4143,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 
 .notes-panel__doc :is(h1, h2, h3) {
   margin: 0.9em 0 0.35em;
-  font-weight: 650;
+  font-weight: 600;
   line-height: 1.3;
 }
 
@@ -4227,7 +4237,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
   color: var(--danger);
 }
 
-@media (max-width: 48rem) {
+@media (width <= 48rem) {
   .side-panel--notes {
     width: 100%;
   }
@@ -4237,7 +4247,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 .chip-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem;
+  gap: var(--space-2);
   overflow: hidden;
 }
 
@@ -4264,7 +4274,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 }
 
 .chips-editor__current {
-  margin: 0 0 0.3rem;
+  margin: 0 0 var(--space-2);
   padding: 0;
   list-style: none;
 }
@@ -4273,7 +4283,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.2rem 0.3rem;
+  padding: var(--space-2) var(--space-2);
   font-size: var(--step--1);
 }
 
@@ -4287,7 +4297,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 
 .chips-editor__time {
   width: 3.6rem;
-  padding: 0.1rem 0.3rem;
+  padding: 0.1rem var(--space-2);
   border: 1px solid var(--rule);
   border-radius: 4px;
   background: var(--panel);
@@ -4352,7 +4362,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
   align-items: start;
 }
 
-@media (max-width: 40rem) {
+@media (width <= 40rem) {
   .cue-card {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -4370,7 +4380,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 }
 
 /* Picture, Notes and Project settings: icon-only in narrow windows. */
-@media (max-width: 64rem) {
+@media (width <= 64rem) {
   .project-bar__links .project-bar__icon {
     padding: 0.4rem;
   }
@@ -4400,7 +4410,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 
 .view-tab__menu,
 .view-tab--add {
-  padding: 0 0.5rem;
+  padding: 0 var(--space);
   border: 0;
   background: none;
   color: var(--slate);
@@ -4437,7 +4447,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 .view-editor input[type='search'],
 .view-editor select {
   min-height: var(--control-h);
-  padding: 0.3rem 0.6rem;
+  padding: var(--space-2) 0.6rem;
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: var(--bay);
@@ -4460,7 +4470,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 }
 
 .view-tile {
-  padding: 0.25rem 0.6rem;
+  padding: var(--space-2) 0.6rem;
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: var(--panel);
@@ -4492,7 +4502,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
   background: none;
   color: var(--accent);
   font: inherit;
-  font-size: 0.75rem;
+  font-size: var(--step--1);
   font-weight: 500;
   text-decoration: underline;
   text-underline-offset: 0.15em;
@@ -4555,8 +4565,8 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 .renumber-list__row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.15rem 0;
+  gap: var(--space);
+  padding: var(--space-1) 0;
 }
 
 .renumber-list__old {
@@ -4610,7 +4620,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 .stats__heading {
   display: flex;
   align-items: baseline;
-  gap: 0.5rem;
+  gap: var(--space);
   margin: 0 0 0.4rem;
   color: var(--ink);
   font-size: var(--step--1);
@@ -4618,15 +4628,15 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 }
 
 .stats__note {
-  margin: 0.3rem 0 0;
+  margin: var(--space-2) 0 0;
   color: var(--slate);
-  font-size: 0.75rem;
+  font-size: var(--step--1);
   font-weight: 400;
 }
 
 .stats__link {
   margin-left: auto;
-  font-size: 0.75rem;
+  font-size: var(--step--1);
   font-weight: 400;
 }
 
@@ -4638,9 +4648,9 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 }
 
 .stats__table thead th {
-  padding: 0 0 0.2rem;
+  padding: 0 0 var(--space-2);
   color: var(--slate);
-  font-size: 0.7rem;
+  font-size: var(--step--1);
   font-weight: 500;
   text-align: right;
 }
@@ -4650,14 +4660,14 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
   align-items: center;
   gap: 0.4rem;
   min-width: 0;
-  padding: 0.15rem 0;
+  padding: var(--space-1) 0;
   font-weight: 400;
   text-align: left;
 }
 
 .stats__table td {
   width: 3.6rem;
-  padding: 0.15rem 0 0.15rem 0.5rem;
+  padding: var(--space-1) 0 var(--space-1) var(--space);
   color: var(--slate);
   text-align: right;
   white-space: nowrap;
@@ -4671,7 +4681,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 .stats__swatch-button {
   display: inline-flex;
   flex: none;
-  padding: 0.15rem;
+  padding: var(--space-1);
   border: 0;
   border-radius: 3px;
   background: none;
@@ -4762,7 +4772,7 @@ button.stats__name:hover,
 .stats__figures dt,
 .stats__details dt {
   color: var(--slate);
-  font-size: 0.75rem;
+  font-size: var(--step--1);
 }
 
 .stats__figures dd {
@@ -4776,7 +4786,7 @@ button.stats__name:hover,
 .stats__details div {
   display: flex;
   justify-content: space-between;
-  padding: 0.15rem 0;
+  padding: var(--space-1) 0;
   font-size: var(--step--1);
 }
 
@@ -4795,8 +4805,8 @@ button.stats__name:hover,
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.2rem 0;
+  gap: var(--space);
+  padding: var(--space-2) 0;
   font-size: var(--step--1);
   cursor: pointer;
 }
@@ -4824,7 +4834,7 @@ button.stats__name:hover,
   background: var(--tooltip-bg);
   box-shadow: var(--shadow);
   color: var(--tooltip-ink);
-  font-size: 0.75rem;
+  font-size: var(--step--1);
   font-weight: 500;
   line-height: 1.35;
   white-space: pre-line;
@@ -4837,11 +4847,11 @@ button.stats__name:hover,
 
 .tooltip__key {
   margin-left: 0.45rem;
-  padding: 0 0.3rem;
+  padding: 0 var(--space-2);
   border: 1px solid var(--tooltip-key-rule);
   border-radius: 3px;
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: var(--step--1);
   white-space: nowrap;
 }
 
@@ -4895,7 +4905,7 @@ button.stats__name:hover,
 
 .form-section__name a {
   display: block;
-  margin-top: 0.25rem;
+  margin-top: var(--space-2);
   color: var(--slate);
   font-size: var(--step--1);
 }
@@ -4954,7 +4964,7 @@ button.stats__name:hover,
   border-top: 1px solid var(--rule);
 }
 
-@media (max-width: 48rem) {
+@media (width <= 48rem) {
   .settings-sheet .form-section {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -4998,7 +5008,7 @@ button.stats__name:hover,
   top: var(--space);
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: var(--space-1);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -5029,7 +5039,7 @@ button.stats__name:hover,
 }
 
 /* Narrow windows: the pages become a row of tabs that scrolls. */
-@media (max-width: 48rem) {
+@media (width <= 48rem) {
   .settings {
     grid-template-columns: minmax(0, 1fr);
     gap: calc(var(--space) * 2);
@@ -5071,7 +5081,7 @@ button.stats__name:hover,
 
 .settings-views__actions form {
   display: inline-flex;
-  gap: 0.25rem;
+  gap: var(--space-2);
 }
 
 .danger-zone {
@@ -5108,7 +5118,7 @@ button.stats__name:hover,
   display: flex;
   align-items: center;
   gap: var(--space);
-  padding: 0.25rem 0;
+  padding: var(--space-2) 0;
   border-top: 1px solid var(--rule);
 }
 
@@ -5123,7 +5133,7 @@ button.stats__name:hover,
   font-variant-numeric: tabular-nums;
 }
 
-@media (max-width: 30rem) {
+@media (width <= 30rem) {
   .log-written__fields {
     grid-template-columns: 1fr;
   }
@@ -5226,7 +5236,7 @@ a.conform:hover {
 }
 
 .project-menu__heading {
-  margin: 0.3rem 0.6rem 0.1rem;
+  margin: var(--space-2) 0.6rem 0.1rem;
   color: var(--slate);
   font-size: var(--step--1);
   font-weight: 600;
@@ -5236,7 +5246,7 @@ a.conform:hover {
 .project-bar__links .project-menu__panel .menu__item {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--space-5);
   padding: 0.45rem 0.6rem;
   border-radius: calc(var(--radius) - 2px);
   color: var(--ink);
@@ -5258,7 +5268,7 @@ a.conform:hover {
 /* The breakdown under the project header's figures, and its line on
    Projects cards: quiet, wrapping chips with a status swatch. */
 .breakdown {
-  margin-top: 0.3rem;
+  margin-top: var(--space-2);
   font-size: var(--step--1);
 }
 
@@ -5288,7 +5298,7 @@ a.conform:hover {
 .breakdown__list dt {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: var(--space-2);
   color: var(--slate);
 }
 
@@ -5364,7 +5374,7 @@ a.conform:hover {
 }
 
 .help__body li + li {
-  margin-top: 0.3rem;
+  margin-top: var(--space-2);
 }
 
 .help__body code {
@@ -5532,7 +5542,7 @@ body:has(.swatches__choice.tone-7 input:checked) {
 }
 
 .swatches legend {
-  margin-bottom: 0.3rem;
+  margin-bottom: var(--space-2);
   padding: 0;
   color: var(--slate);
   font-size: var(--step--1);
@@ -5550,7 +5560,7 @@ body:has(.swatches__choice.tone-7 input:checked) {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.3rem 0.65rem 0.3rem 0.4rem;
+  padding: var(--space-2) 0.65rem var(--space-2) 0.4rem;
   border: 1px solid var(--rule);
   border-radius: 999px;
   color: var(--slate);
@@ -5651,7 +5661,7 @@ body:has(.swatches__choice.tone-7 input:checked) {
 }
 
 .toggle__option {
-  padding: 0.2rem 0.7rem;
+  padding: var(--space-2) 0.7rem;
   border-radius: calc(var(--radius) - 2px);
   color: var(--slate);
   font-size: var(--step--1);
@@ -5703,7 +5713,7 @@ a.toggle__option:hover {
 .cal-day__link {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--space-2);
   height: 100%;
   padding: calc(var(--space) * 0.5);
   color: var(--ink);
@@ -5779,7 +5789,7 @@ body:has(> .page--fill) {
   text-overflow: ellipsis;
 }
 
-@media (max-width: 64rem) {
+@media (width <= 64rem) {
   body:has(> .page--fill) {
     display: block;
     height: auto;
@@ -5888,7 +5898,7 @@ body:has(> .page--fill) {
 /* A cue, as an event: the project's tone down its edge. */
 .cal-cue {
   display: block;
-  padding: 0.2rem 0.35rem 0.25rem;
+  padding: var(--space-2) 0.35rem var(--space-2);
   border-left: 3px solid var(--tone, var(--slate));
   border-radius: 0 4px 4px 0;
   background: color-mix(in srgb, var(--tone, var(--slate)) 14%, var(--bay));
@@ -6036,7 +6046,7 @@ body:has(> .page--fill) {
 
 .day-cue__meta {
   display: block;
-  margin-top: 0.15rem;
+  margin-top: var(--space-1);
   color: var(--slate);
   font-size: var(--step--1);
 }
@@ -6093,7 +6103,7 @@ body:has(> .page--fill) {
   display: inline-flex;
   align-items: baseline;
   gap: 0.4em;
-  padding: 0.2rem 0.6rem;
+  padding: var(--space-2) 0.6rem;
   border: 1px solid var(--rule);
   border-radius: 999px;
   background: var(--bay);
@@ -6117,7 +6127,7 @@ body:has(> .page--fill) {
 
 /* Narrower: the sidebar goes under the calendar; on a phone the month's
    and the Overview's days show how many cues instead of the cues. */
-@media (max-width: 64rem) {
+@media (width <= 64rem) {
   .schedule {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -6127,7 +6137,7 @@ body:has(> .page--fill) {
   }
 }
 
-@media (max-width: 40rem) {
+@media (width <= 40rem) {
   .cal--month .cal-day__link,
   .cal--strip .cal-day__link {
     min-height: 4rem;
@@ -6267,7 +6277,7 @@ body:has(> .page--fill) {
 .credit-card__head .button {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: var(--space-2);
 }
 
 .party-table table {
@@ -6306,7 +6316,7 @@ body:has(> .page--fill) {
 /* Quiet fields: text until hovered, a field when typed in. */
 .party-table td input:not([type='checkbox']) {
   width: 100%;
-  padding: 0.3rem 0.45rem;
+  padding: var(--space-2) 0.45rem;
   border: 1px solid transparent;
   border-radius: 4px;
   background: transparent;
@@ -6334,7 +6344,7 @@ body:has(> .page--fill) {
   display: grid;
   flex: 1;
   grid-template-columns: 1fr 1fr;
-  gap: 0.25rem;
+  gap: var(--space-2);
 }
 
 .party-name__fields--one {
@@ -6500,7 +6510,7 @@ td.party-table__ipi {
   font-size: var(--step--1);
 }
 
-@media (max-width: 64rem) {
+@media (width <= 64rem) {
   .credits {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -6510,7 +6520,7 @@ td.party-table__ipi {
   }
 }
 
-@media (max-width: 48rem) {
+@media (width <= 48rem) {
   .party-table thead,
   .party-table__uses {
     display: none;
@@ -6530,7 +6540,7 @@ td.party-table__ipi {
 /* Phones: the project bar's figures flow as lines instead of a grid
    that kept every project page 535px wide, and its menu opens as a
    sheet along the bottom rather than off the left edge. */
-@media (max-width: 40rem) {
+@media (width <= 40rem) {
   .project-bar {
     padding: var(--space) calc(var(--space) * 2);
   }
@@ -6576,7 +6586,7 @@ td.party-table__ipi {
 
 /* Phones: wide tables scroll inside the page instead of widening it,
    and the top bar's and settings' links scroll sideways. */
-@media (max-width: 40rem) {
+@media (width <= 40rem) {
   .page table {
     display: block;
     position: relative; /* keeps visually-hidden labels inside it */
@@ -6685,7 +6695,7 @@ td.party-table__ipi {
   display: flex;
   flex-wrap: wrap;
   gap: 0 var(--space);
-  margin: 0.15rem 0 0;
+  margin: var(--space-1) 0 0;
   color: var(--slate);
   font-size: var(--step--1);
 }
@@ -6797,7 +6807,7 @@ td.party-table__ipi {
   margin-left: auto;
 }
 
-@media (max-width: 40rem) {
+@media (width <= 40rem) {
   .project {
     /* Six even columns: the three figures take two each. */
     grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -6947,7 +6957,7 @@ td.party-table__ipi {
 }
 
 .field--readout .field__value {
-  margin: 0.15rem 0 0;
+  margin: var(--space-1) 0 0;
 }
 
 /* Editable lists: a handle to drag, small colour swatches, × to remove
@@ -7019,7 +7029,7 @@ td.party-table__ipi {
 .inline-table__add {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: var(--space-2);
   margin-top: var(--space);
 }
 
@@ -7063,7 +7073,7 @@ td.party-table__ipi {
 }
 
 .cue-index a {
-  padding: 0.2rem 0.5rem;
+  padding: var(--space-2) var(--space);
   border-left: 2px solid var(--rule);
   color: var(--ink);
   font-size: var(--step--1);
@@ -7082,7 +7092,7 @@ td.party-table__ipi {
 
 /* On a phone the page is one column, so the index would fill the first
    screen before the fields; scrolling does its job. */
-@media (max-width: 48rem) {
+@media (width <= 48rem) {
   .cue-index {
     display: none;
   }
@@ -7166,7 +7176,7 @@ td.party-table__ipi {
   display: none;
 }
 
-@media (max-width: 40rem) {
+@media (width <= 40rem) {
   .cal--week .cal__weekdays {
     display: none;
   }
@@ -7234,7 +7244,7 @@ form:has(input[name='confirm']:valid) .backup__restore {
 
 .day-cues__item {
   display: grid;
-  gap: 0.25rem;
+  gap: var(--space-2);
 }
 
 .day-cue__actions {
@@ -7281,7 +7291,7 @@ form:has(input[name='confirm']:valid) .backup__restore {
 }
 
 /* On a phone the grid's toolbar wraps rather than widen the page. */
-@media (max-width: 40rem) {
+@media (width <= 40rem) {
   .toolbar,
   .toolbar__menus {
     flex-wrap: wrap;
@@ -7428,7 +7438,7 @@ button.review-comment__at:hover {
 }
 
 .review-versions__item {
-  padding: 0.2rem 0.65rem;
+  padding: var(--space-2) 0.65rem;
   border: 1px solid var(--rule);
   border-radius: 999px;
   color: var(--ink);
@@ -7808,7 +7818,7 @@ button.review-comment__at:hover {
   justify-items: start;
 }
 
-@media (max-width: 56rem) {
+@media (width <= 56rem) {
   .review-body {
     grid-template-columns: minmax(0, 1fr);
   }

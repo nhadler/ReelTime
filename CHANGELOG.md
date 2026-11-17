@@ -58,6 +58,8 @@ this project follows [Semantic Versioning](https://semver.org/).
   width, like the other short dialogs, instead of the widest.
 - **Difficulty bars** use the app's own amber and red, so they follow
   the light theme like everything else.
+- **Small text** is one size: the 11–13.6px labels (keyboard keys,
+  stats, tips, the toolbar, notes) are all 13px.
 
 ## [2.2.0] - 2026-11-17
 
