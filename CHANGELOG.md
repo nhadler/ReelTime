@@ -36,6 +36,10 @@ this project follows [Semantic Versioning](https://semver.org/).
 - **Empty lists** say what's missing ("No themes yet.", "No writers
   yet.") in one quiet line, instead of "None yet." in five styles. The
   empty grid uses the same empty-state box as the other pages.
+- **Save buttons:** Credits' Save Changes is first on the left like
+  every other form's, and the cue page's Save Shares is a primary
+  button. Page actions (Export on Credits, Activity and Trash) are full
+  size.
 
 ## [2.2.0] - 2026-11-17
 

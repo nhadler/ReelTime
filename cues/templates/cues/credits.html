@@ -11,7 +11,7 @@
   <div class="page-head credits-head">
     {% include "cues/includes/page_title.html" with title="Credits" slug="credits-and-cue-sheets" %}
     <details class="menu credits-head__export">
-      <summary class="button button--quiet button--small">Export</summary>
+      <summary class="button button--quiet">Export</summary>
       <div class="menu__panel">
         <a class="menu__item" href="{% url 'cues:credits_export' 'csv' %}" download>CSV</a>
         <a class="menu__item" href="{% url 'cues:credits_export' 'xlsx' %}" download>Excel</a>
@@ -34,9 +34,9 @@
           {% include "cues/includes/credits_band.html" with fs=writers writers=True title="Writers" icon="person" count=writers.initial_form_count add="Add Writer" %}
           {% include "cues/includes/credits_band.html" with fs=publishers writers=False title="Publishers" icon="building" count=publishers.initial_form_count add="Add Publisher" %}
           <div class="save-bar">
-            <span class="save-bar__status" data-credits-status></span>
-            {% if undoable %}<button class="button button--quiet" type="submit" form="credits-undo" title="Take back your latest change to this list">Undo Last Change</button>{% endif %}
             <button class="button" type="submit">Save Changes</button>
+            {% if undoable %}<button class="button button--quiet" type="submit" form="credits-undo" title="Take back your latest change to this list">Undo Last Change</button>{% endif %}
+            <span class="save-bar__status" data-credits-status></span>
           </div>
         </form>
         {% if undoable %}<form id="credits-undo" method="post" action="{% url 'cues:credits_undo' %}">{% csrf_token %}</form>{% endif %}

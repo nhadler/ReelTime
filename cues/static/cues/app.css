@@ -1046,6 +1046,11 @@ input[type='checkbox'] {
   list-style: none;
 }
 
+/* Inside a card, in line with the card's own rows. */
+.credit-card .empty {
+  padding-inline: calc(var(--space) * 2);
+}
+
 /* An empty page or list (includes/empty.html): icon, title, action. */
 .empty-state {
   display: grid;
@@ -6458,7 +6463,6 @@ td.party-table__ipi {
 }
 
 .save-bar__status {
-  margin-right: auto;
   color: var(--slate);
   font-size: var(--step--1);
 }
