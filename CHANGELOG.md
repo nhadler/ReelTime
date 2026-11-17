@@ -50,6 +50,10 @@ this project follows [Semantic Versioning](https://semver.org/).
 - **Fields:** a field's error sits right under its box, above any
   hint; the view editor's boxes match every other dialog's; the review
   link's name hint is a hint, not body text.
+- **Focus** is the same ring everywhere: the avatar and colour swatches
+  used a darker green, the notes editor and Credits' cells showed a
+  green border instead, and a few buttons drew the ring flush against
+  their edge.
 
 ## [2.2.0] - 2026-11-17
 
