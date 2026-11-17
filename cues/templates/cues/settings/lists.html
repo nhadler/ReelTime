@@ -5,11 +5,11 @@
     {% csrf_token %}
     <section class="form-section">
       <h3>Themes</h3>
-      {% include "cues/includes/inline_table.html" with fs=theme_set add="Add Theme" %}
+      {% include "cues/includes/inline_table.html" with fs=theme_set add="Add Theme" none="No themes yet." %}
     </section>
     <section class="form-section">
       <h3>Instruments</h3>
-      {% include "cues/includes/inline_table.html" with fs=instrument_set add="Add Instrument" %}
+      {% include "cues/includes/inline_table.html" with fs=instrument_set add="Add Instrument" none="No instruments yet." %}
     </section>
     <div class="form-actions">
       <button class="button" type="submit">Save</button>

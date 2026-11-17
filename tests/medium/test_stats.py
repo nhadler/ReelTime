@@ -214,7 +214,7 @@ def test_the_panel_without_deadlines(editor: Client) -> None:
         reverse("cues:stats_panel", args=[project.pk])
     ).content.decode()
     assert "No deadline ahead." in html
-    assert "None yet." in html
+    assert "No deadlines yet." in html
 
 
 def test_choosing_the_pace_deadline(

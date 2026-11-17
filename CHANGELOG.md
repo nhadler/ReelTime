@@ -33,6 +33,9 @@ this project follows [Semantic Versioning](https://semver.org/).
 - **Menus:** the right-click menu is the same size as the Tools and
   More menus beside it; every command that opens a dialog ends in
   "…"; menus, popovers, the date picker and tips share one surface.
+- **Empty lists** say what's missing ("No themes yet.", "No writers
+  yet.") in one quiet line, instead of "None yet." in five styles. The
+  empty grid uses the same empty-state box as the other pages.
 
 ## [2.2.0] - 2026-11-17
 

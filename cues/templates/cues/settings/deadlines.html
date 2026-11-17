@@ -5,7 +5,7 @@
     {% csrf_token %}
     <section class="form-section">
       <h3>Deadlines</h3>
-      {% include "cues/includes/inline_table.html" with fs=deadline_set add="Add Deadline" %}
+      {% include "cues/includes/inline_table.html" with fs=deadline_set add="Add Deadline" none="No deadlines yet." %}
     </section>
     <section class="form-section" aria-labelledby="project-days-title">
       <div class="form-section__name"><h3 id="project-days-title">This Project's Days Off</h3><a href="{% url 'cues:days_off' %}">Your Own Days Off</a></div>

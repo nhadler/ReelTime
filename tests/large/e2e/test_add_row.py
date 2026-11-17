@@ -34,7 +34,7 @@ def test_three_writers_in_one_save(
     section = page.locator("#shares-group")
     rows = section.locator("tbody tr")
     expect(rows).to_have_count(0)  # no blank spare rows
-    expect(section.get_by_text("None yet.")).to_be_visible()
+    expect(section.get_by_text("No shares yet.")).to_be_visible()
     for _ in range(3):
         section.get_by_role("button", name="Add Share").click()
     expect(rows).to_have_count(3)

@@ -2203,23 +2203,29 @@ async function refreshOptions(field) {
  * @return {string} The overlay's HTML (fixed text, nothing from data).
  */
 function emptyOverlay() {
+  const box = (title, note, actions) =>
+    `<div class="empty-state grid-empty"><p class="empty-state__title">` +
+    `${title}</p>${note ? `<p class="empty-state__note">${note}</p>` : ''}` +
+    `${actions ? `<div class="grid-empty__actions">${actions}</div>` : ''}` +
+    `</div>`;
   if (allRows.length) {
-    return (
-      '<div class="grid-empty"><p>No cues match the filters.</p>' +
-      '<div class="grid-empty__actions"><button class="button button--quiet"' +
-      ' type="button" data-empty="clear">Clear Filters</button></div></div>'
+    return box(
+      'No Cues Match the Filters',
+      '',
+      '<button class="button button--quiet" type="button"' +
+        ' data-empty="clear">Clear Filters</button>',
     );
   }
   if (!config.canEdit) {
-    return '<div class="grid-empty"><p>No cues yet.</p></div>';
+    return box('No Cues Yet', '', '');
   }
-  return (
-    '<div class="grid-empty"><p>No cues yet. Import a Pro Tools session,' +
-    ' a Cubase marker track, a MIDI file or a spreadsheet, or add cues' +
-    ' one by one.</p><div class="grid-empty__actions">' +
-    '<button class="button" type="button" data-empty="import">' +
-    'Import Cues</button><button class="button button--quiet"' +
-    ' type="button" data-empty="new">New Cue</button></div></div>'
+  return box(
+    'No Cues Yet',
+    'Import a Pro Tools session, a Cubase marker track, a MIDI file or a' +
+      ' spreadsheet, or add cues one by one.',
+    '<button class="button" type="button" data-empty="import">Import' +
+      ' Cues…</button><button class="button button--quiet" type="button"' +
+      ' data-empty="new">New Cue</button>',
   );
 }
 

@@ -59,7 +59,7 @@
     {% endfor %}
   </ol>
 {% else %}
-  <p class="review-comments__none muted">No comments yet.</p>
+  <p class="empty">No comments yet.</p>
 {% endif %}
 {% if posted %}
   {% include "cues/review/error.html" with oob=True %}

@@ -1036,8 +1036,14 @@ input[type='checkbox'] {
   vertical-align: top;
 }
 
+/* A list inside a card or section with nothing in it: one quiet line,
+   "No themes yet." A page or the main list uses .empty-state. */
 .empty {
+  margin: 0;
+  padding: var(--space) 0;
   color: var(--slate);
+  font-size: var(--step-0);
+  list-style: none;
 }
 
 /* An empty page or list (includes/empty.html): icon, title, action. */
@@ -1901,12 +1907,15 @@ body:has(.overview) > .page {
   line-height: 1.4;
 }
 
+/* The grid with no rows: the empty state of every other page. */
 .grid-empty {
-  max-width: 28rem;
-  color: var(--slate);
-  text-align: center;
+  max-width: 30rem;
   /* AG Grid's overlay lets clicks through; its buttons take them. */
   pointer-events: auto;
+}
+
+.grid-empty .empty-state__note {
+  margin: 0;
 }
 
 .grid-empty__actions {
@@ -6184,11 +6193,6 @@ body:has(> .page--fill) {
   top: calc(var(--space) * 2);
 }
 
-.credits__quiet {
-  margin: 0;
-  font-size: var(--step--1);
-}
-
 .search-field {
   position: relative;
   max-width: 24rem;
@@ -6439,12 +6443,6 @@ td.party-table__ipi {
 
 .party-table__row--removed input {
   text-decoration: line-through;
-}
-
-.party-table__empty {
-  margin: 0;
-  padding: calc(var(--space) * 2);
-  color: var(--slate);
 }
 
 .save-bar {
@@ -7000,7 +6998,7 @@ td.party-table__ipi {
 }
 
 /* An empty list is one line and Add, without a header over nothing. */
-.inline-table:has(> .inline-table__empty:not([hidden])) > table {
+.inline-table:has(> [data-inline-empty]:not([hidden])) > table {
   display: none;
 }
 
@@ -7059,12 +7057,6 @@ td.party-table__ipi {
 
 .inline-table__row--removed input {
   text-decoration: line-through;
-}
-
-.inline-table__empty {
-  margin: 0;
-  padding: var(--space) 0;
-  color: var(--slate);
 }
 
 .inline-table__add {
@@ -7337,10 +7329,6 @@ form:has(input[name='confirm']:valid) .backup__restore {
   .toolbar__menus {
     flex-wrap: wrap;
   }
-}
-
-.share-list__none {
-  list-style: none;
 }
 
 /* Review links. The cue page's Review section: the link, then the

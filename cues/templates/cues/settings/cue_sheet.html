@@ -32,12 +32,12 @@
     </fieldset>
     <section class="form-section">
       <h3>Default Shares</h3>
-      {% include "cues/includes/inline_table.html" with fs=defaults add="Add Share" %}
+      {% include "cues/includes/inline_table.html" with fs=defaults add="Add Share" none="No shares yet." %}
     </section>
     {% if series_defaults %}
       <section class="form-section">
         <h3>Series Default Shares <span class="muted">{{ project.series }}</span></h3>
-        {% include "cues/includes/inline_table.html" with fs=series_defaults add="Add Share" %}
+        {% include "cues/includes/inline_table.html" with fs=series_defaults add="Add Share" none="No shares yet." %}
       </section>
     {% endif %}
     <div class="form-actions">

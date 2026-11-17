@@ -64,7 +64,7 @@
                 </table>
               </div>
             {% else %}
-              <p class="party-table__empty">None yet.</p>
+              <p class="empty">No {{ title|lower }} yet.</p>
             {% endif %}
           </section>
         {% endfor %}
@@ -83,7 +83,7 @@
           {% endfor %}
         </ol>
       {% else %}
-        <p class="muted credits__quiet">No changes yet.</p>
+        <p class="empty">No changes yet.</p>
       {% endif %}
     </aside>
   </div>
