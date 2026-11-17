@@ -28,6 +28,7 @@ export function askBatch({field, value, count}) {
 
   const form = document.createElement('form');
   form.className = 'batch-edit';
+  form.dataset.size = 'md';
   form.method = 'dialog';
   const question = document.createElement('p');
   const name = document.createElement('strong');

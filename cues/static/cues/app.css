@@ -1268,6 +1268,13 @@ details.form-section summary {
   color: var(--ink);
 }
 
+/* A short form says so on itself (data-size="md": the tools, Schedule
+   On, Log Written, Export, the cue sheet, batch edit), so a new one
+   needs no selector of its own. */
+.dialog:has(> [data-size='md']) {
+  width: min(var(--dialog-md), calc(100vw - 2rem));
+}
+
 .dialog::backdrop {
   background: rgb(0 0 0 / 55%);
 }
@@ -4481,9 +4488,6 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 }
 
 /* Cue tools: fields, then a live preview of the change. */
-.dialog:has(.tool-form) {
-  width: min(var(--dialog-md), calc(100vw - 2rem));
-}
 
 .tool-form__problem {
   color: var(--slate);
@@ -5062,13 +5066,6 @@ button.stats__name:hover,
   padding: calc(var(--space) * 2);
   border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent);
   border-radius: var(--radius);
-}
-
-/* Batch edit's question (overview/batch.js). */
-.dialog:has(.schedule-on),
-.dialog:has(.log-written),
-.dialog:has(.batch-edit) {
-  width: min(var(--dialog-md), calc(100vw - 2rem));
 }
 
 .batch-edit p {

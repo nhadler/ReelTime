@@ -1,6 +1,6 @@
 {# The export dialog. A plain GET form: the browser downloads the file and the page stays as it is. CSS hides what the chosen report doesn't use. #}
 {% load text %}
-<form class="dialog__form export" method="get" action="{% url 'cues:export_download' project.pk %}">
+<form class="dialog__form export" data-size="md" method="get" action="{% url 'cues:export_download' project.pk %}">
   <header class="dialog__head">
     <h2 id="dialog-title">Export Cues</h2>
     <button class="dialog__close" type="button" data-dialog-close aria-label="Close">×</button>

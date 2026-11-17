@@ -1,5 +1,5 @@
 {# A cue tool's dialog, loaded into #app-dialog by htmx. #}
-<form class="dialog__form tool-form" method="post" novalidate
+<form class="dialog__form tool-form" data-size="md" method="post" novalidate
       hx-post="{{ action }}" hx-target="#app-dialog" hx-swap="innerHTML">
   {% csrf_token %}
   <input type="hidden" name="cues" value="{{ cue_ids }}">

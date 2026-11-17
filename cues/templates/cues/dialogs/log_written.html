@@ -1,5 +1,5 @@
 {# A stretch of a cue written on a day; the schedule counts it as done. From starts where the last log ended. Loaded into #app-dialog by htmx. #}
-<form class="dialog__form log-written" method="post" novalidate
+<form class="dialog__form log-written" data-size="md" method="post" novalidate
       hx-post="{% url 'cues:log_written' cue.pk %}"
       hx-target="#app-dialog" hx-swap="innerHTML">
   {% csrf_token %}

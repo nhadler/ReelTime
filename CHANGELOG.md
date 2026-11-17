@@ -54,6 +54,8 @@ this project follows [Semantic Versioning](https://semver.org/).
   used a darker green, the notes editor and Credits' cells showed a
   green border instead, and a few buttons drew the ring flush against
   their edge.
+- **Dialog widths:** Export Cues and Export Cue Sheet are the medium
+  width, like the other short dialogs, instead of the widest.
 
 ## [2.2.0] - 2026-11-17
 

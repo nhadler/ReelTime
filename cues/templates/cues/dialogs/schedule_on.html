@@ -1,5 +1,5 @@
 {# Pins a cue to a day of the schedule; the rest of the plan flows around it. Loaded into #app-dialog by htmx. #}
-<form class="dialog__form schedule-on" method="post" novalidate
+<form class="dialog__form schedule-on" data-size="md" method="post" novalidate
       hx-post="{% url 'cues:schedule_on' cue.pk %}"
       hx-target="#app-dialog" hx-swap="innerHTML">
   {% csrf_token %}

@@ -1,6 +1,6 @@
 {# The cue sheet export. A plain GET form: the browser downloads the file; the checklist redraws as the choices change. #}
 {% load text %}
-<form class="dialog__form cue-sheet-export" method="get" action="{% url 'cues:cue_sheet_download' project.pk %}"
+<form class="dialog__form cue-sheet-export" data-size="md" method="get" action="{% url 'cues:cue_sheet_download' project.pk %}"
       hx-get="{% url 'cues:cue_sheet_checklist' project.pk %}" hx-trigger="change" hx-target="#cue-sheet-checklist" hx-swap="innerHTML">
   <header class="dialog__head">
     <h2 id="dialog-title">Export Cue Sheet</h2>
