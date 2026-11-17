@@ -3323,9 +3323,13 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
   }
 }
 
-/* Long dialogs scroll; their buttons stay in reach. */
+/* A dialog's buttons: a strip along its bottom edge, in reach while a
+   long dialog scrolls. Right-aligned, Cancel then the action: drawn in
+   reverse, so in the markup the action is still first, where Enter and
+   the keyboard find it. They wrap on a narrow screen. */
 .dialog .form-actions {
   position: sticky;
+  flex-flow: row-reverse wrap;
   bottom: calc(var(--space) * -3);
   margin: calc(var(--space) * 2) calc(var(--space) * -3) calc(var(--space) * -3);
   padding: calc(var(--space) * 1.5) calc(var(--space) * 3);
@@ -7279,10 +7283,6 @@ td.party-table__ipi {
   font-size: var(--step-1);
   font-weight: 500;
   line-height: 1.4;
-}
-
-.confirm-dialog .form-actions {
-  margin: 0;
 }
 
 /* Restore stays quiet until the confirmation word is typed (its pattern). */

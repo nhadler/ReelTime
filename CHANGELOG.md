@@ -6,6 +6,13 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- **Dialog buttons** are right-aligned, Cancel then the action, in every
+  dialog, and wrap on a phone instead of breaking their labels over
+  several lines. The buttons of a question (Delete, Reset Schedule) no
+  longer sit in a strip set in from the dialog's edges.
+
 ## [2.2.0] - 2026-11-17
 
 ### Added
