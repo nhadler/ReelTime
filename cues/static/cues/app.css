@@ -1289,13 +1289,9 @@ details.form-section summary {
 }
 
 .dialog__close {
-  border: 0;
-  background: none;
-  color: var(--slate);
   font: inherit;
-  font-size: var(--step-2);
+  font-size: var(--step-1);
   line-height: 1;
-  cursor: pointer;
 }
 
 .dialog__section {
@@ -2027,6 +2023,44 @@ body:has(.overview) > .page {
 }
 
 /* Cue details: versions | fields | history. */
+
+/* An icon alone as a small button: × to close or remove, a drag
+   handle, the date picker's calendar, the notes tools. One size (the
+   small control height, square), one shape, quiet until hovered. */
+:is(
+  .dialog__close,
+  .date-field__button,
+  .inline-table__x,
+  .party-table__remove,
+  .drag-handle,
+  .chips-editor__remove,
+  .notes-panel__tool
+) {
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--control-h-sm);
+  height: var(--control-h-sm);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--slate);
+  line-height: 1;
+  cursor: pointer;
+}
+
+:is(
+  .dialog__close,
+  .date-field__button,
+  .inline-table__x,
+  .party-table__remove,
+  .drag-handle,
+  .chips-editor__remove,
+  .notes-panel__tool
+):hover {
+  background: var(--panel-raised);
+  color: var(--ink);
+}
 
 .button--icon {
   min-width: var(--control-h);
@@ -3065,23 +3099,8 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 .date-field__button {
   position: absolute;
   top: 50%;
-  right: 0.35rem;
-  display: grid;
-  place-items: center;
-  width: 1.8rem;
-  height: 1.8rem;
-  padding: 0;
-  border: 0;
-  border-radius: var(--radius);
-  background: none;
-  color: var(--slate);
-  cursor: pointer;
+  right: 0.25rem;
   transform: translateY(-50%);
-}
-
-.date-field__button:hover {
-  background: var(--panel-raised);
-  color: var(--ink);
 }
 
 .date-field__button:focus-visible {
@@ -4047,15 +4066,8 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 }
 
 .notes-panel__tool {
-  min-width: 2rem;
-  height: 2rem;
-  border: 0;
-  border-radius: var(--radius);
-  background: none;
-  color: var(--slate);
   font: inherit;
   font-weight: 600;
-  cursor: pointer;
 }
 
 .notes-panel__tool[aria-pressed='true'] {
@@ -4276,17 +4288,10 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 }
 
 .chips-editor__remove {
-  width: 1.4rem;
-  height: 1.4rem;
-  border: 0;
-  border-radius: 4px;
-  background: none;
-  color: var(--slate);
-  cursor: pointer;
+  flex: none;
 }
 
 .chips-editor__remove:hover {
-  background: var(--panel);
   color: var(--danger);
 }
 
@@ -6417,15 +6422,7 @@ td.party-table__ipi {
 }
 
 .party-table__remove {
-  width: 1.8rem;
-  height: 1.8rem;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--slate);
   font-size: var(--step-1);
-  line-height: 1;
-  cursor: pointer;
 }
 
 .party-table__remove:hover:not(:disabled) {
@@ -6976,20 +6973,8 @@ td.party-table__ipi {
 }
 
 .drag-handle {
-  width: 1.6rem;
-  height: 1.6rem;
-  border: 0;
-  border-radius: 4px;
-  background: none;
-  color: var(--slate);
   font-size: var(--step-0);
-  line-height: 1;
   cursor: grab;
-}
-
-.drag-handle:hover {
-  background: var(--panel-raised);
-  color: var(--ink);
 }
 
 .drag-handle:focus-visible,
@@ -7009,12 +6994,8 @@ td.party-table__ipi {
 /* The handle, swatch and × sit level with the middle of the fields
    beside them (cells keep to the top, so an error below one field
    doesn't push the others down). */
-.inline-table .drag-handle {
-  margin-top: calc((var(--control-h) - 1.6rem) / 2);
-}
-
-.inline-table .inline-table__x {
-  margin-top: calc((var(--control-h) - 1.8rem) / 2);
+.inline-table :is(.drag-handle, .inline-table__x) {
+  margin-top: calc((var(--control-h) - var(--control-h-sm)) / 2);
 }
 
 /* The swatch's column is as wide as the swatch, so × follows it. */
@@ -7039,15 +7020,7 @@ td.party-table__ipi {
 }
 
 .inline-table__x {
-  width: 1.8rem;
-  height: 1.8rem;
-  border: 0;
-  border-radius: 999px;
-  background: none;
-  color: var(--slate);
   font-size: var(--step-1);
-  line-height: 1;
-  cursor: pointer;
 }
 
 .inline-table__x:hover {

@@ -40,6 +40,9 @@ this project follows [Semantic Versioning](https://semver.org/).
   every other form's, and the cue page's Save Shares is a primary
   button. Page actions (Export on Credits, Activity and Trash) are full
   size.
+- **Icon buttons** (×, drag handles, the calendar button, the notes
+  tools) are one size and shape, where there were seven sizes and three
+  shapes.
 
 ## [2.2.0] - 2026-11-17
 
