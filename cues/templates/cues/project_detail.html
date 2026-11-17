@@ -30,36 +30,36 @@
         {% if request.user.role != "viewer" %}
           {# data-needs: how many selected cues a tool wants (grid.js greys the rest). #}
           <button class="menu__item" type="button" role="menuitem" data-tool="new" data-palette="New Cues"
-                  title="Several new cues in one {{ project.reel_word|lower }}">New Cues</button>
+                  title="Several new cues in one {{ project.reel_word|lower }}">New Cues…</button>
           <button class="menu__item" type="button" role="menuitem" id="grid-import" data-palette="Import Cues" data-palette-keys="Ctrl+I"
                   hx-get="{% url 'cues:import' project.pk %}"
                   hx-target="#app-dialog" hx-swap="innerHTML">
-            Import Cues<kbd>Ctrl+I</kbd></button>
+            Import Cues…<kbd>Ctrl+I</kbd></button>
         {% endif %}
         <button class="menu__item" type="button" role="menuitem" id="grid-export" data-palette="Export Cues" data-palette-keys="Ctrl+E">
-          Export Cues<kbd>Ctrl+E</kbd></button>
+          Export Cues…<kbd>Ctrl+E</kbd></button>
         <button class="menu__item" type="button" role="menuitem" id="grid-cue-sheet" data-palette="Export Cue Sheet"
                 hx-get="{% url 'cues:cue_sheet' project.pk %}"
                 hx-target="#app-dialog" hx-swap="innerHTML"
-                title="The PRO cue sheet: RapidCue Excel or CSV">Export Cue Sheet</button>
+                title="The PRO cue sheet: RapidCue Excel or CSV">Export Cue Sheet…</button>
         {% if request.user.role != "viewer" %}
           <hr class="menu__rule">
           <button class="menu__item" type="button" role="menuitem" data-tool="versions"
-                  title="A new version for each selected cue, or every cue shown">Add Versions</button>
+                  title="A new version for each selected cue, or every cue shown">Add Versions…</button>
           <button class="menu__item" type="button" role="menuitem" data-tool="split" data-needs="one"
-                  title="Split one selected cue in two">Split Cue</button>
+                  title="Split one selected cue in two">Split Cue…</button>
           <button class="menu__item" type="button" role="menuitem" data-tool="merge" data-needs="two"
-                  title="Merge two or more selected cues into one">Merge Cues</button>
+                  title="Merge two or more selected cues into one">Merge Cues…</button>
           <button class="menu__item" type="button" role="menuitem" data-tool="renumber" data-needs="any"
-                  title="New numbers for the selected cues (one selected: it and every cue after it)">Renumber Cues</button>
+                  title="New numbers for the selected cues (one selected: it and every cue after it)">Renumber Cues…</button>
           <button class="menu__item" type="button" role="menuitem" data-tool="shift" data-needs="any"
-                  title="Move the selected cues earlier or later">Shift Cues</button>
+                  title="Move the selected cues earlier or later">Shift Cues…</button>
           <button class="menu__item" type="button" role="menuitem" data-tool="move" data-needs="any"
-                  title="Move the selected cues to another {{ project.reel_word|lower }}">Move Cues</button>
+                  title="Move the selected cues to another {{ project.reel_word|lower }}">Move Cues…</button>
           <button class="menu__item" type="button" role="menuitem" data-tool="copy" data-needs="any"
-                  title="Copy the selected cues into a {{ project.reel_word|lower }}">Copy Cues</button>
+                  title="Copy the selected cues into a {{ project.reel_word|lower }}">Copy Cues…</button>
           <button class="menu__item" type="button" role="menuitem" data-tool="delete" data-needs="any"
-                  title="Delete the selected cues">Delete Cues<kbd>Ctrl+Shift+⌫</kbd></button>
+                  title="Delete the selected cues">Delete Cues…<kbd>Ctrl+Shift+⌫</kbd></button>
           <hr class="menu__rule">
           <button class="menu__item" type="button" role="menuitem" id="grid-undo">
             Undo Last Change<kbd>Ctrl+Z</kbd></button>

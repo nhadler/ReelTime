@@ -92,6 +92,8 @@
   --step-3: 1.62rem;
   --space: 0.5rem;
   --radius: 6px;
+  /* Under anything that floats over the page: menus, popovers, tips. */
+  --shadow: 0 10px 30px rgb(0 0 0 / 35%);
   /* Two control heights: buttons, inputs and selects use one or the other. */
   --control-h: 2.25rem;
   --control-h-sm: 1.75rem;
@@ -439,7 +441,7 @@ a {
   padding: 0.6rem 0.6rem 0.25rem;
   color: var(--slate);
   font-size: var(--step--1);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .palette__empty {
@@ -2265,7 +2267,7 @@ body:has(.overview) > .page {
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: var(--panel-raised);
-  box-shadow: 0 10px 30px rgb(0 0 0 / 35%);
+  box-shadow: var(--shadow);
   /* The room below it in the window (menus.js), so it never runs off. */
   max-height: var(--panel-room, none);
   overflow-y: auto;
@@ -3079,9 +3081,9 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
   padding: var(--space) calc(var(--space) * 1.5);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
-  background: var(--panel);
+  background: var(--panel-raised);
   color: var(--ink);
-  box-shadow: 0 0.6rem 2rem rgb(0 0 0 / 35%);
+  box-shadow: var(--shadow);
 }
 
 .date-picker__head,
@@ -3501,7 +3503,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: var(--panel-raised);
-  box-shadow: 0 10px 30px rgb(0 0 0 / 35%);
+  box-shadow: var(--shadow);
 }
 
 .status-editor__filter {
@@ -3559,8 +3561,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: var(--panel-raised);
-  box-shadow: 0 10px 30px rgb(0 0 0 / 35%);
-  font-size: var(--step--1);
+  box-shadow: var(--shadow);
 }
 
 .context-menu .menu__item:disabled {
@@ -3570,7 +3571,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
 }
 
 .context-menu__rule {
-  margin: 0.25rem 0;
+  margin: 0.3rem 0.2rem;
   border: 0;
   border-top: 1px solid var(--rule);
 }
@@ -3963,7 +3964,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: var(--panel-raised);
-  box-shadow: 0 10px 30px rgb(0 0 0 / 35%);
+  box-shadow: var(--shadow);
   color: var(--ink);
   font-size: var(--step--1);
   line-height: 1.45;
@@ -4224,7 +4225,7 @@ form:not(:has([name='numbering'][value='custom']:checked)) .numbering-custom {
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: var(--panel-raised);
-  box-shadow: 0 10px 30px rgb(0 0 0 / 35%);
+  box-shadow: var(--shadow);
 }
 
 .chips-editor__current {
@@ -4796,7 +4797,7 @@ button.stats__name:hover,
   border: 1px solid rgb(255 255 255 / 10%);
   border-radius: calc(var(--radius) - 2px);
   background: #08090c;
-  box-shadow: 0 6px 18px rgb(0 0 0 / 35%);
+  box-shadow: var(--shadow);
   color: #f2f2f0;
   font-size: 0.75rem;
   font-weight: 500;
@@ -5209,7 +5210,7 @@ a.conform:hover {
 .project-menu__heading {
   margin: 0.3rem 0.6rem 0.1rem;
   color: var(--slate);
-  font-size: 0.75rem;
+  font-size: var(--step--1);
   font-weight: 600;
 }
 

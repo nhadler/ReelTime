@@ -30,6 +30,9 @@ this project follows [Semantic Versioning](https://semver.org/).
   text in the normal colour. Saved, error and Import's problems and
   warnings looked different; the cue page's "Not saved." is now red and
   names the field.
+- **Menus:** the right-click menu is the same size as the Tools and
+  More menus beside it; every command that opens a dialog ends in
+  "…"; menus, popovers, the date picker and tips share one surface.
 
 ## [2.2.0] - 2026-11-17
 

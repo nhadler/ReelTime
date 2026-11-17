@@ -26,18 +26,18 @@
     <hr class="menu__rule">
     <p class="project-menu__heading">Cues</p>
     {% if request.user.role != "viewer" %}
-      <button class="menu__item" type="button" hx-get="{% url 'cues:import' project.pk %}" hx-target="#app-dialog" hx-swap="innerHTML"{% if tab != "cues" %} data-palette="Import Cues"{% endif %}>Import Cues<kbd>Ctrl+I</kbd></button>
+      <button class="menu__item" type="button" hx-get="{% url 'cues:import' project.pk %}" hx-target="#app-dialog" hx-swap="innerHTML"{% if tab != "cues" %} data-palette="Import Cues"{% endif %}>Import Cues…<kbd>Ctrl+I</kbd></button>
     {% endif %}
     {% if tab == "cues" %}
-      <button class="menu__item" type="button" data-grid-action="export">Export Cues<kbd>Ctrl+E</kbd></button>
+      <button class="menu__item" type="button" data-grid-action="export">Export Cues…<kbd>Ctrl+E</kbd></button>
     {% else %}
-      <button class="menu__item" type="button" hx-get="{% url 'cues:export' project.pk %}" hx-target="#app-dialog" hx-swap="innerHTML" data-palette="Export Cues">Export Cues</button>
+      <button class="menu__item" type="button" hx-get="{% url 'cues:export' project.pk %}" hx-target="#app-dialog" hx-swap="innerHTML" data-palette="Export Cues">Export Cues…</button>
     {% endif %}
-    <button class="menu__item" type="button" hx-get="{% url 'cues:cue_sheet' project.pk %}" hx-target="#app-dialog" hx-swap="innerHTML"{% if tab != "cues" %} data-palette="Export Cue Sheet"{% endif %}>Export Cue Sheet</button>
+    <button class="menu__item" type="button" hx-get="{% url 'cues:cue_sheet' project.pk %}" hx-target="#app-dialog" hx-swap="innerHTML"{% if tab != "cues" %} data-palette="Export Cue Sheet"{% endif %}>Export Cue Sheet…</button>
     {% if tab == "cues" %}
-      <button class="menu__item" type="button" data-grid-action="copy-json" title="The selected cues (or the focused one, or all shown) as JSON for macros">Copy JSON<kbd>Ctrl+Shift+J</kbd></button>
+      <button class="menu__item" type="button" data-grid-action="copy-json" title="The selected cues (or the focused one, or all shown) as JSON for macros">Copy JSON…<kbd>Ctrl+Shift+J</kbd></button>
     {% else %}
-      <a class="menu__item" href="{{ overview }}?do=copy-json" title="Every cue as JSON for macros">Copy JSON</a>
+      <a class="menu__item" href="{{ overview }}?do=copy-json" title="Every cue as JSON for macros">Copy JSON…</a>
     {% endif %}
     <hr class="menu__rule">
     <p class="project-menu__heading">Settings</p>
