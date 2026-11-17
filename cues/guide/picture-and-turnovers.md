@@ -20,8 +20,9 @@ When a new cut arrives:
 
 1. Open **Picture** in the project bar and choose **Log a Turnover**.
 2. Give its label (`c1030`, `LOCK`) and the date it arrived.
-3. Tick the reels that changed and type their new IN and OUT. Reels you
-   leave unticked keep their current picture.
+3. Tick the reels that changed and type their new IN and OUT, as
+   timecode at the project's frame rate. Reels you leave unticked keep
+   their current picture.
 4. Add any **new reels** with their names, IN and OUT.
 5. Choose **Log Turnover**.
 
@@ -29,8 +30,10 @@ Each reel's *current picture* is the newest turnover that includes it.
 If a reel's IN moved, ReelTime opens **Conform** next (see *Conform*).
 
 Click a turnover's name on the Picture page to change it, or to delete
-it. You can't remove a reel or delete a turnover if cue versions
-reference its picture.
+it. Unticking a reel there drops it from that turnover; the reel then
+keeps its picture from the turnovers before. You can't remove a reel or
+delete a turnover if cue versions reference its picture. **Undo**
+brings a deleted turnover back.
 
 ## Cues Not on a Reel Yet
 

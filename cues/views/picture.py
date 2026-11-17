@@ -190,6 +190,8 @@ def turnover_create(request: HttpRequest, project_id: int) -> HttpResponse:
         {
             "nav": "projects",
             "project": project,
+            "summary": summaries.for_project(project),
+            "tab": "picture",
             "form": form,
             "rows": list(zip(reels, existing.forms, strict=False)),
             "existing": existing,
@@ -300,6 +302,8 @@ def turnover_edit(
         {
             "nav": "projects",
             "project": project,
+            "summary": summaries.for_project(project),
+            "tab": "picture",
             "turnover": turnover,
             "form": form,
             "rows": list(zip(reels, existing.forms, strict=False)),

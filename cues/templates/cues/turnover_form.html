@@ -3,9 +3,18 @@
 {% block title %}{% if turnover %}Edit {{ turnover.label }}{% else %}Log a turnover{% endif %} · {{ project.title }} · ReelTime{% endblock %}
 {% block page_class %}page--narrow{% endblock %}
 
+{% block subheader %}
+  <div class="project-band">{% include "cues/includes/project_header.html" %}</div>
+{% endblock %}
+
 {% block content %}
-  <h1>{% if turnover %}Edit Turnover {{ turnover.label }}{% else %}Log a Turnover{% endif %}</h1>
-  <p class="muted">{{ project.title }}. Times are {{ project.rate.label }} timecode.</p>
+  <div class="page-head">
+    {% if turnover %}
+      {% include "cues/includes/page_title.html" with title="Edit Turnover "|add:turnover.label slug="picture-and-turnovers" sub=True %}
+    {% else %}
+      {% include "cues/includes/page_title.html" with title="Log a Turnover" slug="picture-and-turnovers" sub=True %}
+    {% endif %}
+  </div>
   <form method="post" novalidate>
     {% csrf_token %}
     {% include "cues/includes/form_errors.html" %}
@@ -18,7 +27,6 @@
     {% if rows %}
       <fieldset class="form-section">
         <legend>{{ project.reels_word }} in This Turnover</legend>
-        <p class="muted">{% if turnover %}Ticked reels are part of this turnover. Untick one to drop it; it then keeps its picture from the turnovers before.{% else %}Untick reels that didn't change; they keep their current picture.{% endif %}</p>
         {{ existing.management_form }}
         <table class="table table--edit">
           <thead><tr><th scope="col">{% if turnover %}In Turnover{% else %}Changed{% endif %}</th><th scope="col">{{ project.reel_word }}</th><th scope="col">IN</th><th scope="col">OUT</th></tr></thead>
@@ -72,7 +80,6 @@
     <form class="form-section turnover-delete" method="post" action="{% url 'cues:turnover_delete' project.pk turnover.pk %}">
       {% csrf_token %}
       <h2>Delete This Turnover</h2>
-      <p class="muted">Only while no cue version is written to its picture. Undo brings it back.</p>
       <button class="button button--danger" type="submit">Delete {{ turnover.label }}</button>
     </form>
   {% endif %}

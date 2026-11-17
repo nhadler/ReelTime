@@ -23,6 +23,9 @@ this project follows [Semantic Versioning](https://semver.org/).
   the tools) look the same everywhere: the one picked is tinted green
   with its text in the normal colour. On a phone a group that wraps
   stands apart instead of breaking its joined corners.
+- **Log a Turnover** and **Edit Turnover** keep the project bar, with
+  the title and **?** link of the other project pages. Their notes on
+  what unticking a reel does are in Help.
 
 ## [2.2.0] - 2026-11-17
 
