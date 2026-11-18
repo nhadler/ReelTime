@@ -16,7 +16,7 @@
          {% if version == selected %}aria-current="page"{% endif %}>
         <span class="version-list__label">{{ version.label }}</span>
         {% if version.pk == cue.current_version_id %}<span class="version-list__current">Current</span>{% endif %}
-        <span class="version-list__meta">{{ version.written_to.turnover.label|default:"no picture" }} · {{ version.created_at|date:short_format }}</span>
+        {% with picture=version.written_to.turnover.label|default:"no picture" %}<span class="version-list__meta"><span class="version-list__picture" title="{{ picture }}">{{ picture }}</span> · {{ version.created_at|date:short_format }}</span>{% endwith %}
       </a>
     </li>
   {% empty %}

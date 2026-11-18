@@ -2172,7 +2172,7 @@ body:has(.overview) > .page {
   position: sticky;
   top: var(--space);
   max-height: calc(100vh - 2 * var(--space));
-  overflow: auto;
+  overflow: hidden auto;
   padding: calc(var(--space) * 1.5);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
@@ -2204,7 +2204,7 @@ body:has(.overview) > .page {
 
 .version-list__item {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: baseline;
   gap: 0 var(--space);
   padding: 0.4rem var(--space);
@@ -2235,9 +2235,19 @@ body:has(.overview) > .page {
 }
 
 .version-list__meta {
+  display: flex;
+  min-width: 0;
   grid-column: 1 / -1;
   color: var(--slate);
   font-size: var(--step--1);
+  white-space: pre;
+}
+
+/* A long picture name ends in "…" (the full name is its tooltip); the
+   date after it always shows. */
+.version-list__picture {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .details-fields {

@@ -6,6 +6,12 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- A version whose picture has a long name no longer pushes the cue
+  page's **Versions** list sideways, cutting off its title and labels:
+  the name ends in "…", with the whole name on hover.
+
 ## [2.4.0] - 2026-11-17
 
 ### Added
