@@ -89,8 +89,8 @@ on a comment answers it. A guest can type any name; comments from
 someone signed in to ReelTime are marked **Team**, and only those are
 sure to be from who they say.
 
-Each timed comment is a dot above the video's timeline. Clicking a
-comment's timecode, or its dot, goes to that frame, or to the start of
+Each timed comment is a speech bubble above the video's timeline,
+pointing at its frame. Clicking a comment's timecode, or its bubble, goes to that frame, or to the start of
 its stretch. While the video is inside a comment's stretch, that part
 of the timeline is coloured and the comment is lit in the list.
 

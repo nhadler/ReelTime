@@ -6,6 +6,11 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- **Comments on a review page's timeline** are speech bubbles pointing
+  at their frame, not small dots, so they're easy to see and to click.
+
 ### Fixed
 
 - A version whose picture has a long name no longer pushes the cue
