@@ -6,6 +6,12 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- **Name on Review Pages** (Settings → Look): review links show
+  this name, such as the composer's, at the top and in the browser tab
+  instead of ReelTime.
+
 ## [2.3.0] - 2026-11-17
 
 ### Changed

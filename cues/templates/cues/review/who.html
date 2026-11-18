@@ -1,7 +1,7 @@
 {% extends "cues/review/base.html" %}
 {# A guest says who is watching, once, before the video shows: the name goes with their comments and with when they watched. #}
 
-{% block title %}Review Link · ReelTime{% endblock %}
+{% block title %}Review Link · {{ review_name|default:"ReelTime" }}{% endblock %}
 
 {% block review %}
   <form class="notice review-lock" method="post" action="{% url 'cues:review_who' link.token %}">

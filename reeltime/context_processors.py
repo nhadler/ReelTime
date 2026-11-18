@@ -19,7 +19,7 @@ def _user(request: HttpRequest) -> object:
 
 
 def preferences(request: HttpRequest) -> dict[str, str]:
-    """The colour theme and date formats from App Settings.
+    """The colour theme, date formats and review pages' name from App Settings.
 
     Error pages render this too, so a database problem must not break
     them: they get the defaults.
@@ -29,7 +29,11 @@ def preferences(request: HttpRequest) -> dict[str, str]:
         settings_row = models.AppSettings.load()
     except DatabaseError:
         settings_row = models.AppSettings()
-    return {"theme": settings_row.theme, **settings_row.date_formats()}
+    return {
+        "theme": settings_row.theme,
+        "review_name": settings_row.review_name,
+        **settings_row.date_formats(),
+    }
 
 
 def account(request: HttpRequest) -> dict[str, str]:

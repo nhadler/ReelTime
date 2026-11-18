@@ -1,7 +1,7 @@
 {% extends "cues/review/base.html" %}
 {# A review link with a password: asked once per browser session. #}
 
-{% block title %}Review Link · ReelTime{% endblock %}
+{% block title %}Review Link · {{ review_name|default:"ReelTime" }}{% endblock %}
 
 {% block review %}
   <form class="notice review-lock" method="post" action="{% url 'cues:review_unlock' link.token %}">

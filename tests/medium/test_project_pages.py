@@ -641,6 +641,7 @@ def test_theme_falls_back_when_the_database_fails() -> None:
     ):
         assert context_processors.preferences(request) == {
             "theme": "dark",
+            "review_name": "",
             "date_format": "m/d/Y",
             "short_format": "M j",
             "day_format": "D M j",

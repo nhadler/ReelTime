@@ -708,6 +708,7 @@ def test_app_settings(
         "schedule_projects": "one",
         "daily_max": "12.5",
         "min_part": "5",
+        "review_name": "Christa Duggan",
     }
     assert editor.post(url, data)["Location"] == url
     saved = models.AppSettings.load()
@@ -720,6 +721,7 @@ def test_app_settings(
     assert saved.schedule_hard == Decimal(4)
     assert saved.schedule_unrated == "Moderate"
     assert saved.schedule_projects == models.AppSettings.ProjectsAtOnce.ONE
+    assert saved.review_name == "Christa Duggan"
     assert (saved.schedule_daily_max, saved.schedule_min_part) == (750, 300)
     html = editor.get(url).content.decode()
     assert 'name="daily_max" value="12.5"' in html

@@ -108,6 +108,12 @@ class AppSettings(models.Model):
         default=ProjectsAtOnce.PARALLEL,
     )
 
+    # Shown at the top of review links and in their browser tab, in place
+    # of ReelTime: usually the composer's name. Blank shows ReelTime.
+    review_name = models.CharField(
+        "name on review pages", max_length=80, blank=True
+    )
+
     class Meta:
         verbose_name = "settings"
         verbose_name_plural = "settings"

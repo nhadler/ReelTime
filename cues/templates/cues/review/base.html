@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{# A review link's pages: for a guest, so no top bar and nothing of the app but the wordmark. #}
+{# A review link's pages: for a guest, so no top bar and nothing of the app but the wordmark, or the name set in Settings (review_name) in its place. #}
 
 {% block page_class %}review{% endblock %}
 
@@ -10,7 +10,11 @@
 
 {% block content %}
   <header class="review-head">
-    <p class="review-head__mark"><span class="wordmark__reel">Reel</span>Time</p>
+    {% if review_name %}
+      <p class="review-head__mark">{{ review_name }}</p>
+    {% else %}
+      <p class="review-head__mark"><span class="wordmark__reel">Reel</span>Time</p>
+    {% endif %}
     {% block review_head %}{% endblock %}
   </header>
   {% block review %}{% endblock %}

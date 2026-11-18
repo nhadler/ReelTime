@@ -48,7 +48,12 @@ class AppSettingsForm(forms.ModelForm):  # type: ignore[type-arg]
             "schedule_revise",
             "schedule_unrated",
             "schedule_projects",
+            "review_name",
         ]
+        # Blank shows ReelTime, so that's what an empty box says.
+        widgets = {
+            "review_name": forms.TextInput(attrs={"placeholder": "ReelTime"})
+        }
         labels = {
             "leading_zero": "Leading zero (01:00:10:00)",
             "subframes": "Show subframes",

@@ -59,6 +59,10 @@ restoring the cue doesn't bring the link back.
 
 ## What a Reviewer Sees
 
+The top of every review page, and its browser tab, says ReelTime, or
+the **Name on Review Pages** from Settings in its place (the composer's
+name, say). The rest of ReelTime keeps its own name.
+
 First the password, if the link has one, then **Who's Watching?**: a
 guest gives their name once, before anything of the cue shows. The name
 goes with their comments and with when they watched.

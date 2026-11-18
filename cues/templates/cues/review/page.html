@@ -2,7 +2,7 @@
 {% load static %}
 {# The review page: one version's video beside its comments. The player's own controls carry the comments as marks (review.js). #}
 
-{% block title %}{{ cue.number }}{% if cue.title %} {{ cue.title }}{% endif %} · Review · ReelTime{% endblock %}
+{% block title %}{{ cue.number }}{% if cue.title %} {{ cue.title }}{% endif %} · Review · {{ review_name|default:"ReelTime" }}{% endblock %}
 
 {% block review_scripts %}
   {% if shown %}<script src="{% static 'cues/review.js' %}" type="module"></script>{% endif %}
