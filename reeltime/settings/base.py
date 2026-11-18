@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "reeltime",
     "accounts",
     "cues",
+    "notifications",
 ]
 
 MIDDLEWARE = [
@@ -279,6 +280,9 @@ CONTENT_SECURITY_POLICY: dict[str, dict[str, list[Any]]] = {
         "style-src": [csp.SELF, csp.NONCE],
         "img-src": [csp.SELF, "data:"],
         "connect-src": [csp.SELF],
+        # The service worker (/sw.js) and the web app manifest.
+        "worker-src": [csp.SELF],
+        "manifest-src": [csp.SELF],
         "frame-ancestors": [csp.NONE],
         "form-action": [csp.SELF],
         "base-uri": [csp.NONE],
@@ -349,3 +353,18 @@ SILENCED_SYSTEM_CHECKS: list[str] = [
     "django_ratelimit.E003",
     "django_ratelimit.W001",
 ]
+
+# Push notifications (notifications). The VAPID private key as a PEM;
+# empty makes one in DATA_DIR/vapid.pem on first use.
+VAPID_PRIVATE_KEY = ""
+# Push services whose addresses a browser may hand ReelTime, matched as
+# the host or a subdomain of it: ReelTime POSTs to them, and to nothing
+# else a browser names.
+PUSH_HOSTS = (
+    "push.apple.com",
+    "fcm.googleapis.com",
+    "push.services.mozilla.com",
+    "notify.windows.com",
+)
+# Seconds to wait for a push service.
+PUSH_TIMEOUT = 10

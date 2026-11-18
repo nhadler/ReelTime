@@ -7,6 +7,7 @@ import os
 import pathlib
 import signal
 import sqlite3
+import threading
 from typing import Any
 from unittest import mock
 
@@ -20,6 +21,7 @@ import pytest
 
 from accounts import audit
 from accounts import models
+from notifications import outbox
 from reeltime import maintenance
 
 pytestmark = pytest.mark.django_db
@@ -171,7 +173,12 @@ def test_scheduler_stops_on_sigterm() -> None:
         assert kwargs["wait"](5) is True  # the handler set the stop event
 
     out = io.StringIO()
-    with mock.patch.object(maintenance, "run_forever", fake_run_forever):
+    sent: list[threading.Event] = []
+    with (
+        mock.patch.object(maintenance, "run_forever", fake_run_forever),
+        mock.patch.object(outbox, "run", sent.append),
+    ):
         call_command("run_scheduler", stdout=out)
+    assert sent[0].is_set()  # notifications stop with the scheduler
     assert "nightly at 3:00 UTC" in out.getvalue()
     assert "Scheduler stopped." in out.getvalue()

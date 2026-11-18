@@ -41,6 +41,9 @@ CONTENT_SECURITY_POLICY["DIRECTIVES"]["form-action"].append(origin(OIDC_ISSUER))
 
 BREAKGLASS_ENABLED = env.get_bool("REELTIME_BREAKGLASS_ENABLED", default=False)
 
+# The key that signs push notifications; made on first use when unset.
+VAPID_PRIVATE_KEY = env.get("REELTIME_VAPID_PRIVATE_KEY", "")
+
 # STATIC_ROOT is collected at install time (reeltime.settings.build).
 STORAGES = {**STORAGES, "staticfiles": {"BACKEND": MANIFEST_STORAGE}}
 

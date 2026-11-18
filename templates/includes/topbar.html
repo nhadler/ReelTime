@@ -34,11 +34,12 @@
         <hr class="menu__rule">
         <a class="menu__item" href="{% url 'cues:days_off' %}" data-palette="Your Days Off">Your Days Off</a>
         <a class="menu__item" href="{% url 'cues:calendar_feed' %}" data-palette="Calendar Feed">Calendar Feed</a>
+        <a class="menu__item" href="{% url 'notifications:page' %}" data-palette="Notifications">Notifications</a>
         <a class="menu__item" href="{% url 'cues:help' %}" data-palette="Help">Help</a>
         {% if account_url %}
           <a class="menu__item" href="{{ account_url }}" target="_blank" rel="noopener noreferrer">Manage Account</a>
         {% endif %}
-        <form method="post" action="{% url 'accounts:logout' %}">
+        <form method="post" action="{% url 'accounts:logout' %}" data-forget-url="{% url 'notifications:forget' %}">
           {% csrf_token %}
           <button class="menu__item" type="submit">Sign Out</button>
         </form>

@@ -10,6 +10,9 @@
     <link rel="icon" href="{% static 'cues/favicon.svg' %}" type="image/svg+xml">
     <link rel="icon" href="{% static 'cues/favicon-32.png' %}" sizes="32x32" type="image/png">
     <link rel="apple-touch-icon" href="{% static 'cues/apple-touch-icon.png' %}">
+    {# Added to a Home Screen, ReelTime opens as an app of its own. #}
+    <link rel="manifest" href="{% url 'notifications:manifest' %}">
+    <meta name="theme-color" content="#171b22">
     <link rel="stylesheet" href="{% static 'cues/app.css' %}">
     {# First and not deferred: it must be listening before any script can fail to load. #}
     <script src="{% static 'cues/load-guard.js' %}"></script>
@@ -27,6 +30,7 @@
     <script src="{% static 'cues/select-all.js' %}" type="module"></script>
     <script src="{% static 'cues/form-errors.js' %}" type="module"></script>
     <script src="{% static 'cues/remember-open.js' %}" type="module"></script>
+    <script src="{% static 'notifications/sign-out.js' %}" type="module"></script>
     {% block scripts %}{% endblock %}
   </head>
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>

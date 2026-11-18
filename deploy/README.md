@@ -46,6 +46,7 @@ all with comments. Any variable can instead be read from a file by setting
 | `OIDC_ACCOUNT_URL` | Optional: where the profile menu's Manage Account goes. Default: PocketID's account page, `OIDC_ISSUER` + `/settings/account`. |
 | `REELTIME_SOURCE_URL` | Optional: where Help's Source Code link goes. Default: this repository. If you run a modified copy for others, the AGPL asks you to point it at your source. |
 | `REELTIME_UPDATE_CHECK` | Optional: `false` stops the daily check for a new release. Default `true`: the scheduler asks GitHub (`REELTIME_SOURCE_URL`'s repository) for the latest release once a day and when it starts, and admins see it in the profile menu. Only the request itself is sent. |
+| `REELTIME_VAPID_PRIVATE_KEY` | Optional: the P-256 private key (PEM) that signs push notifications. Unset, ReelTime makes one on first use and keeps it in the data directory as `vapid.pem`. Changing it means every device turns notifications on again. Notifications are sent to Apple's, Google's, Mozilla's and Microsoft's push services, so the scheduler (or `reeltime-push.service`) needs to reach the internet. |
 | `REELTIME_TIME_ZONE` | Where times are shown, as an IANA name such as `America/Los_Angeles`. Default `UTC`. Times are always stored in UTC, so changing it is safe. |
 | `REELTIME_BREAKGLASS_ENABLED` | Leave `false` (see "When PocketID is down"). |
 | `REELTIME_DATA_DIR` | Set for you: `/data` in Docker, `/var/lib/reeltime` with systemd. |
@@ -77,7 +78,8 @@ To build from a checkout instead, add the build override:
 (or `just up`).
 
 - **Services:** `web` (gunicorn; snapshots the database, migrates, then
-  serves) and `scheduler` (nightly snapshot and housekeeping at 03:00 UTC).
+  serves) and `scheduler` (nightly snapshot and housekeeping at 03:00 UTC,
+  and push notifications every few seconds).
 - **Data:** the `reeltime-data` volume, mounted at `/data`: the SQLite
   database and `snapshots/`.
 - **Hardening:** non-root UID 10001, read-only root filesystem with a
@@ -108,7 +110,7 @@ sudo git clone --branch v2.4.0 https://github.com/nhadler/reeltime.git /opt/reel
 sudo sh /opt/reeltime/deploy/systemd/install.sh
 sudo $EDITOR /etc/reeltime/reeltime.env
 echo '<pocketid client secret>' | sudo tee /etc/reeltime/oidc_client_secret
-sudo systemctl enable --now reeltime.service reeltime-snapshot.timer
+sudo systemctl enable --now reeltime.service reeltime-push.service reeltime-snapshot.timer
 curl -H 'Host: <your host>' http://127.0.0.1:8000/healthz   # ok
 ```
 
@@ -129,6 +131,9 @@ overwriting an existing one, and installs:
   a dynamic user with state in `/var/lib/reeltime`, uploads spooled to
   `/var/cache/reeltime` (`TMPDIR`), secrets passed with `LoadCredential=`,
   and a strict sandbox (`systemd-analyze security` rates it 1.5, "OK").
+- `reeltime-push.service`: `reeltime push`, which sends notifications
+  to phones and browsers every few seconds (Notifications in the profile
+  menu).
 - `reeltime-snapshot.service` + `.timer`: `reeltime nightly` at 03:00
   local time, catching up after downtime.
 

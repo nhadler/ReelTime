@@ -37,6 +37,7 @@ fi
 
 umask 022
 install -m 0644 deploy/systemd/reeltime.service \
+  deploy/systemd/reeltime-push.service \
   deploy/systemd/reeltime-snapshot.service \
   deploy/systemd/reeltime-snapshot.timer /etc/systemd/system/
 systemctl daemon-reload
@@ -45,5 +46,5 @@ cat <<MSG
 Installed. Next:
   1. Edit $CONF/reeltime.env and put the PocketID client secret in
      $CONF/oidc_client_secret.
-  2. systemctl enable --now reeltime.service reeltime-snapshot.timer
+  2. systemctl enable --now reeltime.service reeltime-push.service reeltime-snapshot.timer
 MSG

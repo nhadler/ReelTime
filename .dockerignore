@@ -9,6 +9,7 @@
 !cues/
 !reeltime/
 !mcp_server/
+!notifications/
 !templates/
 !deploy/docker-entrypoint.sh
 **/__pycache__

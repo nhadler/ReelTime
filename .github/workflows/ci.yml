@@ -30,11 +30,11 @@ jobs:
       - name: ruff format
         run: uv run ruff format --check .
       - name: pylint
-        run: uv run pylint accounts cues mcp_server reeltime tests manage.py
+        run: uv run pylint accounts cues mcp_server notifications reeltime tests manage.py
       - name: mypy
         run: uv run mypy
       - name: bandit
-        run: uv run bandit -q -r accounts cues mcp_server reeltime -x tests
+        run: uv run bandit -q -r accounts cues mcp_server notifications reeltime -x tests
       - name: makemigrations --check
         run: uv run python manage.py makemigrations --check --dry-run
       - name: check --deploy

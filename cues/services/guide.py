@@ -19,6 +19,7 @@ ORDER = (
     "picture-and-turnovers",
     "cues-and-versions",
     "review-links",
+    "notifications",
     "importing",
     "conform",
     "tools",

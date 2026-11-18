@@ -9,12 +9,13 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
+from notifications import outbox
 from reeltime import maintenance
 from reeltime import updates
 
 
 class Command(BaseCommand):
-    """Runs nightly maintenance every day until stopped."""
+    """Runs nightly maintenance and sends notifications until stopped."""
 
     help = "Run nightly maintenance at NIGHTLY_HOUR_UTC until SIGTERM."
 
@@ -32,6 +33,11 @@ class Command(BaseCommand):
         self.stdout.write(
             f"Scheduler running; nightly at {settings.NIGHTLY_HOUR_UTC}:00 UTC."
         )
+        # Notifications go out every few seconds, beside the nightly job.
+        sender = threading.Thread(
+            target=outbox.run, args=(stop,), name="notifications", daemon=True
+        )
+        sender.start()
         updates.check()  # so admins hear of a release before the first night
         maintenance.run_forever(
             clock=timezone.now,
@@ -39,4 +45,5 @@ class Command(BaseCommand):
             job=maintenance.nightly,
             hour=settings.NIGHTLY_HOUR_UTC,
         )
+        sender.join(timeout=15)
         self.stdout.write("Scheduler stopped.")

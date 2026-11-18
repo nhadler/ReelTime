@@ -12,5 +12,6 @@ urlpatterns = [
     path("readyz", login_not_required(health.readyz), name="readyz"),
     path("auth/", include("accounts.urls")),
     path("admin/", admin.site.urls),
+    path("", include("notifications.urls")),
     path("", include("cues.urls")),
 ]

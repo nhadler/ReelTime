@@ -7300,6 +7300,18 @@ form:has(input[name='confirm']:valid) .backup__restore {
   display: contents;
 }
 
+/* Notifications: this user's devices. */
+.notification-devices {
+  margin-block: var(--space-4);
+}
+
+.notification-devices__actions form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}
+
 /* On a phone the grid's toolbar wraps rather than widen the page. */
 @media (width <= 40rem) {
   .toolbar,

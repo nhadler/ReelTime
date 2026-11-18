@@ -24,9 +24,9 @@ cov:
 lint:
     uv run ruff check .
     uv run ruff format --check .
-    uv run pylint accounts cues mcp_server reeltime tests manage.py
+    uv run pylint accounts cues mcp_server notifications reeltime tests manage.py
     uv run mypy
-    uv run bandit -q -r accounts cues mcp_server reeltime -x tests
+    uv run bandit -q -r accounts cues mcp_server notifications reeltime -x tests
     uv run python manage.py makemigrations --check --dry-run
     just check-deploy
     npx --no-install eslint .

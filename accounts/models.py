@@ -38,6 +38,11 @@ class User(AbstractUser):
     # Changes with the picture; the top bar links to it with this, so
     # browsers may cache it for good. Blank when there is none.
     picture_hash = models.CharField(max_length=16, blank=True, editable=False)
+    # What this user's devices are told about (notifications).
+    notify_comments = models.BooleanField(
+        "comments and replies on review links", default=True
+    )
+    notify_opens = models.BooleanField("review links opened", default=True)
 
     def __str__(self) -> str:
         """Returns the display name, falling back to the username."""
@@ -68,6 +73,8 @@ class AuditAction(models.TextChoices):
     RESTORE = "restore", "Restore"
     PROJECT_DELETE = "project_delete", "Project deleted"
     SETTINGS_CHANGE = "settings_change", "Settings changed"
+    NOTIFICATIONS_ON = "notifications_on", "Notifications turned on"
+    NOTIFICATIONS_OFF = "notifications_off", "Notifications turned off"
 
 
 class AuditEvent(models.Model):

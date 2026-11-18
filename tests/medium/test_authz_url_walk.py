@@ -39,9 +39,18 @@ PUBLIC = {
     "cues:review_who",
     "cues:review_watching",
     "cues:review_comments",
+    # The web app manifest and service worker: browsers fetch them
+    # without cookies, and neither holds anything about anyone.
+    "notifications:manifest",
+    "notifications:service_worker",
 }
-# Pages a viewer may POST to: their own calendar link.
-VIEWER_POSTS = {"cues:calendar_feed"}
+# Pages a viewer may POST to: their own calendar link and notifications.
+VIEWER_POSTS = {
+    "cues:calendar_feed",
+    "notifications:page",
+    "notifications:subscribe",
+    "notifications:forget",
+}
 
 _ROUTE_PARAM = re.compile(r"<(?:(?P<converter>\w+):)?\w+>")
 # Named or unnamed regex groups, e.g. (?P<app_label>a|b) or ([^/]+).
@@ -148,7 +157,7 @@ def test_viewer_cannot_write(
     assert role_client(Role.VIEWER).post(route.url).status_code == 403
 
 
-def test_viewer_posts_are_only_their_own_calendar_link() -> None:
+def test_viewer_posts_are_only_their_own_settings() -> None:
     assert VIEWER_POSTS <= {route.name for route in PROTECTED}
 
 

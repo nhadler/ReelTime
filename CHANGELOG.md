@@ -6,6 +6,19 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- **Notifications** (profile menu): ReelTime tells your phone or browser
+  when someone comments on or replies to a review link, or opens one.
+  The project's name is the title, and tapping it opens the cue's page
+  at that version. On an iPhone or iPad, add ReelTime to the Home Screen
+  first (iOS 16.4 or later); it then opens as an app of its own. Choose
+  what you're told about, send a test, and remove devices on the same
+  page. A guest's name always says "(guest)", and several comments on
+  one cue close together arrive as one. See Help, Notifications.
+- ReelTime has a web app manifest and icons, so a Home Screen or
+  desktop install opens it full screen.
+
 ### Changed
 
 - **Comments on a review page's timeline** are speech bubbles pointing
@@ -16,6 +29,20 @@ this project follows [Semantic Versioning](https://semver.org/).
 - A version whose picture has a long name no longer pushes the cue
   page's **Versions** list sideways, cutting off its title and labels:
   the name ends in "…", with the whole name on hover.
+
+### Deployment
+
+- Notifications are sent by the scheduler service, which now also runs
+  every few seconds. Without Docker, enable the new
+  `reeltime-push.service` (`systemctl enable --now reeltime-push.service`
+  after re-running `deploy/systemd/install.sh`). It needs to reach
+  Apple's, Google's, Mozilla's and Microsoft's push services.
+- The key that signs notifications is made on first use and kept in the
+  data directory as `vapid.pem`; `REELTIME_VAPID_PRIVATE_KEY` sets one
+  instead. Push subscriptions aren't in backups: after a restore, turn
+  notifications on again on each device.
+- The Content Security Policy adds `worker-src 'self'` and
+  `manifest-src 'self'`.
 
 ## [2.4.0] - 2026-11-17
 

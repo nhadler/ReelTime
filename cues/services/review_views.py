@@ -20,6 +20,7 @@ from cues import models
 from cues import timecode
 from cues.services import review
 from cues.services.summaries import clock
+from notifications import outbox
 
 # A reload this soon after the last sign of life is the same visit.
 SAME_VISIT = datetime.timedelta(minutes=30)
@@ -36,9 +37,18 @@ def new_browser() -> str:
 
 
 def start(
-    version: models.CueVersion, *, name: str, member: bool, browser: str
+    version: models.CueVersion,
+    *,
+    name: str,
+    member: bool,
+    browser: str,
+    viewer: int | None = None,
 ) -> models.ReviewView:
-    """Starts a visit, or carries on this browser's recent one."""
+    """Starts a visit, or carries on this browser's recent one.
+
+    A new visit tells whoever wants to know (notifications), except the
+    viewer themself (`viewer`, their user id).
+    """
     now = timezone.now()
     recent = (
         version.review_views.filter(
@@ -63,6 +73,16 @@ def start(
     )
     keep = list(version.review_views.values_list("pk", flat=True)[:MAX_VIEWS])
     version.review_views.exclude(pk__in=keep).delete()
+    cue = version.cue
+    outbox.opened(
+        project=cue.project.title,
+        about=f"cue-{cue.pk}",
+        label=f"{cue.number} {version.label}",
+        name=name,
+        member=member,
+        viewer=viewer,
+        path=review.cue_path(version),
+    )
     return view
 
 

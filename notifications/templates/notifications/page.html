@@ -1,0 +1,76 @@
+{% extends "app.html" %}
+{% load static text %}
+{# Notifications on this user's phones and browsers (profile menu). #}
+
+{% block title %}Notifications · ReelTime{% endblock %}
+{% block page_class %}page--narrow{% endblock %}
+{% block scripts %}<script src="{% static 'notifications/notifications.js' %}" type="module"></script>{% endblock %}
+
+{% block content %}
+  <div class="page-head">{% include "cues/includes/page_title.html" with title="Notifications" slug="notifications" %}</div>
+  {{ config|json_script:"notifications-config" }}
+
+  <div class="callout" data-state="install" hidden>
+    {% include "cues/includes/icon.html" with name="bell" %}
+    <div>
+      <p class="callout__title">Add ReelTime to the Home Screen First</p>
+      <p>In Safari, tap Share, then Add to Home Screen. Open ReelTime from the Home Screen and come back to this page.</p>
+    </div>
+  </div>
+  <p class="empty" data-state="unsupported" hidden>This browser can't show notifications from ReelTime.</p>
+  <p class="empty" data-state="denied" hidden>Notifications from ReelTime are blocked in this browser's settings. Allow them there, then reload this page.</p>
+  <div class="form-actions" data-state="ready" hidden>
+    <button class="button" type="button" id="notifications-on">Turn On for This Device</button>
+  </div>
+  <p class="helptext" id="notifications-status" role="status"></p>
+
+  <section class="form-section">
+    <h2>Devices</h2>
+    {% if devices %}
+      <table class="table notification-devices">
+        <thead>
+          <tr>
+            <th scope="col">Device</th>
+            <th scope="col">Last Sent</th>
+            <th scope="col"><span class="visually-hidden">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for device in devices %}
+            <tr data-endpoint="{{ device.endpoint }}">
+              <td>Added {{ device.created_at|stamp:short_format }} <span class="chip" data-this-device hidden>This Device</span></td>
+              <td>{% if device.last_sent_at %}{{ device.last_sent_at|stamp:short_format }}{% else %}Not yet{% endif %}</td>
+              <td class="notification-devices__actions">
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="device" value="{{ device.pk }}">
+                  <button class="button button--small button--quiet" type="submit" name="action" value="test">Send Test</button>
+                  <button class="button button--small button--quiet" type="submit" name="action" value="remove"
+                          data-confirm="Remove this device? It stops getting notifications.">Remove</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="empty">No devices yet.</p>
+    {% endif %}
+  </section>
+
+  <form method="post" class="form-section">
+    {% csrf_token %}
+    <h2>Tell Me About</h2>
+    <div class="field field--check">
+      <input type="checkbox" id="notify-comments" name="comments"{% if user.notify_comments %} checked{% endif %}>
+      <label for="notify-comments">Comments and Replies</label>
+    </div>
+    <div class="field field--check">
+      <input type="checkbox" id="notify-opens" name="opens"{% if user.notify_opens %} checked{% endif %}>
+      <label for="notify-opens">Review Links Opened</label>
+    </div>
+    <div class="form-actions">
+      <button class="button button--quiet" type="submit" name="action" value="choose">Save</button>
+    </div>
+  </form>
+{% endblock %}

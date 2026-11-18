@@ -26,6 +26,7 @@ from django.db.models import F
 from django.db.models import Max
 from django.db.models import Q
 from django.db.models import Sum
+from django.urls import reverse
 from django.utils import crypto
 from django.utils import timezone
 
@@ -34,6 +35,7 @@ from cues import models
 from cues import timecode
 from cues.services import activity
 from cues.services import history
+from notifications import outbox
 
 MAX_NAME = 60
 MAX_BODY = 2000
@@ -355,6 +357,12 @@ def guest_name(name: str) -> str:
     return _name(name, None)
 
 
+def cue_path(version: models.CueVersion) -> str:
+    """The Review section of a version on its cue's page."""
+    page = reverse("cues:cue", args=[version.cue_id])
+    return f"{page}?version={version.pk}#group-review"
+
+
 def add_comment(
     version: models.CueVersion,
     *,
@@ -416,7 +424,7 @@ def add_comment(
                 f"{cue.number} {version.label} has {MAX_COMMENTS} comments, "
                 "the most a version takes."
             )
-        return models.ReviewComment.objects.create(
+        comment = models.ReviewComment.objects.create(
             version=version,
             frame=frame,
             end_frame=end,
@@ -425,6 +433,19 @@ def add_comment(
             body=text,
             parent=parent,
         )
+        # Queued in the same transaction; sent by the outbox's loop.
+        outbox.comment(
+            project=cue.project.title,
+            about=f"cue-{cue.pk}",
+            label=f"{cue.number} {version.label}",
+            name=shown,
+            member=user is not None,
+            author=user.pk if user else None,
+            text=text,
+            reply=parent is not None,
+            path=cue_path(version),
+        )
+        return comment
 
 
 def resolve(

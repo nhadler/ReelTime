@@ -151,6 +151,7 @@ def _visit(
         else str(request.session[NAME]),
         member=member is not None,
         browser=str(request.session[BROWSER]),
+        viewer=member.pk if member else None,
     )
 
 

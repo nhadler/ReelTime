@@ -9,6 +9,8 @@ EXPECTED_CSP = {
     "style-src": "'self'",
     "img-src": "'self' data:",
     "connect-src": "'self'",
+    "worker-src": "'self'",
+    "manifest-src": "'self'",
     "frame-ancestors": "'none'",
     "form-action": "'self'",
     "base-uri": "'none'",

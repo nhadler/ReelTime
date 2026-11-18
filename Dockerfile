@@ -26,6 +26,7 @@ COPY accounts ./accounts
 COPY cues ./cues
 COPY reeltime ./reeltime
 COPY mcp_server ./mcp_server
+COPY notifications ./notifications
 COPY templates ./templates
 COPY deploy/docker-entrypoint.sh ./deploy/docker-entrypoint.sh
 RUN --mount=type=cache,target=/root/.cache/uv \
