@@ -6,6 +6,8 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.5.0] - 2026-11-17
+
 ### Added
 
 - **Notifications** (profile menu): ReelTime tells your phone or browser
@@ -498,7 +500,8 @@ The first public release.
   `ghcr.io/nhadler/reellife` with an SBOM and build provenance, Docker
   Compose, and a systemd + uv install.
 
-[Unreleased]: https://github.com/nhadler/reeltime/compare/v2.4.0...HEAD
+[Unreleased]: https://github.com/nhadler/reeltime/compare/v2.5.0...HEAD
+[2.5.0]: https://github.com/nhadler/reeltime/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/nhadler/reeltime/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/nhadler/reeltime/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/nhadler/reeltime/compare/v2.1.0...v2.2.0
