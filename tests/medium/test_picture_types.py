@@ -20,6 +20,8 @@ from cues.services import projects as project_service
 from cues.services import turnovers
 from tests import factories
 
+HX = {"HX-Request": "true"}
+
 pytestmark = pytest.mark.django_db
 
 HOUR = 86_400  # frames at 24 fps
@@ -169,5 +171,7 @@ def test_import_places_new_cues_in_the_types_words(
     _log(project, *names)
     form = transfer_forms.ImportForm(project=project)
     assert [c.choice_label for c in form["picture"]] == choices
-    html = editor.get(reverse("cues:import", args=[project.pk])).content
+    html = editor.get(
+        reverse("cues:import", args=[project.pk]), headers=HX
+    ).content
     assert f">{choices[0]}</option>".encode() in html

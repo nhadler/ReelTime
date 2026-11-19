@@ -53,6 +53,18 @@ def test_a_guest_opens_the_page(link: models.ReviewLink) -> None:
     assert link.last_opened_at is not None
 
 
+def test_the_sender_checking_the_link_is_not_an_opening(
+    link: models.ReviewLink, role_client: Callable[[Role], Client]
+) -> None:
+    assert role_client(Role.EDITOR).get(page_url(link)).status_code == 200
+    link.refresh_from_db()
+    assert link.last_opened_at is None
+    # A signed-in viewer is a reviewer like any guest.
+    assert role_client(Role.VIEWER).get(page_url(link)).status_code == 200
+    link.refresh_from_db()
+    assert link.last_opened_at is not None
+
+
 def test_the_page_is_private_and_may_play_dropbox_video(
     link: models.ReviewLink,
 ) -> None:

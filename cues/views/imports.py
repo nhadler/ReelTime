@@ -36,6 +36,7 @@ from cues.importers import base
 from cues.importers import merge
 from cues.importers import tabular
 from cues.services import imports
+from cues.views import fragments
 
 FIELD_LABELS = {
     "number": "Cue #",
@@ -263,6 +264,8 @@ def _render_preview(
 def import_dialog(request: HttpRequest, project_id: int) -> HttpResponse:
     """The import dialog's first step."""
     project = get_object_or_404(models.Project, pk=project_id)
+    if fragments.typed_in(request):
+        return fragments.to_grid(project.pk, "import")
     return render(
         request,
         "cues/dialogs/import.html",

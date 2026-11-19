@@ -28,29 +28,31 @@ def test_the_more_menu_lists_everything_else(
     assert "Project Notes" not in menu
     for item in (
         "Conform",
-        'data-grid-action="stats"',
         reverse("cues:activity", args=[project.pk]),
         'data-palette="Activity"',
         reverse("cues:trash", args=[project.pk]),
         'data-palette="Trash"',
-        "Import Cues",
-        'data-grid-action="export"',
+        'id="grid-cue-sheet"',
         "Export Cue Sheet",
         'data-grid-action="copy-json"',
         reverse("cues:settings_statuses", args=[project.pk]),
-        "Project (Archive, Duplicate…)",
+        "Duplicate, Archive or Delete",
     ):
         assert item in menu, item
+    # The toolbar and bottom bar have these on the cue overview: one home.
+    for item in ("Import Cues", "Export Cues", ">Stats<"):
+        assert item not in menu, item
     # Off the cue overview, grid actions open it to do them.
     picture = editor.get(
         reverse("cues:picture", args=[project.pk])
     ).content.decode()
     assert f"{reverse('cues:project', args=[project.pk])}?do=stats" in picture
+    assert "Import Cues…" in picture and "Export Cues…" in picture
     viewer = role_client(Role.VIEWER)
     seen = viewer.get(
         reverse("cues:project", args=[project.pk])
     ).content.decode()
-    assert "Import Cues<kbd>" not in seen[seen.index("project-menu") :]
+    assert 'id="grid-import"' not in seen
 
 
 @pytest.mark.parametrize(

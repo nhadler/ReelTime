@@ -21,8 +21,11 @@ const NUMBER_PX = 90;
  * @param {!Element} container The timeline.
  */
 export function fitLabels(container) {
-  for (const block of container.querySelectorAll('.timeline__cue')) {
-    const width = block.getBoundingClientRect().width;
+  const blocks = [...container.querySelectorAll('.timeline__cue')];
+  // Every width first, then every label: one layout, not one per block.
+  const widths = blocks.map((block) => block.getBoundingClientRect().width);
+  for (const [i, block] of blocks.entries()) {
+    const width = widths[i];
     if (width < BARE_PX) {
       block.textContent = '';
     } else if (width < NUMBER_PX) {
@@ -157,6 +160,7 @@ export function drawTimeline(container, input) {
     segment.append(label, ruler(reel, input.fps), track);
     container.append(segment);
   }
+  roving(container);
   fitLabels(container);
 }
 
@@ -194,8 +198,53 @@ function block(cue, reel, lane, input) {
   button.addEventListener('dblclick', () => input.onOpen(cue));
   if (input.onLane && !input.collapsed) {
     dragBetweenLanes(button, cue, lane, input);
+    // The keyboard's way to change lanes: Alt+Up and Alt+Down.
+    button.addEventListener('keydown', (event) => {
+      const step = {ArrowUp: -1, ArrowDown: 1}[event.key];
+      if (!event.altKey || !step) {
+        return;
+      }
+      event.preventDefault();
+      const target = Math.min(Math.max(lane + step, 0), input.lanes - 1);
+      if (target !== lane) {
+        input.onLane(cue, target + 1);
+      }
+    });
   }
   return button;
+}
+
+/**
+ * Makes the cue blocks one Tab stop: the arrow keys (and Home, End)
+ * move between them, in timeline order.
+ * @param {!Element} container The timeline.
+ */
+function roving(container) {
+  const blocks = [...container.querySelectorAll('.timeline__cue')];
+  for (const [i, block] of blocks.entries()) {
+    block.tabIndex = i === 0 ? 0 : -1;
+    block.addEventListener('focus', () => {
+      for (const other of blocks) {
+        other.tabIndex = other === block ? 0 : -1;
+      }
+    });
+    block.addEventListener('keydown', (event) => {
+      if (event.altKey || event.ctrlKey || event.metaKey) {
+        return;
+      }
+      const to = {
+        ArrowLeft: i - 1,
+        ArrowRight: i + 1,
+        Home: 0,
+        End: blocks.length - 1,
+      }[event.key];
+      if (to === undefined || !blocks[to]) {
+        return;
+      }
+      event.preventDefault();
+      blocks[to].focus();
+    });
+  }
 }
 
 /**
@@ -218,14 +267,26 @@ function dragBetweenLanes(button, cue, lane, input) {
       button.style.top = `${target * LANE_PX}px`;
       button.classList.toggle('timeline__cue--dragging', target !== lane);
     };
-    const up = () => {
+    const stop = () => {
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', cancel);
+    };
+    const up = () => {
+      stop();
       if (target !== lane) {
         input.onLane(cue, target + 1);
       }
     };
+    // An interrupted drag (a touch taken by scrolling, a lost window)
+    // puts the block back and saves nothing.
+    const cancel = () => {
+      stop();
+      button.style.top = `${lane * LANE_PX}px`;
+      button.classList.remove('timeline__cue--dragging');
+    };
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', cancel);
   });
 }

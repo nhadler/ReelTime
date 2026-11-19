@@ -13,7 +13,7 @@ page or of Credits.
 
 ## Activity
 
-**Activity** (Settings menu, Project) lists every change to the
+**Activity** (More menu, Project) lists every change to the
 project, newest first, with the time, author, action and cue count.
 **Undo** takes back any of them, not just your latest, as long as
 nothing it changed was changed again afterwards; such an entry says
@@ -26,7 +26,7 @@ name or cue number is now taken. The error identifies the conflict.
 
 ## Trash
 
-**Trash** (Settings menu, Project) lists the cues deleted from the
+**Trash** (More menu, Project) lists the cues deleted from the
 project, with what deleted them and when. **Restore** brings a cue back
 with its versions, credits, themes and instrumentation as they were,
 even when the change that deleted it can no longer be undone. If

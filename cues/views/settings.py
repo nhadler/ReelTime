@@ -40,7 +40,7 @@ SECTIONS = (
     ("departments", "Departments", "cues:settings_departments"),
     ("deadlines", "Deadlines", "cues:settings_deadlines"),
     ("views", "Views", "cues:settings_views"),
-    ("project", "Project", "cues:settings_project"),
+    ("project", "Duplicate, Archive or Delete", "cues:settings_project"),
 )
 _LABELS = {key: label for key, label, _ in SECTIONS}
 _URLS = {key: url for key, _, url in SECTIONS}

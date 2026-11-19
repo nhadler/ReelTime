@@ -19,6 +19,8 @@ from cues.services import long_play
 from cues.services import projects as project_service
 from tests import factories
 
+HX = {"HX-Request": "true"}
+
 pytestmark = pytest.mark.django_db
 
 HOUR = 86_400  # frames at 24 fps
@@ -157,13 +159,13 @@ def test_dialog_offers_it_except_for_long_play(
     viewer: Client, project: models.Project
 ) -> None:
     url = reverse("cues:export", args=[project.pk])
-    html = viewer.get(url).content.decode()
+    html = viewer.get(url, headers=HX).content.decode()
     assert 'name="long_play"' in html and "Long Play Time" in html
     assert 'name="leader"' in html and 'name="start_hour"' in html
     assert "Time before the first reel" in html
     project.picture_type = models.Project.PictureType.LONG_PLAY
     project.save()
-    html = viewer.get(url).content.decode()
+    html = viewer.get(url, headers=HX).content.decode()
     assert 'name="long_play"' not in html
 
 

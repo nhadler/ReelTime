@@ -33,8 +33,9 @@ music.
 - A project opens on its **cue overview**: the header (progress and the
   **Breakdown**), a timeline of the cues, and the grid.
 - The project bar has **Cue Details**, **Picture**, **Notes** and the
-  **Settings** menu (☰). Settings includes Conform, Stats, import and
-  export, Copy JSON and the project settings pages.
+  **More** menu (☰): Conform, Activity, Trash, Export Cue Sheet, Copy
+  JSON and the project settings pages. On the cue overview, **Import**
+  and **Export** are in the toolbar and **Stats** is beside the views.
 - **Search** (Ctrl+K, ⌘K on a Mac) finds any project or cue (`1m01`,
   `1m01 main`, or a production number and cue, `BH101 1m01`) and runs
   commands such as New Cue or Export Cues. It also finds cues by their

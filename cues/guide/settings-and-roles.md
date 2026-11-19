@@ -15,7 +15,7 @@ Open these pages from the project bar's **Settings** menu:
 - **Deadlines**: deadlines and this project's own days off.
 - **Views**: the grid's views, in order; reset, duplicate, delete, or
   copy from another project.
-- **Project**: archive or duplicate the project; admins can delete it.
+- **Duplicate, Archive or Delete**: duplicate or archive the project; admins can delete it.
 
 ## App Settings
 

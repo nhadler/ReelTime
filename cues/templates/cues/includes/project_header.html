@@ -6,7 +6,7 @@
   </span>
   <div class="project-bar__main">
     <div class="project-bar__name">
-      <h1><a href="{% url 'cues:project' project.pk %}">{{ project.title }}</a></h1>
+      {% if tab == "cues" %}<h1 class="project-bar__title"><a href="{% url 'cues:project' project.pk %}">{{ project.title }}</a></h1>{% else %}<p class="project-bar__title"><a href="{% url 'cues:project' project.pk %}">{{ project.title }}</a></p>{% endif %}
     </div>
     {% if summary.has_cues %}
       {# Four columns: label, cues, times, then the pace and conform. #}

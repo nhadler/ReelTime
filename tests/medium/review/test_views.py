@@ -234,7 +234,9 @@ def test_the_cue_page_lists_who_watched(
     link: models.ReviewLink,
 ) -> None:
     editor = role_client(Role.EDITOR)
-    assert "Views" not in editor.get(panel_url(cue)).content.decode()
+    assert (
+        "Views" not in editor.get(panel_url(cue), headers=HX).content.decode()
+    )
     client = guest("Dana Director")
     key = _visit_key(client, link)
     client.post(
@@ -245,6 +247,9 @@ def test_the_cue_page_lists_who_watched(
     assert "0:20" in shown and "1:00:20:00" in shown
     # Visits go with their version, and outlast a revoked link.
     review.revoke(link)
-    assert "Dana Director" in editor.get(panel_url(cue)).content.decode()
+    assert (
+        "Dana Director"
+        in editor.get(panel_url(cue), headers=HX).content.decode()
+    )
     cue.versions.all().delete()
     assert not models.ReviewView.objects.exists()

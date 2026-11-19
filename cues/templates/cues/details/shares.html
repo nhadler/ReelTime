@@ -16,7 +16,7 @@
       {% csrf_token %}
       <input type="hidden" name="shares_seen" value="{{ shares_seen }}">
       {% include "cues/includes/inline_table.html" with fs=share_set add="Add Share" none="No shares yet." %}
-      <div class="form-actions"><button class="button button--small" type="submit">Save Shares</button></div>
+      <div class="form-actions"><button class="button button--small button--quiet" type="submit">Save Shares</button></div>
     </form>
   {% else %}
     <ul class="share-list">

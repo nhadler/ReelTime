@@ -16,6 +16,8 @@ from cues.services import history
 from cues.views import cue_details
 from tests import factories
 
+HX = {"HX-Request": "true"}
+
 pytestmark = pytest.mark.django_db
 
 
@@ -412,13 +414,13 @@ def test_sub_status_must_be_the_projects(
 def test_compare_strip(editor: Client, project: models.Project) -> None:
     on_old = _cue(project, "2m04")
     html = editor.get(
-        reverse("cues:cue_compare", args=[on_old.pk])
+        reverse("cues:cue_compare", args=[on_old.pk]), headers=HX
     ).content.decode()
     assert "Needs conform." in html
     assert "+00:00:02:12" in html
     current = _cue(project, "1m01")
     html = editor.get(
-        reverse("cues:cue_compare", args=[current.pk])
+        reverse("cues:cue_compare", args=[current.pk]), headers=HX
     ).content.decode()
     assert "was written to the current picture (c0917)" in html
 
@@ -454,7 +456,7 @@ def test_history_lists_changes(editor: Client, project: models.Project) -> None:
     cue = _cue(project, "1m01")
     _save(editor, cue, "title", "Opening")
     html = editor.get(
-        reverse("cues:cue_history", args=[cue.pk])
+        reverse("cues:cue_history", args=[cue.pk]), headers=HX
     ).content.decode()
     assert "Edit 1m01 Title" in html
     assert "<del>Main Title</del>" in html
@@ -469,7 +471,7 @@ def test_viewers_see_history_without_revert(
     cue = _cue(project, "1m01")
     _save(editor, cue, "title", "Opening")
     html = viewer.get(
-        reverse("cues:cue_history", args=[cue.pk])
+        reverse("cues:cue_history", args=[cue.pk]), headers=HX
     ).content.decode()
     assert "Edit 1m01 Title" in html
     assert "Revert" not in html
@@ -496,7 +498,7 @@ def test_older_changes_wait_for_newer_ones(
     _save(editor, cue, "artist", "Someone else")
     older = models.ChangeSet.objects.get(label="Edit 1m01 Title")
     html = editor.get(
-        reverse("cues:cue_history", args=[cue.pk])
+        reverse("cues:cue_history", args=[cue.pk]), headers=HX
     ).content.decode()
     assert html.count(">\n          Revert") == 1  # only the newest
     response = editor.post(reverse("cues:cue_revert", args=[cue.pk, older.pk]))
@@ -553,7 +555,7 @@ def test_imports_say_they_revert_every_cue(
             cue.artist = "Imported"
             cue.save()
     html = editor.get(
-        reverse("cues:cue_history", args=[first.pk])
+        reverse("cues:cue_history", args=[first.pk]), headers=HX
     ).content.decode()
     assert "Revert all 2 cues" in html
     assert "changed 1 other cue." in html

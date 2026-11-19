@@ -58,11 +58,16 @@ def test_the_cue_page_has_the_file_link_the_link_and_a_count(
     # A viewer reads it all but can't change it.
     viewer = role_client(Role.VIEWER)
     seen = viewer.get(
-        panel_url(cue), {"version": str(version.pk)}
+        panel_url(cue), {"version": str(version.pk)}, headers=HX
     ).content.decode()
     assert link.token in seen and "2 comments on v1" in seen
     assert 'name="expires_on"' not in seen and "Revoke Link" not in seen
-    assert viewer.get(panel_url(cue), {"version": "999999"}).status_code == 404
+    assert (
+        viewer.get(
+            panel_url(cue), {"version": "999999"}, headers=HX
+        ).status_code
+        == 404
+    )
 
 
 def test_the_panel_says_what_the_link_is_set_to(
@@ -77,21 +82,23 @@ def test_the_panel_says_what_the_link_is_set_to(
     link.expires_on = datetime.date(2026, 11, 30)
     link.comments_open = False
     link.save()
-    seen = editor.get(panel_url(cue)).content.decode()
+    seen = editor.get(panel_url(cue), headers=HX).content.decode()
     assert "Password set" in seen and "Works through Nov 30" in seen
     assert "Comments closed" in seen and "Last opened" in seen
     assert "No comments on v1 yet" in seen and "Remove Password" in seen
     assert "strings42" not in seen
     link.expires_on = datetime.date(2026, 11, 1)
     link.save()
-    assert "Ended Nov 1" in editor.get(panel_url(cue)).content.decode()
+    assert (
+        "Ended Nov 1" in editor.get(panel_url(cue), headers=HX).content.decode()
+    )
     # A File Link that can't be played says so; a path isn't linked.
     cue.versions.update(file_link="/Volumes/Bounces/1m01.mov")
-    seen = editor.get(panel_url(cue)).content.decode()
+    seen = editor.get(panel_url(cue), headers=HX).content.decode()
     assert "Not a Dropbox link to a single file" in seen
     assert "Open the Bounce" not in seen
     cue.versions.update(file_link="")
-    seen = editor.get(panel_url(cue)).content.decode()
+    seen = editor.get(panel_url(cue), headers=HX).content.decode()
     assert "Paste a Dropbox link to v1" in seen
 
 
@@ -99,12 +106,21 @@ def test_a_cue_without_versions_or_a_link(
     role_client: Callable[[Role], Client],
 ) -> None:
     cue = factories.CueFactory.create()
-    editor = role_client(Role.EDITOR).get(panel_url(cue)).content.decode()
+    editor = (
+        role_client(Role.EDITOR)
+        .get(panel_url(cue), headers=HX)
+        .content.decode()
+    )
     assert "Make a Review Link" in editor and "File Link" not in editor
     viewer = role_client(Role.VIEWER)
-    assert "No review link." in viewer.get(panel_url(cue)).content.decode()
+    assert (
+        "No review link."
+        in viewer.get(panel_url(cue), headers=HX).content.decode()
+    )
     review.create(cue, None)
-    assert "comment" not in viewer.get(panel_url(cue)).content.decode()
+    assert (
+        "comment" not in viewer.get(panel_url(cue), headers=HX).content.decode()
+    )
 
 
 def test_an_editor_makes_sets_up_and_revokes_a_link(
@@ -148,7 +164,7 @@ def test_an_editor_makes_sets_up_and_revokes_a_link(
         48,
         True,
     )
-    again = editor.get(panel_url(cue)).content.decode()
+    again = editor.get(panel_url(cue), headers=HX).content.decode()
     assert 'value="0:02"' in again and "strings42" not in again
     # A setting saved from a tab that shows old values touches only
     # itself: the last day and the password stay.
@@ -162,7 +178,10 @@ def test_an_editor_makes_sets_up_and_revokes_a_link(
         36,
         False,
     )
-    assert 'value="00:00:01:12"' in editor.get(panel_url(cue)).content.decode()
+    assert (
+        'value="00:00:01:12"'
+        in editor.get(panel_url(cue), headers=HX).content.decode()
+    )
 
 
 def test_settings_on_an_ended_link_and_revoking(
@@ -296,18 +315,21 @@ def test_a_versions_audio_plays_under_its_video(
     (shown,) = review.playable(cue)
     assert shown.audio.endswith("raw=1")
     assert "The audio plays under the video." in (
-        editor.get(panel_url(cue)).content.decode()
+        editor.get(panel_url(cue), headers=HX).content.decode()
     )
     # Not a Dropbox file: no player, and the cue page says so.
     version.audio_link = "/Volumes/Bounces/1m01_2mx.wav"
     version.save()
     assert "review-audio" not in guest().get(page_url(link)).content.decode()
-    assert "Audio Link isn" in editor.get(panel_url(cue)).content.decode()
+    assert (
+        "Audio Link isn"
+        in editor.get(panel_url(cue), headers=HX).content.decode()
+    )
     # Audio without video isn't a review page of its own.
     version.audio_link = AUDIO_LINK
     version.file_link = ""
     version.save()
     assert "The audio plays once File Link has a video." in (
-        editor.get(panel_url(cue)).content.decode()
+        editor.get(panel_url(cue), headers=HX).content.decode()
     )
     assert b"Nothing to Watch Yet" in guest().get(page_url(link)).content

@@ -2,7 +2,7 @@
 
 {% block settings %}
   <section class="form-section">
-    <h3>Views</h3>
+    <h2>Views</h2>
     <table class="table settings-views">
       <thead><tr><th scope="col">View</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
       <tbody>
@@ -44,7 +44,7 @@
   </section>
 
   <section class="form-section">
-    <h3>Copy From Another Project</h3>
+    <h2>Copy From Another Project</h2>
     {% if copy_form.fields.source.queryset.exists %}
       <form method="post" action="{% url 'cues:settings_copy_from' project.pk %}" novalidate>
         {% csrf_token %}

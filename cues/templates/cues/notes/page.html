@@ -9,6 +9,6 @@
 {% block content %}
   <div class="page-head">{% include "cues/includes/page_title.html" with title="Project Notes" slug="cues-and-versions" sub=True %}</div>
   <div class="project-notes">
-    {% for note in notes %}{% include "cues/notes/note.html" %}{% endfor %}
+    {% for note in notes %}{% include "cues/notes/note.html" with note_level=2 %}{% endfor %}
   </div>
 {% endblock %}

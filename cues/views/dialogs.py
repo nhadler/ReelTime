@@ -34,6 +34,7 @@ from cues.services import pins
 from cues.services import projects as project_service
 from cues.services import writing
 from cues.services.summaries import clock
+from cues.views import fragments
 
 # Events the page listens for (grid.js, the header's hx-trigger, dialog.js).
 CHANGED = {"cues:reload": True, "cues:changed": True}
@@ -41,17 +42,6 @@ CHANGED = {"cues:reload": True, "cues:changed": True}
 
 def _user(request: HttpRequest) -> User | None:
     return request.user if isinstance(request.user, User) else None
-
-
-def _typed_in(request: HttpRequest) -> bool:
-    """A dialog's address opened directly rather than loaded by htmx.
-
-    The form alone would show unstyled, so the view sends the page it
-    belongs to instead.
-    """
-    return (
-        request.method == "GET" and request.headers.get("HX-Request") != "true"
-    )
 
 
 def _closed() -> HttpResponse:
@@ -84,7 +74,7 @@ def _new_cue_initial(
 def new_cue(request: HttpRequest, project_id: int) -> HttpResponse:
     """The new cue dialog."""
     project = get_object_or_404(models.Project, pk=project_id)
-    if _typed_in(request):  # the grid opens the dialog (grid.js)
+    if fragments.typed_in(request):  # the grid opens the dialog (grid.js)
         return redirect(reverse("cues:project", args=[project.pk]) + "?new=1")
     added = ""
     if request.method == "POST":
@@ -177,7 +167,7 @@ def new_version(request: HttpRequest, cue_id: int) -> HttpResponse:
     cue = get_object_or_404(
         models.Cue.objects.select_related("project", "picture"), pk=cue_id
     )
-    if _typed_in(request):
+    if fragments.typed_in(request):
         return redirect("cues:cue", cue.pk)
     if request.method == "POST":
         form = forms.NewVersionForm(request.POST, cue=cue)
@@ -228,7 +218,7 @@ def schedule_on(request: HttpRequest, cue_id: int) -> HttpResponse:
     cue = get_object_or_404(
         models.Cue.objects.select_related("project"), pk=cue_id
     )
-    if _typed_in(request):
+    if fragments.typed_in(request):
         return redirect("cues:cue", cue.pk)
     pin = models.SchedulePin.objects.filter(cue=cue).first()
     initial = {"date": pin.date if pin else timezone.localdate()}
@@ -323,7 +313,7 @@ def log_written(request: HttpRequest, cue_id: int) -> HttpResponse:
     cue = get_object_or_404(
         models.Cue.objects.select_related("project", "status"), pk=cue_id
     )
-    if _typed_in(request):
+    if fragments.typed_in(request):
         return redirect("cues:cue", cue.pk)
     data = request.POST if request.method == "POST" else request.GET
     date = _day(data.get("date", ""))

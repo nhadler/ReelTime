@@ -46,6 +46,7 @@ from cues import timecode
 from cues.services import activity
 from cues.services import review
 from cues.services import review_views
+from cues.views import fragments
 from reeltime import net
 
 ViewT = TypeVar("ViewT", bound=Callable[..., Any])
@@ -131,6 +132,12 @@ def _unnamed(request: HttpRequest) -> bool:
     return _member(request) is None and not request.session.get(NAME)
 
 
+def _sender(request: HttpRequest) -> bool:
+    """An editor or admin: someone who sends review links, not a reviewer."""
+    member = _member(request)
+    return member is not None and roles.at_least(member.role, Role.EDITOR)
+
+
 def _visit(
     request: HttpRequest, version: models.CueVersion
 ) -> models.ReviewView | None:
@@ -140,7 +147,7 @@ def _visit(
     link, checking how it looks.
     """
     member = _member(request)
-    if member is not None and roles.at_least(member.role, Role.EDITOR):
+    if _sender(request):
         return None
     if BROWSER not in request.session:
         request.session[BROWSER] = review_views.new_browser()
@@ -206,8 +213,9 @@ def page(request: HttpRequest, token: str) -> HttpResponse:
     shown = review.choose(found, request.GET.get("v", ""))
     if shown is None and "v" in request.GET:
         return _gone(request)
-    link.last_opened_at = timezone.now()
-    link.save(update_fields=["last_opened_at"])
+    if not _sender(request):  # the sender checking it isn't an opening
+        link.last_opened_at = timezone.now()
+        link.save(update_fields=["last_opened_at"])
     context: dict[str, Any] = {
         "link": link,
         "cue": cue,
@@ -520,6 +528,10 @@ def _version(cue: models.Cue, text: str) -> models.CueVersion | None:
 @require_GET
 def panel(request: HttpRequest, cue_id: int) -> HttpResponse:
     """The cue page's Review section: the link and a version's comments."""
+    if fragments.typed_in(request):
+        return fragments.to_cue(
+            cue_id, "group-review", request.GET.get("version", "")
+        )
     cue = _cue(cue_id)
     return _panel(request, cue, _version(cue, request.GET.get("version", "")))
 

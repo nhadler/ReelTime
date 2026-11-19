@@ -16,6 +16,8 @@ from cues.exporters import cue_log
 from cues.services import demo
 from tests import factories
 
+HX = {"HX-Request": "true"}
+
 pytestmark = pytest.mark.django_db
 
 TODAY = datetime.date(2026, 10, 30)
@@ -202,7 +204,9 @@ def test_dialog_for_viewers_too(
     assert view is not None
     first = project.cues.get(number="1m01")
     url = reverse("cues:export", args=[project.pk])
-    html = viewer.get(f"{url}?view={view.pk}&ids={first.pk},x").content.decode()
+    html = viewer.get(
+        f"{url}?view={view.pk}&ids={first.pk},x", headers=HX
+    ).content.decode()
     assert "Export Cues" in html
     assert f'value="{view.pk}"' in html and "checked" in html
     assert "The 1 Shown in the Grid" in html

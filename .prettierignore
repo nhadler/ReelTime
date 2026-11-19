@@ -6,6 +6,8 @@ staticfiles/
 htmlcov/
 fixtures/
 private/
+.claude/
+.impeccable/
 uv.lock
 package-lock.json
 *.html

@@ -11,7 +11,7 @@
   <form method="post" action="?list={{ field }}" novalidate>
     {% csrf_token %}
     <section class="form-section">
-      <h3>{% for key, name in tabs %}{% if key == field %}{{ name }}{% endif %}{% endfor %}</h3>
+      <h2>{% for key, name in tabs %}{% if key == field %}{{ name }}{% endif %}{% endfor %}</h2>
       {% include "cues/includes/inline_table.html" with fs=formset add="Add Status" none="No statuses yet." %}
     </section>
     <div class="form-actions">

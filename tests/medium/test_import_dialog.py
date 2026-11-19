@@ -20,6 +20,8 @@ from cues.views import imports as views
 from tests import factories
 from tests import golden
 
+HX = {"HX-Request": "true"}
+
 pytestmark = pytest.mark.django_db
 
 CLIPS = golden.FIXTURES / "protools_clips_23976.txt"
@@ -102,7 +104,7 @@ def test_dialog_opens_for_editors_only(
     project: models.Project,
 ) -> None:
     url = reverse("cues:import", args=[project.pk])
-    html = editor.get(url).content.decode()
+    html = editor.get(url, headers=HX).content.decode()
     assert "Import Cues" in html
     assert 'hx-encoding="multipart/form-data"' in html
     assert '<option value="detect" selected>' in html
@@ -117,14 +119,15 @@ def test_project_page_has_the_import_button(
     html = editor.get(
         reverse("cues:project", args=[project.pk])
     ).content.decode()
-    assert 'id="grid-import"' in html
-    assert 'id="grid-import-open"' in html  # in the toolbar, not just Tools
+    # In the toolbar, and only there on this page.
+    assert html.count('id="grid-import"') == 1
+    assert html.count("Import Cues…") == 0
     viewer = (
         role_client(Role.VIEWER)
         .get(reverse("cues:project", args=[project.pk]))
         .content.decode()
     )
-    assert 'id="grid-import-open"' not in viewer
+    assert 'id="grid-import"' not in viewer
 
 
 def test_spreadsheet_preview(editor: Client, project: models.Project) -> None:
@@ -342,7 +345,7 @@ def test_cubase_imports_remember_the_start(editor: Client) -> None:
     project.refresh_from_db()
     assert project.daw_start == 0
     dialog = editor.get(
-        reverse("cues:import", args=[project.pk])
+        reverse("cues:import", args=[project.pk]), headers=HX
     ).content.decode()
     assert 'value="00:00:00:00"' in dialog or 'value="0:00:00:00"' in dialog
 

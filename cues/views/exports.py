@@ -25,6 +25,7 @@ from cues.api import grid
 from cues.exporters import cue_log
 from cues.exporters import version_notes
 from cues.exporters import wall_chart
+from cues.views import fragments
 
 _TYPES = {
     "csv": "text/csv; charset=utf-8",
@@ -37,6 +38,8 @@ _TYPES = {
 def export_dialog(request: HttpRequest, project_id: int) -> HttpResponse:
     """The export dialog, opened from the grid with its view and rows."""
     project = get_object_or_404(models.Project, pk=project_id)
+    if fragments.typed_in(request):
+        return fragments.to_grid(project.pk, "export")
     views = grid.views_for(project)
     ids = request.GET.get("ids", "")
     initial = {

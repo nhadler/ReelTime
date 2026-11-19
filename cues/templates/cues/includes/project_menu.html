@@ -1,4 +1,4 @@
-{# Project More menu: the project pages and actions not in the project bar. data-palette registers Ctrl+K commands not already in Tools. Needs project and tab, plus section on settings pages. Export, Copy JSON and Stats use data-grid-action on the cue overview; other pages open it with ?do=. #}
+{# Project More menu: the project pages and actions not in the project bar. data-palette registers Ctrl+K commands not already on the page. Needs project and tab, plus section on settings pages. On the cue overview, Import, Export and Stats are left to its toolbar and bottom bar (one home each), and Copy JSON uses data-grid-action; other pages open the grid with ?do=. #}
 {% load project_menu %}
 {% url 'cues:project' project.pk as overview %}
 {% settings_sections as sections %}
@@ -8,11 +8,7 @@
   <div class="menu__panel project-menu__panel">
     <p class="project-menu__heading">Project</p>
     <a class="menu__item" href="{% url 'cues:conform' project.pk %}"{% if tab == "conform" %} aria-current="page"{% endif %}>Conform</a>
-    {% if tab == "cues" %}
-      <button class="menu__item" type="button" data-grid-action="stats">Stats<kbd>Ctrl+Shift+S</kbd></button>
-    {% else %}
-      <a class="menu__item" href="{{ overview }}?do=stats">Stats</a>
-    {% endif %}
+    {% if tab != "cues" %}<a class="menu__item" href="{{ overview }}?do=stats">Stats</a>{% endif %}
     <a class="menu__item" href="{% url 'cues:activity' project.pk %}" data-palette="Activity"{% if tab == "activity" %} aria-current="page"{% endif %} title="Every change to the project, with Undo">Activity</a>
     <a class="menu__item" href="{% url 'cues:trash' project.pk %}" data-palette="Trash"{% if tab == "trash" %} aria-current="page"{% endif %} title="Deleted cues, to restore">Trash</a>
     {% if request.user.role != "viewer" %}
@@ -25,15 +21,13 @@
     {% endif %}
     <hr class="menu__rule">
     <p class="project-menu__heading">Cues</p>
-    {% if request.user.role != "viewer" %}
-      <button class="menu__item" type="button" hx-get="{% url 'cues:import' project.pk %}" hx-target="#app-dialog" hx-swap="innerHTML"{% if tab != "cues" %} data-palette="Import Cues"{% endif %}>Import Cues…<kbd>Ctrl+I</kbd></button>
-    {% endif %}
-    {% if tab == "cues" %}
-      <button class="menu__item" type="button" data-grid-action="export">Export Cues…<kbd>Ctrl+E</kbd></button>
-    {% else %}
+    {% if tab != "cues" %}
+      {% if request.user.role != "viewer" %}
+        <button class="menu__item" type="button" hx-get="{% url 'cues:import' project.pk %}" hx-target="#app-dialog" hx-swap="innerHTML" data-palette="Import Cues">Import Cues…</button>
+      {% endif %}
       <button class="menu__item" type="button" hx-get="{% url 'cues:export' project.pk %}" hx-target="#app-dialog" hx-swap="innerHTML" data-palette="Export Cues">Export Cues…</button>
     {% endif %}
-    <button class="menu__item" type="button" hx-get="{% url 'cues:cue_sheet' project.pk %}" hx-target="#app-dialog" hx-swap="innerHTML"{% if tab != "cues" %} data-palette="Export Cue Sheet"{% endif %}>Export Cue Sheet…</button>
+    <button class="menu__item" type="button"{% if tab == "cues" %} id="grid-cue-sheet"{% endif %} hx-get="{% url 'cues:cue_sheet' project.pk %}" hx-target="#app-dialog" hx-swap="innerHTML" data-palette="Export Cue Sheet" title="The PRO cue sheet: RapidCue Excel or CSV">Export Cue Sheet…</button>
     {% if tab == "cues" %}
       <button class="menu__item" type="button" data-grid-action="copy-json" title="The selected cues (or the focused one, or all shown) as JSON for macros">Copy JSON…<kbd>Ctrl+Shift+J</kbd></button>
     {% else %}
@@ -42,7 +36,7 @@
     <hr class="menu__rule">
     <p class="project-menu__heading">Settings</p>
     {% for key, label, url_name in sections %}
-      <a class="menu__item" href="{% url url_name project.pk %}"{% if key == "general" %} data-palette="Project Settings"{% endif %}{% if tab == "settings" and key == section %} aria-current="page"{% endif %}>{% if key == "project" %}Project (Archive, Duplicate…){% else %}{{ label }}{% endif %}</a>
+      <a class="menu__item" href="{% url url_name project.pk %}"{% if key == "general" %} data-palette="Project Settings"{% endif %}{% if tab == "settings" and key == section %} aria-current="page"{% endif %}>{{ label }}</a>
     {% endfor %}
   </div>
 </details>

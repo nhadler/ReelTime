@@ -40,6 +40,7 @@ from cues.services import cue_history
 from cues.services import history
 from cues.services import progress
 from cues.services import thumbnails
+from cues.views import fragments
 from cues.views import review as review_views
 from cues.views import shares as share_views
 from cues.views.imports import _limit as _limit_uploads
@@ -347,6 +348,8 @@ def version_field(
 @require_GET
 def cue_compare(request: HttpRequest, cue_id: int) -> HttpResponse:
     """The conform strip, refreshed after each save."""
+    if fragments.typed_in(request):
+        return fragments.to_cue(cue_id, "group-cue")
     cue = _cue(cue_id)
     return render(
         request,
@@ -373,6 +376,8 @@ def _history(
 @require_GET
 def cue_history_panel(request: HttpRequest, cue_id: int) -> HttpResponse:
     """The history panel, refreshed after each save."""
+    if fragments.typed_in(request):
+        return fragments.to_cue(cue_id, "history-title")
     return _history(request, _cue(cue_id))
 
 

@@ -31,13 +31,17 @@ def test_the_menu_reaches_the_grid_from_any_page(
     expect(page.locator("#cue-grid[data-ready=true]")).to_be_attached()
     menu = _open_menu(page)
     axe("settings menu", within=".project-menu")
-    menu.get_by_role("button", name="Export Cues").click()
+    menu.get_by_role("button", name="Export Cue Sheet").click()
     dialog = page.locator("#app-dialog")
-    expect(dialog.get_by_role("heading", name="Export Cues")).to_be_visible()
+    expect(
+        dialog.get_by_role("heading", name="Export Cue Sheet")
+    ).to_be_visible()
     page.keyboard.press("Escape")
-    expect(dialog.get_by_role("heading", name="Export Cues")).to_be_hidden()
-    # The toolbar's Export opens the same dialog.
-    page.locator("#grid-export-open").click()
+    expect(
+        dialog.get_by_role("heading", name="Export Cue Sheet")
+    ).to_be_hidden()
+    # Export Cues is the toolbar's.
+    page.locator("#grid-export").click()
     expect(dialog.get_by_role("heading", name="Export Cues")).to_be_visible()
     page.keyboard.press("Escape")
     # From the Picture page, Stats opens the grid with the panel up.
@@ -46,4 +50,10 @@ def test_the_menu_reaches_the_grid_from_any_page(
     expect(page.locator("#stats-toggle")).to_have_attribute(
         "aria-expanded", "true"
     )
+    assert "do=" not in page.url
+    # A dialog's address opened directly shows the dialog on its page.
+    page.goto(f"{app}/projects/{project.pk}/import/")
+    expect(
+        page.locator("#app-dialog").get_by_role("heading", name="Import Cues")
+    ).to_be_visible()
     assert "do=" not in page.url

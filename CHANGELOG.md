@@ -8,11 +8,57 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- **One place for each command on the cue overview.** Import and Export
+  are in the toolbar, Stats is beside the views, and the Tools menu holds
+  only what works on cues. The More menu keeps Export Cue Sheet and Copy
+  JSON there, and still has Import, Export and Stats on the other project
+  pages. The **Project** settings page is now **Duplicate, Archive or
+  Delete**, so it can't be mistaken for General.
+- **Conform** names the cues each reel's shift moves, shows unchanged
+  offsets as a dash, and marks the ones that moved in amber.
+- **The timeline** is one Tab stop: the arrow keys, Home and End move
+  between cues, and Alt+↑/↓ moves a cue to another lane.
+- **Fields and switches** have a stronger edge, so they're easy to find
+  in both themes. In the light theme, green and grey text is a little
+  darker, for contrast on project-tinted pages.
+- **On a phone**, the grid's Filter and View menus rise from the bottom
+  instead of running off the screen, and a review link's range handles
+  are easier to grab.
+- **Project pages load faster**: the notes editor loads the first time a
+  note opens.
+- **One green button per page** on the cue page (Save Shares is quiet)
+  and the Picture page (Place Cues is quiet).
+- **Headings in order on project pages.** A page's own title (Conform,
+  Activity, a settings page) is its main heading, and its sections come
+  next; the project's name above it is no longer a heading there. The
+  cue overview, which has no title of its own, keeps the project's name
+  as its heading.
 - **New typeface: IBM Plex Sans** replaces Instrument Sans in the app
   and in PDFs. It's the sister of IBM Plex Mono, which already sets the
   timecodes, so words and numbers come from one family made for
   interfaces and data.
 - Removed the Alpine.js file that was shipped but never used.
+- **Calmer edges.** The cue page's current version card and the project
+  cards on Overview and Projects show their colour around the whole
+  edge instead of a thick bar on one side. So do messages, form
+  errors, the Schedule's list of deadlines at risk, the Conform summary
+  and a note's "saved elsewhere" box.
+
+### Fixed
+
+- **The cue page beside a DAW:** at half-screen widths, its section list
+  no longer slides over the fields; it becomes one row of links.
+- **A dialog's address opened directly** (Import, Export, Export Cue
+  Sheet, a cue's History, conform strip or Review section) opens its page
+  with the dialog or section showing, not a bare unstyled fragment.
+- **A review link's "Last opened"** no longer counts the editor or admin
+  who sent it checking how it looks.
+- **Status colours** pick dark or light text by contrast, so every label
+  stays readable.
+- **A timeline drag that's interrupted** puts the cue back and saves
+  nothing.
+- The Projects page's hidden Search button no longer takes keyboard
+  focus.
 
 ## [2.5.0] - 2026-11-17
 

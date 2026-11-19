@@ -20,6 +20,8 @@ from cues.exporters.cue_sheet import rapidcue
 from cues.services import shares
 from tests import factories
 
+HX = {"HX-Request": "true"}
+
 pytestmark = pytest.mark.django_db
 
 TODAY = datetime.date(2026, 10, 31)
@@ -296,7 +298,9 @@ def fixture_viewer(role_client: Callable[[Role], Client]) -> Client:
 def test_dialog_checklist_and_downloads(
     viewer: Client, project: models.Project
 ) -> None:
-    html = viewer.get(reverse("cues:cue_sheet", args=[project.pk])).content
+    html = viewer.get(
+        reverse("cues:cue_sheet", args=[project.pk]), headers=HX
+    ).content
     page = html.decode()
     assert "Export Cue Sheet" in page
     assert "3 cues:" in page
@@ -331,7 +335,9 @@ def test_ready_to_send(viewer: Client) -> None:
         name="Casey", kind="writer", society="BMI"
     )
     shares.set_shares(cue, [shares.Line(writer, "CA", Decimal(100))])
-    page = viewer.get(reverse("cues:cue_sheet", args=[project.pk])).content
+    page = viewer.get(
+        reverse("cues:cue_sheet", args=[project.pk]), headers=HX
+    ).content
     assert b"ready to send." in page
 
 

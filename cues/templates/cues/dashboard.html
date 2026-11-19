@@ -30,7 +30,7 @@
       </select>
     </label>
     {# Enter searches (this comes first); the arrow flips the order. #}
-    <button class="visually-hidden" type="submit">Search</button>
+    <button class="visually-hidden" type="submit" tabindex="-1">Search</button>
     <input type="hidden" name="dir" value="{{ direction }}">
     <button class="button button--quiet button--icon search__direction" type="submit"
             name="dir" value="{% if direction == 'asc' %}desc{% else %}asc{% endif %}"

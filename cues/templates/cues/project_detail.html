@@ -31,17 +31,7 @@
           {# data-needs: how many selected cues a tool wants (grid.js greys the rest). #}
           <button class="menu__item" type="button" role="menuitem" data-tool="new" data-palette="New Cues"
                   title="Several new cues in one {{ project.reel_word|lower }}">New Cues…</button>
-          <button class="menu__item" type="button" role="menuitem" id="grid-import" data-palette="Import Cues" data-palette-keys="Ctrl+I"
-                  hx-get="{% url 'cues:import' project.pk %}"
-                  hx-target="#app-dialog" hx-swap="innerHTML">
-            Import Cues…<kbd>Ctrl+I</kbd></button>
         {% endif %}
-        <button class="menu__item" type="button" role="menuitem" id="grid-export" data-palette="Export Cues" data-palette-keys="Ctrl+E">
-          Export Cues…<kbd>Ctrl+E</kbd></button>
-        <button class="menu__item" type="button" role="menuitem" id="grid-cue-sheet" data-palette="Export Cue Sheet"
-                hx-get="{% url 'cues:cue_sheet' project.pk %}"
-                hx-target="#app-dialog" hx-swap="innerHTML"
-                title="The PRO cue sheet: RapidCue Excel or CSV">Export Cue Sheet…</button>
         {% if request.user.role != "viewer" %}
           <hr class="menu__rule">
           <button class="menu__item" type="button" role="menuitem" data-tool="versions"
@@ -89,15 +79,16 @@
       </div>
     </details>
     {% if request.user.role != "viewer" %}
-      {# The same dialog as Tools › Import Cues, where it can be seen. #}
-      <button class="toolbar__button" type="button" id="grid-import-open"
+      {# Import and Export live here only; the More menu has them on other pages. #}
+      <button class="toolbar__button" type="button" id="grid-import"
+              data-palette="Import Cues" data-palette-keys="Ctrl+I"
               hx-get="{% url 'cues:import' project.pk %}"
               hx-target="#app-dialog" hx-swap="innerHTML"
               title="Import cues (Ctrl+I)">
         {% include "cues/includes/icon.html" with name="import" %}<span>Import</span></button>
     {% endif %}
-    {# The same as Tools › Export Cues. #}
-    <button class="toolbar__button" type="button" id="grid-export-open" title="Export cues (Ctrl+E)">
+    <button class="toolbar__button" type="button" id="grid-export" title="Export cues (Ctrl+E)"
+            data-palette="Export Cues" data-palette-keys="Ctrl+E">
       {% include "cues/includes/icon.html" with name="export" %}<span>Export</span></button>
     <button class="toolbar__button" type="button" id="grid-details"
             title="Open the cue's details (Ctrl+Enter, or double-click a row)">

@@ -1,0 +1,2 @@
+{# One offset cell on the Conform page: amber when the picture moved it, a dash when it didn't, blank when unknown. #}
+<td class="tc">{% if frames %}<span class="tc--offset">{{ text }}</span>{% elif frames == 0 %}<span class="muted" title="No change">—</span>{% endif %}</td>

@@ -411,6 +411,6 @@ def test_a_file_link_that_cannot_be_parsed_is_not_linked(
     role_client: Callable[[Role], Client], cue: models.Cue
 ) -> None:
     cue.versions.update(file_link="https://[bad/1m01.mp4")
-    page = role_client(Role.EDITOR).get(panel_url(cue))
+    page = role_client(Role.EDITOR).get(panel_url(cue), headers=HX)
     assert page.status_code == 200
     assert b"Open the Bounce" not in page.content

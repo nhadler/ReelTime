@@ -78,7 +78,7 @@ def _tool(page: Any, name: str) -> None:
 
 
 def _import_clips(page: Any, axe: Check) -> None:
-    _tool(page, "Import Cues")
+    page.locator("#grid-import").click()
     dialog = page.locator("#app-dialog")
     expect(dialog.get_by_role("heading", name="Import Cues")).to_be_visible()
     axe("import dialog")
@@ -129,6 +129,13 @@ def _groups_and_selection(page: Any) -> None:
     expect(page.locator(".timeline__cue")).to_have_count(3)
     page.locator('.timeline__cue[data-number="1m02"]').click()
     expect(_row(page, "1m02").locator(".ag-cell-focus")).to_have_count(1)
+    # The blocks are one Tab stop; the arrow keys move between them.
+    expect(page.locator('.timeline__cue[tabindex="0"]')).to_have_count(1)
+    page.locator('.timeline__cue[data-number="1m02"]').focus()
+    page.keyboard.press("ArrowLeft")
+    expect(page.locator('.timeline__cue[data-number="1m01"]')).to_be_focused()
+    page.keyboard.press("End")
+    expect(page.locator(".timeline__cue").last).to_be_focused()
     _row(page, "1m01").locator("[col-id=title]").click(button="right")
     menu = page.get_by_role("menu")
     expect(
@@ -323,7 +330,7 @@ def _long_play_time(page: Any, axe: Check, project: models.Project) -> None:
 
 def _export(page: Any, axe: Check, project: models.Project) -> None:
     """The cue log as Excel, then the wall chart as PDF."""
-    _tool(page, "Export Cues")
+    page.locator("#grid-export").click()
     dialog = page.locator("#app-dialog")
     expect(dialog.get_by_role("heading", name="Export Cues")).to_be_visible()
     axe("export dialog")
@@ -368,7 +375,8 @@ def _search(page: Any, axe: Check) -> None:
 
 def _cue_sheet(page: Any, axe: Check) -> None:
     """The cue sheet: a checklist that follows the choices, a download."""
-    _tool(page, "Export Cue Sheet")
+    page.locator(".project-menu > summary").click()
+    page.locator("#grid-cue-sheet").click()
     dialog = page.locator("#app-dialog")
     expect(
         dialog.get_by_role("heading", name="Export Cue Sheet")
@@ -449,7 +457,7 @@ def _log_turnover(
     page.get_by_role("button", name="Log Turnover").click()
     assert project.turnovers.count() == 2
     # Reel 1's head moved: the conform assistant offers to shift its cues.
-    expect(page.get_by_role("heading", name="Conform", level=2)).to_be_visible()
+    expect(page.get_by_role("heading", name="Conform", level=1)).to_be_visible()
     offer = page.get_by_label(
         re.compile(r"Shift Reel 1's \d+ cues by \+00:00:02:12")
     )
@@ -473,11 +481,11 @@ def _settings_pages(
         "Departments",
         "Deadlines",
         "Views",
-        "Project",
+        "Duplicate, Archive or Delete",
     ):
         page.locator(".settings__nav").get_by_role("link", name=label).click()
         expect(
-            page.get_by_role("heading", name=label, exact=True, level=2)
+            page.get_by_role("heading", name=label, exact=True, level=1)
         ).to_be_visible()
         axe(f"settings: {label}")
     page.goto(f"{app}/settings/")
@@ -653,7 +661,9 @@ def test_keyboard_hints_follow_the_computer(  # pylint: disable=too-many-argumen
     expect(page.locator("#grid-new-cue")).to_have_attribute(
         "title", f"New cue ({new_cue})"
     )
-    expect(page.locator("#grid-import kbd")).to_have_text(import_cues)
+    expect(page.locator("#grid-import")).to_have_attribute(
+        "title", f"Import cues ({import_cues})"
+    )
 
 
 def test_days_off_calendar(
@@ -702,7 +712,7 @@ def test_days_off_calendar(
     ).click()
     expect(dialog.get_by_role("heading", name="Import Cues")).to_be_visible()
     page.keyboard.press("Escape")
-    page.locator("#grid-import-open").click()
+    page.locator("#grid-import").click()
     expect(dialog.get_by_role("heading", name="Import Cues")).to_be_visible()
 
 

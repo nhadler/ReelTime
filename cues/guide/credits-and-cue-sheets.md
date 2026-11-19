@@ -27,7 +27,7 @@ Use **Apply** to assign them to existing cues.
 ## The Cue Sheet
 
 Fill in Project Settings, Cue Sheet (production company, category,
-preparer...). Choose **Export Cue Sheet** from Settings or Tools, then
+preparer...). Choose **Export Cue Sheet** from the More menu, then
 select RapidCue Excel or CSV. Options include a revised sheet, cue #
 before each title, IPI numbers, notes, artist and inactive cues.
 

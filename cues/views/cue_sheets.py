@@ -19,6 +19,7 @@ from cues import transfer_forms
 from cues.exporters.cue_sheet import generic
 from cues.exporters.cue_sheet import model
 from cues.exporters.cue_sheet import rapidcue
+from cues.views import fragments
 from cues.views.exports import _limit
 
 _XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -34,6 +35,8 @@ def _sheet(
 def dialog(request: HttpRequest, project_id: int) -> HttpResponse:
     """The export dialog, with the checklist for the default choices."""
     project = get_object_or_404(models.Project, pk=project_id)
+    if fragments.typed_in(request):
+        return fragments.to_grid(project.pk, "cue-sheet")
     # The checklist starts from the form's defaults.
     defaults = transfer_forms.CueSheetForm(
         {"format": "rapidcue", "include_ipi": "on"}

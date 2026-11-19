@@ -37,6 +37,7 @@ class ReelMove:
     after: models.PictureVersion
     delta: int  # frames; positive is later
     cues: int  # active cues still to shift; 0 once shifted
+    numbers: tuple[str, ...] = ()  # those cues' numbers, in picture order
 
     def label(self, rate: timecode.Rate) -> str:
         """e.g. '+00:00:02:12'."""
@@ -89,13 +90,18 @@ def moved_reels(turnover: models.Turnover) -> list[ReelMove]:
             or before.tc_in == after.tc_in
         ):
             continue
+        to_shift = sorted(
+            _to_shift(after.picture, after),
+            key=lambda cue: (cue.tc_in is None, cue.tc_in or 0, cue.number),
+        )
         moves.append(
             ReelMove(
                 picture=after.picture,
                 before=before,
                 after=after,
                 delta=after.tc_in - before.tc_in,
-                cues=len(_to_shift(after.picture, after)),
+                cues=len(to_shift),
+                numbers=tuple(cue.number for cue in to_shift),
             )
         )
     return moves
@@ -147,6 +153,9 @@ class Stale:
     written_to: str
     start_offset: str
     duration_difference: str
+    # Frames, for showing what changed: None when unknown.
+    start_frames: int | None = None
+    duration_frames: int | None = None
 
 
 def needing_conform(project: models.Project) -> list[Stale]:
@@ -183,6 +192,8 @@ def needing_conform(project: models.Project) -> list[Stale]:
                 duration_difference=""
                 if result.duration_difference is None
                 else timecode.format_offset(result.duration_difference, rate),
+                start_frames=result.start_offset,
+                duration_frames=result.duration_difference,
             )
         )
     return stale

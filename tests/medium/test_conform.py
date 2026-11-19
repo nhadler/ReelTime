@@ -86,6 +86,7 @@ def test_moved_reels_and_shift(project: models.Project) -> None:
     turnover = _recut(project)
     move = conform.moved_reels(turnover)[0]
     assert (move.picture.name, move.delta, move.cues) == ("1", 48, 1)
+    assert move.numbers == ("1m01",)
     assert move.label(project.rate) == "+00:00:02:00"
     assert conform.shift_reels(project, [move]) == 1
     cue = project.cues.get(number="1m01")
@@ -175,6 +176,7 @@ def test_needing_conform_and_marking(project: models.Project) -> None:
     assert stale.written_to == "c0917"
     assert stale.start_offset == "+00:00:00:00"
     assert stale.duration_difference == "+00:00:00:00"
+    assert (stale.start_frames, stale.duration_frames) == (0, 0)
     conform.mark_conformed(project, [stale.cue], new_version=False)
     assert [s.cue.number for s in conform.needing_conform(project)] == ["2m01"]
     cue = project.cues.get(number="1m01")
@@ -232,8 +234,12 @@ def test_page_shift_and_mark(editor: Client, project: models.Project) -> None:
     assert "Every cue is on its current picture." in html
     turnover = _recut(project)
     html = editor.get(url).content.decode()
-    assert "Shift Reel 1's 1 cue by +00:00:02:00" in html
-    assert "1m01" in html
+    assert (
+        'Shift Reel 1\'s 1 cue by <span class="tc">+00:00:02:00</span> '
+        '<span class="conform-moves__cues">(1m01)</span>'
+    ) in html
+    # Unchanged offsets are a dash; a changed one is amber.
+    assert 'title="No change">—' in html
     page = editor.get(url, {"turnover": "999"}).content.decode()
     assert "No turnovers yet." in page
     shift = reverse("cues:conform_shift", args=[project.pk])

@@ -73,7 +73,7 @@
             {% endfor %}
           </tbody>
         </table>
-        {% if request.user.role != "viewer" %}<div class="form-actions"><button class="button" type="submit">Place Cues</button></div>{% endif %}
+        {% if request.user.role != "viewer" %}<div class="form-actions"><button class="button button--quiet" type="submit">Place Cues</button></div>{% endif %}
       </form>
     </section>
   {% endif %}

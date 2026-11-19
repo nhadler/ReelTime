@@ -33,7 +33,6 @@ import {drawTimeline, fitLabels} from './overview/timeline.js';
 import {setUpTools} from './overview/tools.js';
 import {askBatch} from './overview/batch.js';
 import {checklist, render as renderNotes} from './overview/markdown.js';
-import {setUpNotesPanel} from './overview/notes-panel.js';
 
 const {createGrid, themeQuartz} = window.agGrid;
 
@@ -197,8 +196,32 @@ const FILTER_GROUPS = [
 
 /** @type {?Object} */
 let api = null;
-/** The cue notes panel (setUpNotesPanel), once the grid is up. */
+/** The cue notes panel (lazyNotesPanel), once the grid is up. */
 let notesPanel = null;
+
+/**
+ * The cue notes panel, loaded the first time a note opens: its editor
+ * (TipTap) is most of the page's script, and many visits never use it.
+ * @param {!Object} options For setUpNotesPanel (overview/notes-panel.js).
+ * @return {!Object} open, follow and flush.
+ */
+function lazyNotesPanel(options) {
+  let loading = null;
+  let panel = null;
+  const load = () => {
+    loading ??= import('./overview/notes-panel.js').then((module) => {
+      panel = module.setUpNotesPanel(options);
+      return panel;
+    });
+    return loading;
+  };
+  return {
+    open: (row, field) => load().then((loaded) => loaded.open(row, field)),
+    // Following and saving only matter once a note has been opened.
+    follow: (row) => panel?.follow(row),
+    flush: async () => panel?.flush(),
+  };
+}
 /** @type {!Object<string, !Object>} */
 let columnMeta = {};
 
@@ -506,17 +529,36 @@ function updatedRenderer(params) {
   return avatar;
 }
 
+// The two inks a status colour can carry.
+const DARK_INK = '#14171c';
+const LIGHT_INK = '#ffffff';
+
 /**
- * Dark or light text, whichever reads better on a status colour.
+ * WCAG relative luminance.
+ * @param {string} hex '#rrggbb'.
+ * @return {number}
+ */
+function luminance(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((c) => {
+    const v = c / 255;
+    return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+/**
+ * Dark or light text, whichever has more contrast on a status colour.
  * @param {string} hex '#rrggbb'.
  * @return {string}
  */
 function inkFor(hex) {
-  const n = parseInt(hex.slice(1), 16);
-  const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.55
-    ? '#14171c'
-    : '#ffffff';
+  const back = luminance(hex);
+  const ratio = (ink) => {
+    const front = luminance(ink);
+    return (Math.max(front, back) + 0.05) / (Math.min(front, back) + 0.05);
+  };
+  return ratio(DARK_INK) >= ratio(LIGHT_INK) ? DARK_INK : LIGHT_INK;
 }
 
 /**
@@ -1994,6 +2036,9 @@ function gridAction(action) {
     toggleSidePanel('stats', document.getElementById('stats-toggle'));
   } else if (action === 'copy-json') {
     copyCuesJson();
+  } else if (action === 'import' || action === 'cue-sheet') {
+    // A dialog's address opened directly comes back here (fragments.py).
+    document.getElementById(`grid-${action}`)?.click();
   }
 }
 
@@ -2941,7 +2986,7 @@ async function start() {
       clearFilters();
     }
   });
-  notesPanel = setUpNotesPanel({
+  notesPanel = lazyNotesPanel({
     panel: document.getElementById('side-panel'),
     label: (field) => columnMeta[field]?.label ?? field,
     row: (id) => allRows.find((row) => row.id === id) ?? null,
@@ -3029,9 +3074,6 @@ async function start() {
     }
   });
   exportButton.addEventListener('click', openExport);
-  document
-    .getElementById('grid-export-open')
-    .addEventListener('click', openExport);
   openTool = setUpTools({
     api,
     url: config.toolUrl,

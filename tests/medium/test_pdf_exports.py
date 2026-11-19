@@ -18,6 +18,8 @@ from cues.exporters import version_notes
 from cues.exporters import wall_chart
 from cues.services import demo
 
+HX = {"HX-Request": "true"}
+
 pytestmark = pytest.mark.django_db
 
 TODAY = datetime.date(2026, 10, 30)
@@ -141,7 +143,7 @@ def test_dialog_offers_each_report(
     viewer: Client, project: models.Project
 ) -> None:
     html = viewer.get(
-        reverse("cues:export", args=[project.pk])
+        reverse("cues:export", args=[project.pk]), headers=HX
     ).content.decode()
     for label in ("Cue Log", "Wall Chart", "Version Notes", "PDF"):
         assert label in html

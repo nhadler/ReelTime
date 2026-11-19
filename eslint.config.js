@@ -16,6 +16,9 @@ export default [
       'htmlcov/',
       'fixtures/',
       'private/',
+      // Local tool installs, never committed.
+      '.claude/',
+      '.impeccable/',
       // Third-party files, pinned in static/cues/vendor/VERSIONS.
       '**/static/**/vendor/',
     ],
