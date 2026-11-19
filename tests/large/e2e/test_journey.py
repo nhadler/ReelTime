@@ -330,6 +330,8 @@ def _long_play_time(page: Any, axe: Check, project: models.Project) -> None:
 
 def _export(page: Any, axe: Check, project: models.Project) -> None:
     """The cue log as Excel, then the wall chart as PDF."""
+    # The toolbar's Export works once the grid has loaded.
+    expect(page.locator("#cue-grid[data-ready=true]")).to_be_attached()
     page.locator("#grid-export").click()
     dialog = page.locator("#app-dialog")
     expect(dialog.get_by_role("heading", name="Export Cues")).to_be_visible()
