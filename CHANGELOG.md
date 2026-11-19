@@ -6,6 +6,8 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.6.0] - 2026-11-18
+
 ### Changed
 
 - **One place for each command on the cue overview.** Import and Export
@@ -554,7 +556,8 @@ The first public release.
   `ghcr.io/nhadler/reellife` with an SBOM and build provenance, Docker
   Compose, and a systemd + uv install.
 
-[Unreleased]: https://github.com/nhadler/reeltime/compare/v2.5.0...HEAD
+[Unreleased]: https://github.com/nhadler/reeltime/compare/v2.6.0...HEAD
+[2.6.0]: https://github.com/nhadler/reeltime/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/nhadler/reeltime/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/nhadler/reeltime/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/nhadler/reeltime/compare/v2.2.0...v2.3.0
