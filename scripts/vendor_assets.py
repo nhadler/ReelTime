@@ -28,9 +28,6 @@ FILES = {
         ("dist/htmx.min.js", "htmx.min.js"),
         ("LICENSE", "htmx.LICENSE"),
     ],
-    "@alpinejs/csp": [
-        ("dist/cdn.min.js", "alpine-csp.min.js"),
-    ],
     "ag-grid-community": [
         # The noStyle build: the default one also injects AG Grid's legacy
         # CSS themes at load time, as <style> elements without the CSP
@@ -38,16 +35,16 @@ FILES = {
         ("dist/ag-grid-community.min.noStyle.js", "ag-grid-community.min.js"),
         ("LICENSE.txt", "ag-grid-community.LICENSE"),
     ],
-    "@fontsource-variable/instrument-sans": [
+    "@fontsource-variable/ibm-plex-sans": [
         (
-            "files/instrument-sans-latin-wght-normal.woff2",
-            "instrument-sans-latin-wght.woff2",
+            "files/ibm-plex-sans-latin-wght-normal.woff2",
+            "ibm-plex-sans-latin-wght.woff2",
         ),
         (
-            "files/instrument-sans-latin-ext-wght-normal.woff2",
-            "instrument-sans-latin-ext-wght.woff2",
+            "files/ibm-plex-sans-latin-ext-wght-normal.woff2",
+            "ibm-plex-sans-latin-ext-wght.woff2",
         ),
-        ("LICENSE", "instrument-sans.LICENSE"),
+        ("LICENSE", "ibm-plex-sans.LICENSE"),
     ],
     "@fontsource/ibm-plex-mono": [
         (

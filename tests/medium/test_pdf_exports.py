@@ -61,7 +61,7 @@ def test_real_pdfs_render(
     ):
         assert body.startswith(b"%PDF-")
     # The app's own fonts were loaded, not the system's.
-    assert any(name.startswith("instrument-sans") for name in fetched)
+    assert any(name.startswith("ibm-plex-sans") for name in fetched)
     assert any(name.startswith("ibm-plex-mono") for name in fetched)
 
 

@@ -66,7 +66,7 @@ The development server uses a mock identity provider, so you don't need to confi
 
 ### Stack
 
-ReelTime uses Django 6.1 with server-rendered templates, HTMX, Alpine.js (CSP build), AG Grid Community for the cue grid, and TipTap for writing notes. SQLite handles storage.
+ReelTime uses Django 6.1 with server-rendered templates, HTMX, AG Grid Community for the cue grid, and TipTap for writing notes. SQLite handles storage.
 
 Timecodes are stored as integer frame counts at the project's nominal frame rate rather than as formatted strings.
 

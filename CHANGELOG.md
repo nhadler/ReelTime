@@ -6,6 +6,14 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- **New typeface: IBM Plex Sans** replaces Instrument Sans in the app
+  and in PDFs. It's the sister of IBM Plex Mono, which already sets the
+  timecodes, so words and numbers come from one family made for
+  interfaces and data.
+- Removed the Alpine.js file that was shipped but never used.
+
 ## [2.5.0] - 2026-11-17
 
 ### Added

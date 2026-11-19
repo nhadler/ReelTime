@@ -9,9 +9,8 @@ licences. Licence texts are included alongside the files.
 | What | Where | Licence |
 |---|---|---|
 | [htmx](https://htmx.org) 2.0.11 | `cues/static/cues/vendor/htmx.min.js` | 0BSD (`htmx.LICENSE`) |
-| [Alpine.js CSP build](https://alpinejs.dev) 3.17.5 | `cues/static/cues/vendor/alpine-csp.min.js` | MIT |
-| [AG Grid Community](https://www.ag-grid.com) 36.2.0 | `cues/static/cues/vendor/ag-grid-community.min.js` | MIT (`ag-grid-community.LICENSE`) |
-| [Instrument Sans](https://github.com/Instrument/instrument-sans) | `cues/static/cues/vendor/instrument-sans-*.woff2` | SIL OFL 1.1 (`instrument-sans.LICENSE`) |
+| [AG Grid Community](https://www.ag-grid.com) 36.3.0 | `cues/static/cues/vendor/ag-grid-community.min.js` | MIT (`ag-grid-community.LICENSE`) |
+| [IBM Plex Sans](https://github.com/IBM/plex) | `cues/static/cues/vendor/ibm-plex-sans-*.woff2` | SIL OFL 1.1 (`ibm-plex-sans.LICENSE`) |
 | [IBM Plex Mono](https://github.com/IBM/plex) | `cues/static/cues/vendor/ibm-plex-mono-*.woff2` | SIL OFL 1.1 (`ibm-plex-mono.LICENSE`) |
 | RapidCue cue sheet template (2016 v3) | `cues/exporters/cue_sheet/rapidcue_template.xlsx` | ASCAP and BMI's published template, included unchanged so exports match what RapidCue accepts |
 | Pro Tools test exports from [ptulsconv](https://github.com/iluvcapra/ptulsconv) | `fixtures/third_party/ptulsconv/` (tests only) | MIT (`LICENSE` there) |
