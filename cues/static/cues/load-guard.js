@@ -5,34 +5,48 @@
  * module that imports it, without a word: the cue grid would stay empty.
  * A request that never gets an answer is worse: nothing fails, the page
  * just never finishes loading (it waits for its scripts). Either way this
- * reloads the page once to fetch them again, and if that happens again
- * within half a minute, says so instead. A classic script loaded before
- * the others, so it's listening before any of them can fail.
+ * reloads the page to fetch them again: at once, then after a pause, as a
+ * connection that just dropped may drop again. If that doesn't help, it
+ * says so. Only ReelTime's own scripts count: one a browser extension or
+ * a proxy adds is blocked by the CSP, and the page works without it. A
+ * classic script loaded before the others, so it's listening before any
+ * of them can fail.
  */
 
 (() => {
   const KEY = 'reeltime.reloadedForScript';
   const RETRY_WINDOW = 30000;
   const MESSAGE = "Part of this page didn't load. Reload the page.";
+  // The pause before each reload, in turn.
+  const PAUSES = [0, 3000];
+  // Where the static files are served from, e.g. https://host/static/.
+  const STATIC = new URL('..', document.currentScript.src).href;
   // How long the page may take to run its scripts before one counts as
   // stuck. Generous: a first visit over a slow link fetches them all.
   const STALL_AFTER = 15000;
 
+  let recovering = false;
+
   /**
-   * Remembers this reload; false when the browser won't let us, so the
-   * page can't reload over and over.
-   * @return {boolean}
+   * Counts this reload. Null once the tries are used up, or when the
+   * browser won't let us count, so the page can't reload over and over.
+   * @return {?number} How long to wait before reloading.
    */
-  function markReload() {
+  function nextPause() {
     try {
-      const last = Number(sessionStorage.getItem(KEY)) || 0;
-      if (Date.now() - last < RETRY_WINDOW) {
-        return false;
+      const last = JSON.parse(sessionStorage.getItem(KEY)) || {};
+      const recent = Date.now() - last.at < RETRY_WINDOW;
+      const tries = recent ? last.tries : 0;
+      if (tries >= PAUSES.length) {
+        return null;
       }
-      sessionStorage.setItem(KEY, String(Date.now()));
-      return true;
+      sessionStorage.setItem(
+        KEY,
+        JSON.stringify({at: Date.now() + PAUSES[tries], tries: tries + 1}),
+      );
+      return PAUSES[tries];
     } catch {
-      return false;
+      return null;
     }
   }
 
@@ -53,10 +67,21 @@
     main.prepend(list);
   }
 
-  /** Reloads once, or says the page didn't load. */
-  function recover() {
-    if (markReload()) {
+  /**
+   * Reloads, or says the page didn't load.
+   * @param {string} what What went wrong, for the console.
+   */
+  function recover(what) {
+    console.error(`ReelTime: ${what}`);
+    if (recovering) {
+      return;
+    }
+    recovering = true;
+    const pause = nextPause();
+    if (pause === 0) {
       window.location.reload();
+    } else if (pause !== null) {
+      setTimeout(() => window.location.reload(), pause);
     } else if (document.readyState === 'loading') {
       // Not parsed yet: say it once it is. A stuck script doesn't hold
       // this up; it only holds up DOMContentLoaded.
@@ -69,8 +94,12 @@
   window.addEventListener(
     'error',
     (event) => {
-      if (event.target instanceof HTMLScriptElement) {
-        recover();
+      const script = event.target;
+      if (
+        script instanceof HTMLScriptElement &&
+        script.src.startsWith(STATIC)
+      ) {
+        recover(`${script.src}, or a script it imports, didn't load`);
       }
     },
     true,
@@ -78,7 +107,10 @@
 
   // DOMContentLoaded waits for every script to run; not there after
   // STALL_AFTER means one is stuck.
-  const stall = setTimeout(recover, STALL_AFTER);
+  const stall = setTimeout(
+    () => recover('a script is taking too long to load'),
+    STALL_AFTER,
+  );
   document.addEventListener('DOMContentLoaded', () => clearTimeout(stall), {
     once: true,
   });

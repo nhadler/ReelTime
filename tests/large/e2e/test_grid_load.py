@@ -177,8 +177,63 @@ def test_a_script_that_keeps_failing_says_so(
     expect(page.locator("#load-guard")).to_have_text(
         "Part of this page didn't load. Reload the page."
     )
+    page.wait_for_timeout(4000)
+    assert len(loads) == 3  # two reloads, then no more
+
+
+def test_a_script_that_fails_twice_gets_one_more_try(
+    page: Any, app: str, sign_in_as: SignInAs, csp_violations: list[str]
+) -> None:
+    del csp_violations
+    project = demo.build_demo().project
+    sign_in_as("Casey Composer")
+    loads = _page_loads(page)
+
+    def handle(route: Any) -> None:  # playwright wants a function here
+        if len(loads) <= 2:
+            route.abort("connectionreset")
+        else:
+            route.continue_()
+
+    page.route(
+        re.compile(r"/static/cues/confirm(\.[0-9a-f]{12})?\.js$"), handle
+    )
+    page.goto(f"{app}/projects/{project.pk}/")
+    expect(page.locator("#cue-grid[data-ready=true]")).to_be_attached(
+        timeout=15000
+    )
+    assert len(loads) == 3
+    expect(page.locator("#load-guard")).to_have_count(0)
+
+
+@pytest.mark.parametrize(
+    "src",
+    [
+        "https://scripts.example.com/beacon.js",  # the CSP blocks it
+        "/cdn-cgi/missing.js",  # this host, but not our static files
+    ],
+)
+def test_someone_elses_script_isnt_our_problem(
+    page: Any, app: str, sign_in_as: SignInAs, src: str
+) -> None:
+    sign_in_as("Casey Composer")
+    loads = _page_loads(page)
+
+    def add_script(route: Any) -> None:  # playwright wants a function here
+        response = route.fetch()
+        route.fulfill(
+            response=response,
+            body=response.text().replace(
+                "</body>", f'<script src="{src}"></script></body>'
+            ),
+        )
+
+    page.route(f"{app}/projects/", add_script)
+    page.goto(f"{app}/projects/")
+    expect(page.locator(f"script[src='{src}']")).to_have_count(1)
     page.wait_for_timeout(1000)
-    assert len(loads) == 2  # one reload, then no more
+    assert len(loads) == 1
+    expect(page.locator("#load-guard")).to_have_count(0)
 
 
 def _hold_confirm_js(page: Any, times: int) -> list[Any]:
@@ -230,7 +285,10 @@ def test_a_script_that_stays_stuck_says_so(
     page.clock.run_for(16000)
     page.wait_for_timeout(500)
     page.clock.run_for(16000)
+    page.clock.run_for(4000)  # the pause before the second reload
+    page.wait_for_timeout(500)
+    page.clock.run_for(16000)
     expect(page.locator("#load-guard")).to_have_text(
         "Part of this page didn't load. Reload the page."
     )
-    assert len(loads) == 2  # one reload, then no more
+    assert len(loads) == 3  # two reloads, then no more
