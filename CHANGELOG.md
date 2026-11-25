@@ -6,6 +6,8 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.6.1] - 2026-11-24
+
 ### Fixed
 
 - **"Part of this page didn't load"** no longer appears when a script
@@ -567,7 +569,8 @@ The first public release.
   `ghcr.io/nhadler/reellife` with an SBOM and build provenance, Docker
   Compose, and a systemd + uv install.
 
-[Unreleased]: https://github.com/nhadler/reeltime/compare/v2.6.0...HEAD
+[Unreleased]: https://github.com/nhadler/reeltime/compare/v2.6.1...HEAD
+[2.6.1]: https://github.com/nhadler/reeltime/compare/v2.6.0...v2.6.1
 [2.6.0]: https://github.com/nhadler/reeltime/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/nhadler/reeltime/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/nhadler/reeltime/compare/v2.3.0...v2.4.0
