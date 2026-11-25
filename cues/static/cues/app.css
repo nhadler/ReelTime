@@ -397,6 +397,13 @@ a {
   font-size: var(--step--1);
 }
 
+/* Just above the phone layout the bar has no room for the shortcut. */
+@media (width <= 44rem) {
+  .topbar__search kbd {
+    display: none;
+  }
+}
+
 /* The Ctrl+K palette: a search field with results under it, near the
    top of the window so the list has room to grow down. */
 .palette {
@@ -6858,6 +6865,34 @@ td.party-table__ipi {
   display: flex;
   gap: var(--space);
   margin-left: auto;
+}
+
+/* Beside another window: the title takes the first row, so the figures
+   don't squeeze it out. */
+@media (40rem < width <= 60rem) {
+  .project {
+    grid-template-columns: 6rem repeat(3, minmax(0, 1fr)) 2.25rem;
+    row-gap: var(--space);
+  }
+
+  .project__media {
+    grid-row: 1 / span 2;
+  }
+
+  .project__id {
+    grid-column: 2 / span 3;
+    grid-row: 1;
+  }
+
+  .project__more {
+    grid-column: 5;
+    grid-row: 1;
+  }
+
+  .project__figure {
+    grid-row: 2;
+    text-align: left;
+  }
 }
 
 @media (width <= 40rem) {

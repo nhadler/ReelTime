@@ -6,6 +6,17 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **"Part of this page didn't load"** no longer appears when a script
+  added by a browser extension or a proxy is blocked. When one of
+  ReelTime's own scripts fails, the page tries twice before saying so,
+  pausing before the second try, and the browser's console names the
+  script.
+- **Project titles** on Projects and the Overview stay readable in a
+  narrow window instead of shrinking to a letter, and the
+  top bar no longer runs past the edge of one.
+
 ## [2.6.0] - 2026-11-18
 
 ### Changed
