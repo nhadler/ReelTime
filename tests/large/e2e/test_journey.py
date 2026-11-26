@@ -72,7 +72,8 @@ def _first_turnover(page: Any, app: str, project: models.Project) -> None:
 
 
 def _tool(page: Any, name: str) -> None:
-    """Picks an item from the toolbar's Tools menu."""
+    """Picks an item from the toolbar's Tools menu, once the grid listens."""
+    expect(page.locator("#cue-grid[data-ready=true]")).to_be_attached()
     page.locator("#tools-menu > summary").click()
     page.get_by_role("menuitem", name=re.compile(f"^{name}")).click()
 
