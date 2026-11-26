@@ -154,32 +154,40 @@ def test_an_editor_makes_sets_up_and_revokes_a_link(
     assert 'id="review-password-field" hx-swap-oob="true"' in shown
     assert "Password set" in shown and "strings42" not in shown
     assert "Works through Nov 30" in save("expires_on", "2026-11-30")
-    shown = save("preroll", "0:02")
-    assert "Pre-roll" in shown and "0:02" in shown
+    shown = save("video_start", "1:00:08:00")
+    assert "Video starts at" in shown and "01:00:08:00" in shown
     assert "hx-swap-oob" not in shown
     link.refresh_from_db()
     assert review.check_password(link, "strings42")
-    assert (link.expires_on, link.preroll, link.comments_open) == (
+    assert (link.expires_on, link.video_start, link.comments_open) == (
         datetime.date(2026, 11, 30),
-        48,
+        86_640 - 48,
         True,
     )
     again = editor.get(panel_url(cue), headers=HX).content.decode()
-    assert 'value="0:02"' in again and "strings42" not in again
+    assert 'value="01:00:08:00"' in again and "strings42" not in again
     # A setting saved from a tab that shows old values touches only
     # itself: the last day and the password stay.
     assert "Comments closed" in save("comments_open")
-    save("preroll", "00:00:01:12")
+    save("video_start", "01:00:08:12")
     save("password")
     link.refresh_from_db()
     assert review.check_password(link, "strings42")
-    assert (link.expires_on, link.preroll, link.comments_open) == (
+    assert (link.expires_on, link.video_start, link.comments_open) == (
         datetime.date(2026, 11, 30),
-        36,
+        86_640 - 36,
         False,
     )
     assert (
-        'value="00:00:01:12"'
+        'value="01:00:08:12"'
+        in editor.get(panel_url(cue), headers=HX).content.decode()
+    )
+    # Emptied, the video starts at the IN again, which the field shows.
+    assert "Video starts at" not in save("video_start")
+    link.refresh_from_db()
+    assert link.video_start is None
+    assert (
+        'placeholder="01:00:10:00"'
         in editor.get(panel_url(cue), headers=HX).content.decode()
     )
 
@@ -193,7 +201,7 @@ def test_settings_on_an_ended_link_and_revoking(
     version = str(cue.versions.get().pk)
     settings_url = reverse("cues:review_link", args=[cue.pk])
     review.set_password(link, "strings42")
-    link.preroll = 36
+    link.video_start = 36
     link.comments_open = False
 
     def save(field: str, value: str = "") -> str:
@@ -216,7 +224,7 @@ def test_settings_on_an_ended_link_and_revoking(
     removed = editor.post(settings_url, {"remove_password": "1"}, headers=HX)
     assert "No password" in removed.content.decode()
     link.refresh_from_db()
-    assert (link.password, link.preroll) == ("", 36)
+    assert (link.password, link.video_start) == ("", 36)
     # Revoking ends the link; the comments stay on the cue.
     review.add_comment(
         cue.versions.get(), name="Dana", body="Too busy", frame=1, user=None
@@ -225,7 +233,7 @@ def test_settings_on_an_ended_link_and_revoking(
     assert "Make a Review Link" in revoked.content.decode()
     assert not models.ReviewLink.objects.exists()
     assert models.ReviewComment.objects.count() == 1
-    gone = editor.post(settings_url, {"field": "preroll"}, headers=HX)
+    gone = editor.post(settings_url, {"field": "video_start"}, headers=HX)
     assert gone.status_code == 404
 
 
@@ -234,7 +242,7 @@ def test_settings_on_an_ended_link_and_revoking(
     [
         ("password", "abc", "Password: Use at least 6 characters."),
         ("expires_on", "2026-11-12", "Last Day: Choose today or a later"),
-        ("preroll", "soon", "Pre-Roll: Enter a length like 0:02"),
+        ("video_start", "soon", "Video Start: Enter a timecode like"),
     ],
 )
 def test_a_bad_setting_is_refused_alone(
@@ -253,22 +261,23 @@ def test_a_bad_setting_is_refused_alone(
     assert error in shown and "Not saved." in shown
     assert 'id="review-status"' in shown and "hx-swap-oob" not in shown
     link.refresh_from_db()
-    assert (link.password, link.expires_on, link.preroll) == ("", None, 0)
+    assert (link.password, link.expires_on, link.video_start) == (
+        "",
+        None,
+        None,
+    )
     # Another setting saves all the same, whatever that field still says.
     editor.post(url, {"field": "comments_open", field: value}, headers=HX)
     link.refresh_from_db()
     assert not link.comments_open
 
 
-def test_a_pre_roll_reads_back_as_typed() -> None:
+def test_a_video_start_reads_back_as_a_timecode() -> None:
     drop = timecode.rate_for("29.97", drop_frame=True)
-    whole = timecode.parse_duration("1:00", drop)
-    assert review_views.preroll_text(whole, drop) == "1:00"
-    assert review_views.preroll_text(whole + 1, drop) == "00:00:59;29"
-    film = timecode.RATE_24
-    assert review_views.preroll_text(48, film) == "0:02"
-    assert review_views.preroll_text(36, film) == "00:00:01:12"
-    assert review_views.preroll_text(0, film) == ""
+    start = timecode.parse("01:00:00;02", drop)
+    assert review_views.start_text(start, drop) == "01:00:00;02"
+    assert review_views.start_text(0, timecode.RATE_24) == "00:00:00:00"
+    assert review_views.start_text(None, timecode.RATE_24) == ""
 
 
 def test_viewers_cannot_change_a_link(

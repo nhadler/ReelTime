@@ -261,15 +261,21 @@ def test_a_guest_comments_at_a_frame_and_overall(
     ] * 2
 
 
-def test_the_pre_roll_moves_the_timecodes(
+def test_the_video_start_moves_the_timecodes(
     cue: models.Cue, link: models.ReviewLink
 ) -> None:
     version = cue.versions.get()
     review.add_comment(version, name="Dana", body="Here", frame=48, user=None)
-    link.preroll = 48
+    link.video_start = 86_640 - 48
     link.save()
     assert review.first_frame(link, version) == 86_640 - 48
     assert review.comments(link, version)[0].timecode == "1:00:10:00"
+    # A video that starts at 00:00:00:00 counts from zero.
+    link.video_start = 0
+    link.save()
+    assert review.comments(link, version)[0].timecode == "0:00:02:00"
+    link.video_start = None
+    link.save()
     # Without the link (revoked), the version's IN alone.
     assert review.comments(None, version)[0].timecode == "1:00:12:00"
     # No IN anywhere: from zero, and never before it.

@@ -40,8 +40,10 @@ The link's settings are under it and save as you change them:
   it to your reviewer separately from the link. **Remove Password**
   takes it off.
 - **Last Day**: the link stops working after that day.
-- **Pre-Roll**: how much video plays before the cue's IN, such as a
-  count-in. Comments' timecodes allow for it.
+- **Video Start**: the timecode of the video's first frame, such as
+  `01:00:00:00` for a bounce of the whole reel. Left empty, the video
+  starts at the version's IN, which the field shows. Comments' timecodes
+  count from it.
 - **Allow Comments**: untick to let reviewers watch and read only.
 - **Revoke Link** ends the link for everyone who has it. Comments stay
   on the cue, and a new link has a new address.

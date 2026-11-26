@@ -6,6 +6,19 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- **Video Start** replaces Pre-Roll in a review link's settings: type
+  the timecode of the video's first frame instead of how much plays
+  before the IN. Left empty, the video starts at the version's IN.
+  Existing pre-rolls become the current version's IN less the pre-roll,
+  so its comments keep their timecodes.
+
+### Fixed
+
+- **A cue's page** no longer fails to open when its review link has a
+  pre-roll of an hour or more.
+
 ## [2.6.1] - 2026-11-24
 
 ### Fixed

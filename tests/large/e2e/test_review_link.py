@@ -186,13 +186,13 @@ def test_the_composer_sets_up_a_link_on_the_cue_page(
 
     # The settings are fields here, saved as they change.
     section.get_by_label("Password").fill("strings42")
-    section.get_by_label("Pre-Roll").click()
+    section.get_by_label("Video Start").click()
     expect(section).to_contain_text("Password set")
-    section.get_by_label("Pre-Roll").fill("0:02")
+    section.get_by_label("Video Start").fill("01:00:00:00")
     section.get_by_label("Allow Comments").uncheck()
     expect(section).to_contain_text("Comments closed")
     link.refresh_from_db()
-    assert link.preroll == 2 * cue.project.rate.nominal
+    assert link.video_start == timecode.parse("01:00:00:00", cue.project.rate)
     assert review.check_password(link, "strings42")
     assert not link.comments_open
     section.get_by_role("button", name="Remove Password").click()

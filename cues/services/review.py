@@ -218,10 +218,12 @@ def first_frame(
 ) -> int:
     """The timecode of a version's video's first frame, in frames.
 
-    The version's IN (else the cue's) less the link's pre-roll.
+    The link's Video Start, else the version's IN, else the cue's.
     """
+    if link is not None and link.video_start is not None:
+        return link.video_start
     start = version.tc_in if version.tc_in is not None else version.cue.tc_in
-    return max(0, (start or 0) - (link.preroll if link else 0))
+    return start or 0
 
 
 @dataclasses.dataclass(frozen=True)
@@ -296,7 +298,7 @@ def stamp(link: models.ReviewLink, version: models.CueVersion) -> str:
     latest = found["latest"].isoformat() if found["latest"] else ""
     text = (
         f"{found['ids']}|{latest}|{found['resolved']}|"
-        f"{link.comments_open}|{link.preroll}"
+        f"{link.comments_open}|{link.video_start}"
     )
     return hashlib.sha256(text.encode()).hexdigest()[:16]
 

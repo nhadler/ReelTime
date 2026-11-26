@@ -499,7 +499,7 @@ def panel_context(
         "review_form": LinkForm(link=link, version=version)
         if link and _can_edit(request)
         else None,
-        "review_preroll": preroll_text(link.preroll, cue.project.rate)
+        "review_start": start_text(link.video_start, cue.project.rate)
         if link
         else "",
         "can_edit": _can_edit(request),
@@ -571,14 +571,14 @@ class LinkForm(django_forms.Form):
     comments_open = django_forms.BooleanField(
         label="Allow Comments", required=False
     )
-    preroll = django_forms.CharField(
-        label="Pre-Roll",
+    video_start = django_forms.CharField(
+        label="Video Start",
         required=False,
-        max_length=11,
+        max_length=14,
         widget=django_forms.TextInput(
             attrs={
-                "placeholder": "0:00",
-                "title": "Video before the cue's IN, as m:ss or a timecode",
+                "placeholder": "The IN",
+                "title": "The timecode of the video's first frame",
             }
         ),
     )
@@ -600,12 +600,17 @@ class LinkForm(django_forms.Form):
         kwargs["initial"] = {
             "expires_on": link.expires_on,
             "comments_open": link.comments_open,
-            "preroll": preroll_text(link.preroll, self.rate),
+            "video_start": start_text(link.video_start, self.rate),
         }
         super().__init__(*args, **kwargs)
         self.fields["password"].widget.attrs["placeholder"] = (
             "Set. Type a new one to change it." if link.password else "None"
         )
+        # Left empty, the video starts at the IN of the version shown.
+        if version is not None and (start := review.first_frame(None, version)):
+            self.fields["video_start"].widget.attrs["placeholder"] = (
+                timecode.format_timecode(start, self.rate, leading_zero=True)
+            )
         # Each field posts itself on change, alone: see link_settings.
         for name, field in self.fields.items():
             sent = {"field": name}
@@ -639,16 +644,16 @@ class LinkForm(django_forms.Form):
             raise django_forms.ValidationError("Choose today or a later day.")
         return day
 
-    def clean_preroll(self) -> int:
-        """The pre-roll in frames."""
-        text = str(self.cleaned_data["preroll"]).strip()
+    def clean_video_start(self) -> int | None:
+        """The video's first frame as a timecode, or None for the IN."""
+        text = str(self.cleaned_data["video_start"]).strip()
         if not text:
-            return 0
+            return None
         try:
-            return timecode.parse_duration(text, self.rate)
+            return timecode.parse(text, self.rate)
         except timecode.TimecodeError:
             raise django_forms.ValidationError(
-                "Enter a length like 0:02, or a timecode like 00:00:02:00."
+                "Enter a timecode like 01:00:00:00."
             ) from None
 
     def save(self, field: str) -> None:
@@ -662,13 +667,10 @@ class LinkForm(django_forms.Form):
         link.save()
 
 
-def preroll_text(frames: int, rate: timecode.Rate) -> str:
-    """A pre-roll as it's typed: m:ss for whole seconds, else a timecode."""
-    if not frames:
+def start_text(frames: int | None, rate: timecode.Rate) -> str:
+    """A Video Start as a timecode, or "" when there's none."""
+    if frames is None:
         return ""
-    short = timecode.format_duration(frames, rate)
-    if timecode.parse_duration(short, rate) == frames:
-        return short
     return timecode.format_timecode(frames, rate, leading_zero=True)
 
 

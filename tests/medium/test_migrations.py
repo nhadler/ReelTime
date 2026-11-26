@@ -238,3 +238,54 @@ def test_projects_own_standard_views_get_percent_written() -> None:
         {"id": "status", "width": 140},
     ]
     call_command("migrate", "cues", stdout=io.StringIO())
+
+
+@pytest.mark.django_db(transaction=True)
+def test_a_pre_roll_becomes_the_video_start_and_back() -> None:
+    apps = _migrate([("cues", "0053_app_review_name")])
+    project = apps.get_model("cues", "Project").objects.create(
+        title="Old links", production_number="OLD3", frame_rate="24"
+    )
+    picture = apps.get_model("cues", "Picture").objects.create(
+        project=project, name="1"
+    )
+    cues = apps.get_model("cues", "Cue").objects
+    links = apps.get_model("cues", "ReviewLink").objects
+
+    def cue(number: str, tc_in: int | None) -> Any:
+        return cues.create(
+            project=project,
+            picture=picture,
+            number=number,
+            tc_in=tc_in,
+            tc_out=None if tc_in is None else tc_in + 100,
+        )
+
+    versioned = cue("1m01", 1000)
+    version = apps.get_model("cues", "CueVersion").objects.create(
+        cue=versioned, label="v2", tc_in=2000
+    )
+    versioned.current_version = version
+    versioned.save()
+    counted = links.create(cue=versioned, token="a", preroll=48)
+    bare = links.create(cue=cue("1m02", 500), token="b", preroll=48)
+    early = links.create(cue=cue("1m03", None), token="c", preroll=48)
+    plain = links.create(cue=cue("1m04", 700), token="d")
+    _migrate([("cues", "0054_review_video_start")])
+
+    def starts() -> list[int | None]:
+        return [
+            models.ReviewLink.objects.get(pk=link.pk).video_start
+            for link in (counted, bare, early, plain)
+        ]
+
+    # The current version's IN, else the cue's, less the pre-roll; never
+    # before zero. Without a pre-roll the video starts at the IN.
+    assert starts() == [2000 - 48, 500 - 48, 0, None]
+    _migrate([("cues", "0053_app_review_name")])
+    prerolls = [
+        apps.get_model("cues", "ReviewLink").objects.get(pk=link.pk).preroll
+        for link in (counted, bare, plain)
+    ]
+    assert prerolls == [48, 48, 0]
+    call_command("migrate", "cues", stdout=io.StringIO())

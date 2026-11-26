@@ -31,8 +31,9 @@ class ReviewLink(Timestamped):
     # The last day the link works, or None for no end.
     expires_on = models.DateField(null=True, blank=True)
     comments_open = models.BooleanField(default=True)
-    # Frames of video before the version's IN (a count-in, a two-pop).
-    preroll = models.PositiveIntegerField(default=0)
+    # The timecode of the video's first frame, in frames, or None for
+    # videos that start at their version's IN.
+    video_start = models.PositiveIntegerField(null=True, blank=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,
@@ -66,8 +67,8 @@ class ReviewComment(Timestamped):
         related_name="review_comments",
     )
     # Frames from the video's first frame, or None for a comment on the
-    # version as a whole. The timecode shown follows from it (the
-    # version's IN less the link's pre-roll), so fixing those moves it.
+    # version as a whole. The timecode shown follows from it (the link's
+    # Video Start, else the version's IN), so fixing those moves it.
     frame = models.PositiveIntegerField(null=True, blank=True)
     # The last frame of a note about a stretch of the video, which
     # starts at `frame`; None for a note about the one frame.
