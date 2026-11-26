@@ -6,6 +6,8 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.7.0] - 2026-11-26
+
 ### Changed
 
 - **Video Start** replaces Pre-Roll in a review link's settings: type
@@ -582,7 +584,8 @@ The first public release.
   `ghcr.io/nhadler/reellife` with an SBOM and build provenance, Docker
   Compose, and a systemd + uv install.
 
-[Unreleased]: https://github.com/nhadler/reeltime/compare/v2.6.1...HEAD
+[Unreleased]: https://github.com/nhadler/reeltime/compare/v2.7.0...HEAD
+[2.7.0]: https://github.com/nhadler/reeltime/compare/v2.6.1...v2.7.0
 [2.6.1]: https://github.com/nhadler/reeltime/compare/v2.6.0...v2.6.1
 [2.6.0]: https://github.com/nhadler/reeltime/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/nhadler/reeltime/compare/v2.4.0...v2.5.0

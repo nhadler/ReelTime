@@ -40,12 +40,12 @@ docker compose up -d
 
 By default, ReelTime listens on `127.0.0.1:8000`. You'll need a reverse proxy with TLS, such as Caddy, Traefik, or Tailscale Serve.
 
-Container images are available for `linux/amd64` and `linux/arm64` at [ghcr.io/nhadler/reeltime](https://github.com/nhadler/reeltime/pkgs/container/reeltime). Images are tagged with their release version (`2.6.1`, `2.6`, `2`) and `latest`.
+Container images are available for `linux/amd64` and `linux/arm64` at [ghcr.io/nhadler/reeltime](https://github.com/nhadler/reeltime/pkgs/container/reeltime). Images are tagged with their release version (`2.7.0`, `2.7`, `2`) and `latest`.
 
 To pin a specific version, set the following in `.env`:
 
 ```env
-REELTIME_IMAGE=ghcr.io/nhadler/reeltime:2.6.1
+REELTIME_IMAGE=ghcr.io/nhadler/reeltime:2.7.0
 ```
 
 See [deploy/README.md](deploy/README.md) for OIDC configuration, environment variables, backups, upgrades, and installation without Docker (systemd + uv).
