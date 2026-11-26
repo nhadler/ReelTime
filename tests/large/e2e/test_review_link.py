@@ -626,6 +626,11 @@ def test_a_stretch_is_lit_while_the_video_is_inside_it(
     page.get_by_role("button", name=f"Go to {start}").click()
     expect(page.locator("#review-time")).to_have_text(start)
     expect(listed.first).to_have_class(lit)
+    # Its background reaches past the text without scrolling the list
+    # sideways.
+    assert page.locator(".review-comments__list").evaluate(
+        "list => list.scrollWidth <= list.clientWidth"
+    )
     for _ in range(7):
         forward.click()
     expect(listed.first).to_have_class(lit)

@@ -7906,10 +7906,14 @@ button.review-comment__at:hover {
   background: var(--panel);
 }
 
+/* The padding holds the current comment's background, which reaches past
+   the text: outside it, that would scroll the list sideways. */
 .review-comments__list {
   flex: 1;
   min-height: 4rem;
-  overflow-y: auto;
+  margin-inline: calc(var(--space) * -1);
+  padding-inline: var(--space);
+  overflow: hidden auto;
 }
 
 .review-comments__title {

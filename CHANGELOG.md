@@ -6,6 +6,11 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **Review page comments** no longer scroll sideways and cut off their
+  left edge while one is highlighted at the playhead.
+
 ## [2.7.0] - 2026-11-26
 
 ### Changed
