@@ -42,6 +42,8 @@ def test_a_guest_says_who_is_watching_first(link: models.ReviewLink) -> None:
     asked = client.get(page_url(link))
     assert asked.status_code == 200
     assert b"Who's Watching?" in asked.content
+    # Just the name: no note under it about who sees what.
+    assert b"helptext" not in asked.content
     # Nothing of the cue yet, and no comments either.
     assert b"dropbox" not in asked.content
     assert b"Main Title" not in asked.content

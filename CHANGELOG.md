@@ -6,6 +6,11 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- **Review page**: the name prompt no longer has a note under it about
+  who sees the name and when it was watched.
+
 ## [2.7.1] - 2026-11-26
 
 ### Fixed
