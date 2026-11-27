@@ -6,6 +6,8 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.7.2] - 2026-11-27
+
 ### Changed
 
 - **Review page**: the name prompt no longer has a note under it about
@@ -596,7 +598,8 @@ The first public release.
   `ghcr.io/nhadler/reellife` with an SBOM and build provenance, Docker
   Compose, and a systemd + uv install.
 
-[Unreleased]: https://github.com/nhadler/reeltime/compare/v2.7.1...HEAD
+[Unreleased]: https://github.com/nhadler/reeltime/compare/v2.7.2...HEAD
+[2.7.2]: https://github.com/nhadler/reeltime/compare/v2.7.1...v2.7.2
 [2.7.1]: https://github.com/nhadler/reeltime/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/nhadler/reeltime/compare/v2.6.1...v2.7.0
 [2.6.1]: https://github.com/nhadler/reeltime/compare/v2.6.0...v2.6.1
