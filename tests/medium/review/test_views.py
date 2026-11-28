@@ -178,7 +178,7 @@ def test_the_page_reports_which_seconds_played_and_where_it_paused(
     assert listed.replayed == ("1:00:12:00–1:00:15:00 ×3",)
     assert listed.paused == ("1:00:12:00", "1:00:15:00")
     assert listed.strip is not None
-    assert [bar.level for bar in listed.strip.bars] == [1, 2, 3, 2, 1, 1]
+    assert [each.level for each in listed.strip.bars] == [1, 2, 3, 2, 1, 1]
     assert listed.strip.pauses == pytest.approx((2000 / 11, 5000 / 11))
     # Across visits, what anyone went back to, and who. Pat watched it all
     # once and went back to second 2 twice: watching once isn't a replay.
@@ -195,7 +195,7 @@ def test_the_page_reports_which_seconds_played_and_where_it_paused(
     assert watched.replayed == (("1:00:12:00–1:00:15:00", "Dana ×3, Pat ×3"),)
     # Shaded against the most played second (second 2: 5 plays).
     assert watched.strip is not None
-    assert [bar.level for bar in watched.strip.bars] == [2, 4, 3, 2, 1]
+    assert [each.level for each in watched.strip.bars] == [2, 4, 3, 2, 1]
     # The cue page shows both, with the timecodes.
     panel = (
         role_client(Role.EDITOR)

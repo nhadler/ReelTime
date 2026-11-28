@@ -330,33 +330,30 @@ def visits(
     link: models.ReviewLink | None, version: models.CueVersion
 ) -> list[Visit]:
     """A version's visits, newest first."""
-    rate = version.cue.project.rate
-    clock_ = _Clock(rate, review.first_frame(link, version))
-    found = []
-    for view in version.review_views.all():
-        counts = list(view.seconds)
-        found.append(
-            Visit(
-                view,
-                clock(view.played),
-                clock(
-                    int((view.last_seen_at - view.started_at).total_seconds())
-                ),
-                "" if view.furthest is None else clock_.frame(view.furthest),
-                _seen(counts, view.length),
-                strip(
-                    counts,
-                    [frame / rate.nominal for frame in view.pauses],
-                    view.length,
-                ),
-                tuple(
-                    f"{clock_.span(first, stop)} ×{times}"
-                    for first, stop, times in _replays(counts)[:3]
-                ),
-                tuple(clock_.frame(frame) for frame in view.pauses[:5]),
-            )
-        )
-    return found
+    clock_ = _Clock(version.cue.project.rate, review.first_frame(link, version))
+    return [_visit(view, clock_) for view in version.review_views.all()]
+
+
+def _visit(view: models.ReviewView, clock_: _Clock) -> Visit:
+    """One visit as the cue page lists it."""
+    counts = list(view.seconds)
+    return Visit(
+        view,
+        clock(view.played),
+        clock(int((view.last_seen_at - view.started_at).total_seconds())),
+        "" if view.furthest is None else clock_.frame(view.furthest),
+        _seen(counts, view.length),
+        strip(
+            counts,
+            [frame / clock_.rate.nominal for frame in view.pauses],
+            view.length,
+        ),
+        tuple(
+            f"{clock_.span(first, stop)} ×{times}"
+            for first, stop, times in _replays(counts)[:3]
+        ),
+        tuple(clock_.frame(frame) for frame in view.pauses[:5]),
+    )
 
 
 def watched(
