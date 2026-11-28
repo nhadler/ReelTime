@@ -329,11 +329,16 @@ def _span(
 def _selected(
     request: HttpRequest, span: _Span, today: datetime.date
 ) -> datetime.date:
-    """The day the panel shows: ?day= if shown, else today, else the first."""
+    """The day the panel shows: ?day= if shown, else today, else the first.
+
+    Any day in the grid counts, the next month's first days in a month's
+    last week too: each is a link to itself.
+    """
     picked = _date(request.GET.get("day"), today)
-    for day in (picked, today):
-        if span.home <= day <= span.end:
-            return day
+    if span.first <= picked <= span.last:
+        return picked
+    if span.home <= today <= span.end:
+        return today
     return span.home
 
 

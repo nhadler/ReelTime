@@ -268,8 +268,10 @@ def test_choosing_a_day_lists_its_work(
     assert "Holiday" in _page(viewer, day="2026-11-03")  # a day off
     assert "Nothing was planned." in _page(viewer, day="2026-11-01")
     assert "Nothing planned." in _page(viewer, day="2026-11-20")
-    # A day outside the month shown falls back to today.
+    # A day off the grid falls back to today; one in its last week from
+    # the next month is chosen like any other.
     assert "Mon Nov 2" in _page(viewer, month="2026-11", day="2027-01-01")
+    assert "Tue Dec 1" in _page(viewer, month="2026-11", day="2026-12-01")
     # Another month starts on its first day.
     assert "Tue Dec 1" in _page(viewer, month="2026-12")
     # Cues without an IN or OUT, as a callout.

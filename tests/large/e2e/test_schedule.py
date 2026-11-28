@@ -9,6 +9,7 @@ import pytest
 
 from cues import models
 from cues.services import demo
+from cues.services import pins
 from tests.large.e2e.conftest import Check
 from tests.large.e2e.conftest import SignInAs
 
@@ -29,6 +30,14 @@ def test_the_month_and_week(
         kind=models.Deadline.Kind.COMPOSITION,
         end_date=timezone.localdate() + datetime.timedelta(days=30),
     )
+    # Tomorrow is busier than its square in the month can show, whatever
+    # day the test runs.
+    tomorrow = timezone.localdate() + datetime.timedelta(days=1)
+    to_write = project.cues.filter(
+        status__kind=models.StatusKind.TO_DO, tc_out__isnull=False
+    )
+    for cue in to_write[:5]:
+        pins.pin(cue, tomorrow, None)
     sign_in_as("Casey Composer")
     # Home is the Overview: the next seven days, then the projects.
     expect(page.locator("li.cal-day")).to_have_count(7)
@@ -54,7 +63,7 @@ def test_the_month_and_week(
     expect(page.locator(".cal-cue").first).to_be_visible()
     # The month fits a laptop window: busy days say how many more.
     page.set_viewport_size({"width": 1280, "height": 700})
-    page.reload()
+    page.goto(f"{page.url.split('?')[0]}?month={tomorrow:%Y-%m}")
     expect(page.locator(".page--fill .cal--month")).to_be_attached()
     height = page.evaluate("document.documentElement.scrollHeight")
     assert height <= 700
