@@ -129,6 +129,13 @@ class ReviewView(models.Model):
     played = models.PositiveIntegerField(default=0)
     # The furthest frame of the video reached, if any was.
     furthest = models.PositiveIntegerField(null=True, blank=True)
+    # How many times each second of the video played, by its place from
+    # the video's first second: replays count again.
+    seconds = models.JSONField(default=list, blank=True)
+    # Where the video was paused, in frames from its first, in order.
+    pauses = models.JSONField(default=list, blank=True)
+    # The video's length in seconds, as the page found it.
+    length = models.PositiveIntegerField(null=True, blank=True)
 
     class Meta:
         verbose_name = "review view"

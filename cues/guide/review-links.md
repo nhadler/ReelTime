@@ -119,9 +119,17 @@ Every comment, reply, resolve and deletion is in the project's
 
 Under the link, **Views** lists each visit to the chosen version's
 review page, newest first: who, when, how long the video or audio
-actually played (**Watched**), the furthest timecode they got to
-(**Reached**) and how long the page was open. A reload within half an
-hour counts as the same visit. A version keeps its newest 200 visits.
+actually played (**Watched**), how much of the video played at least
+once (**Seen**), the furthest timecode they got to (**Reached**) and how
+long the page was open. A reload within half an hour counts as the same
+visit. A version keeps its newest 200 visits.
+
+Under each visit, a strip runs the length of the video: shaded where it
+played, darker each time a stretch played again, with a tick where they
+paused. **Replayed** gives the timecodes of the stretches they went back
+to and how many times they played, and **Paused At** where they
+stopped. At the top, one strip adds up every visit, and **Watched Again
+Most** lists the stretches people went back to most, and who.
 
 Guests are known only by the name they gave; no address or other detail
 about them is kept. Editors and admins opening the link aren't counted;

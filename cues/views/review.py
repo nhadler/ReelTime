@@ -319,11 +319,28 @@ def _count(text: str) -> int | None:
     return None
 
 
+def _counts(text: str) -> list[int]:
+    """Posted comma-separated digits as numbers, skipping anything else.
+
+    At most as many as one report may send.
+    """
+    parts = text.split(",", review_views.MAX_REPORTED)
+    found = (_count(part) for part in parts)
+    return [number for number in found if number is not None][
+        : review_views.MAX_REPORTED
+    ]
+
+
 @login_not_required
 @require_POST
 @_limit("review-watching", "RATELIMIT_REVIEW_WATCHING", method="POST")
 def watching(request: HttpRequest, token: str) -> HttpResponse:
-    """The page's report on its visit: seconds played, furthest frame."""
+    """The page's report on its visit.
+
+    Seconds played, the furthest frame, the seconds of video that played
+    since the last report and the frames it was paused at (each a
+    comma-separated list), and the video's length in seconds.
+    """
     link = review.find(token)
     if link is None or _locked(request, link):
         return _gone(request)
@@ -332,6 +349,9 @@ def watching(request: HttpRequest, token: str) -> HttpResponse:
         request.POST.get("visit", ""),
         played=_count(request.POST.get("played", "")) or 0,
         furthest=_count(request.POST.get("furthest", "")),
+        seconds=_counts(request.POST.get("seconds", "")),
+        pauses=_counts(request.POST.get("pauses", "")),
+        length=_count(request.POST.get("length", "")),
     )
     return _private(HttpResponse(status=204 if known else 404))
 
@@ -496,6 +516,9 @@ def panel_context(
         "file_url": _web_link(version.file_link) if version else "",
         "review_notes": review.note_counts(version) if version else (0, 0),
         "review_visits": review_views.visits(link, version) if version else [],
+        "review_watched": review_views.watched(link, version)
+        if version
+        else None,
         "review_form": LinkForm(link=link, version=version)
         if link and _can_edit(request)
         else None,

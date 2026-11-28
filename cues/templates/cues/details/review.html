@@ -50,12 +50,23 @@
     <p class="muted">No review link.</p>
   {% endif %}
   {% if review_visits %}
-    {# Who opened the review page for this version, newest first. #}
+    {# Who opened the review page for this version, newest first, and where the video played: a darker stretch played more times. #}
     <details class="cue-review__views">
       <summary>Views <span class="chip">{{ review_visits|length }}</span></summary>
+      {% if review_watched.strip %}
+        <div class="cue-review__watched">
+          {% include "cues/details/watch_strip.html" with strip=review_watched.strip label="Where everyone played the video" %}
+          {% if review_watched.replayed %}
+            <p class="cue-review__replayed">Watched Again Most</p>
+            <ul class="cue-review__replays">
+              {% for span, who in review_watched.replayed %}<li><span class="tc">{{ span }}</span> {{ who }}</li>{% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endif %}
       <table class="cue-review__visits">
         <thead>
-          <tr><th scope="col">Who</th><th scope="col">When</th><th scope="col">Watched</th><th scope="col">Reached</th><th scope="col">Page Open</th></tr>
+          <tr><th scope="col">Who</th><th scope="col">When</th><th scope="col">Watched</th><th scope="col">Seen</th><th scope="col">Reached</th><th scope="col">Page Open</th></tr>
         </thead>
         <tbody>
           {% for visit in review_visits %}
@@ -63,9 +74,23 @@
               <td>{{ visit.view.name }}{% if visit.view.member %} <span class="chip review-comment__team">Team</span>{% endif %}</td>
               <td>{{ visit.view.started_at|stamp:short_format }}</td>
               <td class="tc">{{ visit.played }}</td>
+              <td class="tc">{{ visit.seen|default:"–" }}</td>
               <td class="tc">{{ visit.reached|default:"–" }}</td>
               <td class="tc">{{ visit.open_for }}</td>
             </tr>
+            {% if visit.strip %}
+              <tr class="cue-review__visit-detail">
+                <td colspan="6">
+                  {% include "cues/details/watch_strip.html" with strip=visit.strip label="Where "|add:visit.view.name|add:" played the video" %}
+                  {% if visit.replayed or visit.paused %}
+                    <dl class="cue-review__moments">
+                      {% if visit.replayed %}<div><dt>Replayed</dt>{% for each in visit.replayed %}<dd class="tc">{{ each }}</dd>{% endfor %}</div>{% endif %}
+                      {% if visit.paused %}<div><dt>Paused At</dt>{% for each in visit.paused %}<dd class="tc">{{ each }}</dd>{% endfor %}</div>{% endif %}
+                    </dl>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endif %}
           {% endfor %}
         </tbody>
       </table>

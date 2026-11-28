@@ -708,8 +708,10 @@ if (audio) {
   }
 }
 
-// The visit: tell the server now and then how long has played and how
-// far the video got, so whoever sent the link can see it was watched.
+// The visit: tell the server now and then how long has played, how far
+// the video got, which seconds of it played (again, when replayed) and
+// where it was paused, so whoever sent the link can see how it was
+// watched.
 if (config.visit) {
   const REPORT_MS = 15000;
   const token = JSON.parse(document.body.getAttribute('hx-headers') || '{}')[
@@ -718,6 +720,16 @@ if (config.visit) {
   let played = 0;
   let furthest = null;
   let last = performance.now();
+  // Since the last report: each second the video played into, and the
+  // frames it was paused at.
+  let seconds = [];
+  let pauses = [];
+  // The second playing now, so it counts once however many updates.
+  let second = null;
+  // Where it was last seen playing. A pause is reported once the video
+  // has stopped, by when a click on a comment has already moved it, so
+  // this, at most a quarter of a second out, is where it stopped.
+  let playingAt = null;
   /** Adds the time since the last look, if anything was playing. */
   const count = () => {
     const now = performance.now();
@@ -736,6 +748,17 @@ if (config.visit) {
     if (furthest !== null) {
       sent.set('furthest', String(furthest));
     }
+    if (Number.isFinite(video.duration) && video.duration > 0) {
+      sent.set('length', String(Math.round(video.duration)));
+    }
+    if (seconds.length) {
+      sent.set('seconds', seconds.join(','));
+    }
+    if (pauses.length) {
+      sent.set('pauses', pauses.join(','));
+    }
+    seconds = [];
+    pauses = [];
     // keepalive: it still goes when the page is being closed.
     fetch(config.watchingUrl, {
       method: 'POST',
@@ -753,6 +776,24 @@ if (config.visit) {
   video.addEventListener('timeupdate', () => {
     if (video.currentTime > 0) {
       furthest = Math.max(furthest ?? 0, position());
+    }
+    if (video.paused || video.seeking) {
+      return;
+    }
+    playingAt = position();
+    const now = Math.floor(video.currentTime);
+    if (now !== second) {
+      seconds.push(now);
+      second = now;
+    }
+  });
+  // A jump starts a new pass: the second landed on counts again.
+  video.addEventListener('seeking', () => {
+    second = null;
+  });
+  video.addEventListener('pause', () => {
+    if (!video.ended && playingAt !== null) {
+      pauses.push(playingAt);
     }
   });
   setInterval(() => {

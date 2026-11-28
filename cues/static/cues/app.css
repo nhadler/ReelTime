@@ -8170,3 +8170,82 @@ button.review-comment__at:hover {
   border-top: 1px solid var(--rule);
   overflow-wrap: anywhere;
 }
+
+/* Where a review video played: darker where it played more times, a
+   tick where it was paused. */
+.watch-strip {
+  display: block;
+  width: 100%;
+  height: 0.75rem;
+  border-radius: 2px;
+}
+
+.watch-strip__track {
+  fill: var(--panel-raised);
+}
+
+.watch-strip__played--1 {
+  fill: color-mix(in srgb, var(--accent) 35%, var(--panel-raised));
+}
+
+.watch-strip__played--2 {
+  fill: color-mix(in srgb, var(--accent) 60%, var(--panel-raised));
+}
+
+.watch-strip__played--3 {
+  fill: color-mix(in srgb, var(--accent) 80%, var(--panel-raised));
+}
+
+.watch-strip__played--4 {
+  fill: var(--accent);
+}
+
+.watch-strip__pause {
+  stroke: var(--ink);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.cue-review__watched {
+  margin-top: var(--space);
+}
+
+.cue-review__replayed {
+  margin: var(--space) 0 0;
+  color: var(--slate);
+  font-size: var(--step--1);
+}
+
+.cue-review__replays {
+  margin: 0;
+  padding: 0;
+  font-size: var(--step--1);
+  list-style: none;
+}
+
+/* A visit's strip and moments sit under its row, as part of it. */
+.cue-review__visits .cue-review__visit-detail td {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.cue-review__moments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 calc(var(--space) * 2);
+  margin: calc(var(--space) * 0.5) 0 0;
+}
+
+.cue-review__moments div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space);
+}
+
+.cue-review__moments dt {
+  color: var(--slate);
+}
+
+.cue-review__moments dd {
+  margin: 0;
+}

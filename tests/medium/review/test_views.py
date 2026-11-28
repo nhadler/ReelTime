@@ -150,6 +150,95 @@ def test_the_page_reports_what_was_watched(
     )
 
 
+def test_the_page_reports_which_seconds_played_and_where_it_paused(
+    role_client: Callable[[Role], Client],
+    cue: models.Cue,
+    link: models.ReviewLink,
+) -> None:
+    version = cue.versions.get()
+    dana = guest("Dana")
+    key = _visit_key(dana, link)
+    # Seconds 0-5 played, then 2-4 again; paused 2 s and 5 s in.
+    played = {"seconds": "0,1,2,3,4,5,2,3,4", "pauses": "48,120"}
+    dana.post(_watching(link), {"visit": key, "length": "10", **played})
+    visit = models.ReviewView.objects.get()
+    assert visit.seconds == [1, 1, 2, 2, 2, 1]
+    assert (visit.pauses, visit.length) == ([48, 120], 10)
+    # Each report adds to the last. The last second counts; anything past
+    # it, or that isn't a number, doesn't.
+    dana.post(
+        _watching(link),
+        {"visit": key, "seconds": "3,x,-1,10,11,99999", "pauses": "9999"},
+    )
+    visit.refresh_from_db()
+    assert visit.seconds == [1, 1, 2, 3, 2, 1, 0, 0, 0, 0, 1]
+    assert visit.pauses == [48, 120]
+    (listed,) = review_views.visits(link, version)
+    assert listed.seen == "60%"
+    assert listed.replayed == ("1:00:12:00–1:00:15:00 ×3",)
+    assert listed.paused == ("1:00:12:00", "1:00:15:00")
+    assert listed.strip is not None
+    assert [bar.level for bar in listed.strip.bars] == [1, 2, 3, 2, 1, 1]
+    assert listed.strip.pauses == pytest.approx((2000 / 11, 5000 / 11))
+    # Across visits, what anyone went back to, and who. Pat watched it all
+    # once and went back to second 2 twice: watching once isn't a replay.
+    pat = guest("Pat")
+    pat.post(
+        _watching(link),
+        {
+            "visit": _visit_key(pat, link),
+            "seconds": "0,1,2,3,4,5,6,7,8,9,2,2",
+            "length": "10",
+        },
+    )
+    watched = review_views.watched(link, version)
+    assert watched.replayed == (("1:00:12:00–1:00:15:00", "Dana ×3, Pat ×3"),)
+    # Shaded against the most played second (second 2: 5 plays).
+    assert watched.strip is not None
+    assert [bar.level for bar in watched.strip.bars] == [2, 4, 3, 2, 1]
+    # The cue page shows both, with the timecodes.
+    panel = (
+        role_client(Role.EDITOR)
+        .get(panel_url(cue), {"version": str(version.pk)}, headers=HX)
+        .content.decode()
+    )
+    assert "Watched Again Most" in panel and "Dana ×3, Pat ×3" in panel
+    assert "Paused At" in panel and "1:00:15:00" in panel
+    assert panel.count('class="watch-strip"') == 3  # everyone, then each
+    assert ">60%<" in panel
+
+
+def test_what_a_visit_keeps_has_limits(link: models.ReviewLink) -> None:
+    client = guest("Dana")
+    key = _visit_key(client, link)
+    pauses = ",".join(str(frame) for frame in range(60))
+    client.post(_watching(link), {"visit": key, "pauses": pauses})
+    visit = models.ReviewView.objects.get()
+    assert visit.pauses == list(range(review_views.MAX_PAUSES))
+    visit.seconds = [review_views.MAX_PLAYS - 1]
+    visit.save()
+    client.post(_watching(link), {"visit": key, "seconds": "0,0,0"})
+    visit.refresh_from_db()
+    assert visit.seconds == [review_views.MAX_PLAYS]
+    # Before the length is known, seconds stop at four hours.
+    limit = str(review_views.MAX_SECONDS)
+    client.post(_watching(link), {"visit": key, "seconds": limit})
+    visit.refresh_from_db()
+    assert len(visit.seconds) == 1
+
+
+def test_a_visit_with_nothing_played_has_no_strip(
+    cue: models.Cue, link: models.ReviewLink
+) -> None:
+    _visit_key(guest("Dana"), link)
+    (listed,) = review_views.visits(link, cue.versions.get())
+    assert (listed.seen, listed.strip, listed.replayed) == ("", None, ())
+    watched = review_views.watched(link, cue.versions.get())
+    assert (watched.strip, watched.replayed) == (None, ())
+    assert review_views.strip([0, 0], [], 2) is None
+    assert review_views.strip([], [], None) is None
+
+
 def test_reports_need_the_visits_key_and_an_open_link(
     cue: models.Cue, link: models.ReviewLink
 ) -> None:

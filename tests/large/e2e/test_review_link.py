@@ -12,6 +12,7 @@ from cues import models
 from cues import timecode
 from cues.services import demo
 from cues.services import review
+from cues.services import review_views
 from tests.large.e2e.conftest import Check
 from tests.large.e2e.conftest import SignInAs
 
@@ -78,6 +79,22 @@ def _ready(page: Any) -> None:
     page.wait_for_url("**/review/*/")
     page.wait_for_load_state("load")
     expect(page.locator("#review-time")).not_to_be_empty()
+
+
+def _played_to(page: Any, seconds: float) -> None:
+    """Waits until the video has played past `seconds`.
+
+    Polled from here: the page's CSP won't let Playwright evaluate a
+    waiting condition in it.
+    """
+    for _ in range(100):
+        if (
+            page.evaluate("document.querySelector('video').currentTime")
+            > seconds
+        ):
+            return
+        page.wait_for_timeout(50)
+    raise AssertionError(f"the video didn't play past {seconds} s")
 
 
 def _cue_with_video() -> models.Cue:
@@ -466,17 +483,27 @@ def test_watching_is_recorded(
         0,
         None,
     )
-    # Play a little, then leave: the page reports on its way out.
-    page.get_by_role("button", name="Play", exact=True).click()
-    page.wait_for_timeout(1500)
+    # Play a little, pause, go back and play the start again, then
+    # leave: the page reports on its way out.
+    play = page.get_by_role("button", name="Play", exact=True)
+    play.click()
+    _played_to(page, 1.5)
+    page.get_by_role("button", name="Pause", exact=True).click()
+    page.evaluate("document.querySelector('video').currentTime = 0")
+    play.click()
+    _played_to(page, 0.6)
     page.goto(f"{app}/auth/login/")
     for _ in range(50):
         visit.refresh_from_db()
-        if visit.played:
+        if visit.played and visit.seconds:
             break
         page.wait_for_timeout(100)
     assert visit.played >= 1
     assert visit.furthest is not None and visit.furthest >= 12
+    # The first second played twice; the test video is three seconds.
+    assert visit.seconds[0] == 2 and visit.seconds[1] >= 1
+    assert visit.length == 3
+    assert len(visit.pauses) == 1 and visit.pauses[0] >= 12
 
 
 def _at_frame_five(page: Any, app: str) -> Callable[[int], str]:
@@ -639,3 +666,36 @@ def test_a_stretch_is_lit_while_the_video_is_inside_it(
     forward.click()
     expect(listed.first).not_to_have_class(lit)
     expect(line).not_to_have_class(lit)
+
+
+def test_the_cue_page_shows_where_the_video_played(
+    page: Any,
+    app: str,
+    sign_in_as: SignInAs,
+    axe: Check,
+    csp_violations: list[str],
+) -> None:
+    del csp_violations
+    cue = _cue_with_video()
+    review.create(cue, None)
+    version = cue.current_version
+    assert version is not None
+    rate = cue.project.rate.nominal
+    for name, counts, pauses in [
+        ("Dana Director", [1] * 40 + [2] * 6 + [4] * 8 + [1] * 30, [41, 52]),
+        ("Sam Producer", [1] * 90, []),
+    ]:
+        review_views.start(version, name=name, member=False, browser=name)
+        views = models.ReviewView.objects.filter(name=name)
+        views.update(
+            seconds=counts, pauses=[at * rate for at in pauses], length=95
+        )
+    sign_in_as("Casey Composer")
+    page.goto(f"{app}/cues/{cue.pk}/")
+    views = page.locator(".cue-review__views")
+    views.locator("summary").click()
+    expect(views).to_contain_text("Watched Again Most")
+    expect(views).to_contain_text("1:01:00:00–1:01:14:00 Dana Director ×4")
+    expect(views.locator(".watch-strip")).to_have_count(3)
+    expect(views).to_contain_text("Paused At")
+    axe("views", within=".cue-review__views")

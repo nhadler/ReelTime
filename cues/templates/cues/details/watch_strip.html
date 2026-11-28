@@ -1,0 +1,10 @@
+{# Where a review video played, along its length: each stretch shaded by how many times it played (once to four or more), and a tick where it was paused. #}
+<svg class="watch-strip" viewBox="0 0 1000 16" preserveAspectRatio="none" role="img" aria-label="{{ label }}">
+  <rect class="watch-strip__track" x="0" y="0" width="1000" height="16"/>
+  {% for bar in strip.bars %}
+    <rect class="watch-strip__played watch-strip__played--{{ bar.level }}" x="{{ bar.x|floatformat:'2u' }}" y="0" width="{{ bar.width|floatformat:'2u' }}" height="16"/>
+  {% endfor %}
+  {% for at in strip.pauses %}
+    <line class="watch-strip__pause" x1="{{ at|floatformat:'2u' }}" x2="{{ at|floatformat:'2u' }}" y1="0" y2="16"/>
+  {% endfor %}
+</svg>

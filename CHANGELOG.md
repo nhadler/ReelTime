@@ -6,6 +6,19 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- **Views** on a cue's review link show how each visit watched: how much
+  of the video it saw, a strip shaded by how many times each stretch
+  played with a tick at every pause, the stretches replayed and the
+  timecodes paused at. At the top, every visit added up and the
+  stretches people went back to most.
+
+### Fixed
+
+- **Schedule**: in a month's last week, clicking one of the next month's
+  days lists its work instead of today's.
+
 ## [2.7.2] - 2026-11-27
 
 ### Changed
